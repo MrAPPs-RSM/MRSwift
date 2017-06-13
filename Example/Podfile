@@ -1,0 +1,17 @@
+platform :ios, '8.0'
+
+target 'SCSwiftExample' do
+
+  use_frameworks!
+
+  pod 'SCSwift', :path => '../'
+
+  target 'SCSwiftExampleTests' do
+    inherit! :search_paths
+  end
+
+  target 'SCSwiftExampleUITests' do
+    inherit! :search_paths
+  end
+
+end

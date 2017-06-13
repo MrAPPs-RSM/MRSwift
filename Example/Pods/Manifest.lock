@@ -1,0 +1,16 @@
+PODS:
+  - SCSwift (0.1.0)
+
+DEPENDENCIES:
+  - SCSwift (from `../`)
+
+EXTERNAL SOURCES:
+  SCSwift:
+    :path: ../
+
+SPEC CHECKSUMS:
+  SCSwift: cadfa2e44248ada57f03f5bcec27703edb2573f1
+
+PODFILE CHECKSUM: 7be53f79b53a146b553b5e68a1d55adb1439ff70
+
+COCOAPODS: 1.2.1
