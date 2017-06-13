@@ -1,6 +1,0 @@
-framework module Pods_MRSwiftExampleTests {
-  umbrella header "Pods-MRSwiftExampleTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

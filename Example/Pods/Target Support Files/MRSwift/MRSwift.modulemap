@@ -1,6 +1,0 @@
-framework module MRSwift {
-  umbrella header "MRSwift-umbrella.h"
-
-  export *
-  module * { export * }
-}
