@@ -14,7 +14,7 @@ public class MRTableSection : NSObject {
     public var title: String = ""
     public var rows = [MRTableRow]()
     
-    public convenience init(key: String, title: String, rows: [SCTableRow]) {
+    public convenience init(key: String, title: String, rows: [MRTableRow]) {
         self.init()
         
         self.key = key

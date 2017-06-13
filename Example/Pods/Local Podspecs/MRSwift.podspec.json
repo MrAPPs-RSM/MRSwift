@@ -1,0 +1,26 @@
+{
+  "name": "MRSwift",
+  "version": "0.1.0",
+  "summary": "A useful bunch of Swift stuff",
+  "description": "A useful mix of views and utilities written in Swift",
+  "homepage": "https://github.com/MrAPPs-RSM/MRSwift.git",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Nicola Innocenti": "nicola.innocenti9@gmail.com"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source": {
+    "git": "https://github.com/MrAPPs-RSM/MRSwift.git",
+    "tag": "0.1.0"
+  },
+  "source_files": "MRSwift/Classes/**/*.swift",
+  "requires_arc": true,
+  "xcconfig": {
+    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)"
+  }
+}

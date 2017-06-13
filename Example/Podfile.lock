@@ -1,16 +1,16 @@
 PODS:
-  - SCSwift (0.1.0)
+  - MRSwift (0.1.0)
 
 DEPENDENCIES:
-  - SCSwift (from `../`)
+  - MRSwift (from `../`)
 
 EXTERNAL SOURCES:
-  SCSwift:
+  MRSwift:
     :path: ../
 
 SPEC CHECKSUMS:
-  SCSwift: cadfa2e44248ada57f03f5bcec27703edb2573f1
+  MRSwift: 2559a825b24c0c4aef2c120f2ce1ee854f6051fb
 
-PODFILE CHECKSUM: 7be53f79b53a146b553b5e68a1d55adb1439ff70
+PODFILE CHECKSUM: eb911c69fb5cc24c98388f2498623af39001d987
 
 COCOAPODS: 1.2.1
