@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         rightViewController.view.backgroundColor = UIColor.blue
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let drawer = MRDrawerController(leftViewController: leftViewController, centerViewController: navController, rightViewController: rightViewController, drawerType: .side)
+        let drawer = MRDrawerController(leftViewController: leftViewController, centerViewController: navController, rightViewController: rightViewController, drawerType: .overlay)
         self.window?.rootViewController = drawer
         self.window?.makeKeyAndVisible()
         

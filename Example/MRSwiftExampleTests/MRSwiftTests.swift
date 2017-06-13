@@ -1,15 +1,15 @@
 //
-//  SCSwiftTests.swift
-//  SCSwiftTests
+//  MRSwiftTests.swift
+//  MRSwiftTests
 //
 //  Created by Nicola Innocenti on 30/04/17.
 //  Copyright © 2017 Nicola Innocenti. All rights reserved.
 //
 
 import XCTest
-@testable import SCSwift
+@testable import MRSwift
 
-class SCSwiftTests: XCTestCase {
+class MRSwiftTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

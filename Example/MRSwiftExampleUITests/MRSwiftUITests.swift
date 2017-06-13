@@ -1,6 +1,6 @@
 //
-//  SCSwiftUITests.swift
-//  SCSwiftUITests
+//  MRSwiftUITests.swift
+//  MRSwiftUITests
 //
 //  Created by Nicola Innocenti on 30/04/17.
 //  Copyright © 2017 Nicola Innocenti. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class SCSwiftUITests: XCTestCase {
+class MRSwiftUITests: XCTestCase {
         
     override func setUp() {
         super.setUp()
