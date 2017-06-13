@@ -1,13 +1,13 @@
 //
 //  ViewController.swift
-//  SCSwiftExample
+//  MRSwiftExample
 //
 //  Created by Nicola Innocenti on 28/05/17.
 //  Copyright © 2017 Nicola Innocenti. All rights reserved.
 //
 
 import UIKit
-import SCSwift
+import MRSwift
 
 class ViewController: UIViewController {
     
@@ -28,7 +28,7 @@ class ViewController: UIViewController {
 
     @IBAction func didTapPickerButton(_ sender: Any) {
         
-        SCImagePicker.shared.pickWithActionSheet(in: self, mediaType: .photo, editing: false, completionBlock: { (image, videoUrl) in
+        MRImagePicker.shared.pickWithActionSheet(in: self, mediaType: .photo, editing: false, completionBlock: { (image, videoUrl) in
             print("Image: \(image != nil)\nVideo: \(videoUrl != nil)")
         }, errorBlock: nil)
     }

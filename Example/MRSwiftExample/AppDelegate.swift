@@ -1,13 +1,13 @@
 //
 //  AppDelegate.swift
-//  SCSwift
+//  MRSwift
 //
 //  Created by Nicola Innocenti on 30/04/17.
 //  Copyright © 2017 Nicola Innocenti. All rights reserved.
 //
 
 import UIKit
-import SCSwift
+import MRSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         rightViewController.view.backgroundColor = UIColor.blue
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let drawer = SCDrawerController(leftViewController: leftViewController, centerViewController: navController, rightViewController: rightViewController, drawerType: .side)
+        let drawer = MRDrawerController(leftViewController: leftViewController, centerViewController: navController, rightViewController: rightViewController, drawerType: .side)
         self.window?.rootViewController = drawer
         self.window?.makeKeyAndVisible()
         

@@ -12,7 +12,6 @@
 		253A8DF314180BF54671BA7F /* Pods_MRSwiftExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C9D8F4B35BB260A2ABB8EF /* Pods_MRSwiftExampleTests.framework */; };
 		53D875577303170A3BF5C19D /* Pods_MRSwiftExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DDB3275C52663DF9395F972 /* Pods_MRSwiftExampleUITests.framework */; };
 		5EE51EF0762D177B8FD79556 /* Pods_SCSwiftExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CD306AF0C70A169AD3FDE88 /* Pods_SCSwiftExampleTests.framework */; };
-		D6BCC117D64FBBDC7C1FDAAD /* Pods_SCSwiftExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ED06C98E9A71D7FA279B394 /* Pods_SCSwiftExample.framework */; };
 		EB1460ED1EEFDBD3003AC3E5 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB7478331EB5E34000EACEB8 /* Info.plist */; };
 		EB1B536D1EDB631E000621AC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1B536B1EDB631E000621AC /* ViewController.swift */; };
 		EB1B536E1EDB631E000621AC /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB1B536C1EDB631E000621AC /* ViewController.xib */; };
@@ -79,7 +78,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6BCC117D64FBBDC7C1FDAAD /* Pods_SCSwiftExample.framework in Frameworks */,
 				0D1F027B9989A4250AD4A099 /* Pods_MRSwiftExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
