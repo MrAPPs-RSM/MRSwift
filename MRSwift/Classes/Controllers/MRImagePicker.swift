@@ -83,11 +83,11 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             }
             
             alert.addAction(UIAlertAction(title: self.photoCameraText, style: .default, handler: { (action) in
-                let pickerType: PPImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
+                let pickerType: MRImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
                 self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             }))
             alert.addAction(UIAlertAction(title: self.cameraRollText, style: .default, handler: { (action) in
-                let pickerType: PPImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
+                let pickerType: MRImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
                 self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             }))
             alert.addAction(UIAlertAction(title: self.cancelText, style: .cancel, handler: nil))
