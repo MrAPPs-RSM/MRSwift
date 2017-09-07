@@ -169,7 +169,7 @@ public extension UIScreen {
     }
 }
 
-typealias UIAlertActionBlock = (_ action: UIAlertAction) -> Void
+public typealias UIAlertActionBlock = (_ action: UIAlertAction) -> Void
 public extension UIAlertController {
     
     public class func new(title: String?, message: String?, tintColor: UIColor?, preferredStyle: UIAlertControllerStyle) -> UIAlertController {

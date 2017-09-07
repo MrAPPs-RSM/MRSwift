@@ -68,7 +68,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         set (newValue) { UserDefaults.standard.set(newValue, forKey: MRImagePicker.MRImagePickerCancelString) }
     }
     
-    public func pickWithActionSheet(in viewController: UIViewController, mediaType: PPMediaType, editing: Bool, iPadStartFrame: CGRect?, completionBlock: @escaping PPImagePickerCompletionBlock, errorBlock: PPImagePickerErrorBlock?) {
+    public func pickWithActionSheet(in viewController: UIViewController, mediaType: MRMediaType, editing: Bool, iPadStartFrame: CGRect?, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             
@@ -95,12 +95,12 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             
         } else if UIImagePickerController.isSourceTypeAvailable(.camera) {
             
-            let pickerType: PPImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
+            let pickerType: MRImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
             self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             
         } else if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             
-            let pickerType: PPImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
+            let pickerType: MRImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
             self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
         }
     }
