@@ -68,24 +68,41 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         set (newValue) { UserDefaults.standard.set(newValue, forKey: MRImagePicker.MRImagePickerCancelString) }
     }
     
-    public func pickWithActionSheet(in viewController: UIViewController, mediaType: MRMediaType, editing: Bool, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
+    public func pickWithActionSheet(in viewController: UIViewController, mediaType: PPMediaType, editing: Bool, iPadStartFrame: CGRect?, completionBlock: @escaping PPImagePickerCompletionBlock, errorBlock: PPImagePickerErrorBlock?) {
         
-        let alert = UIAlertController(title: self.pickerTitleText, message: nil, preferredStyle: .actionSheet)
-        
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            
+            let alert = UIAlertController.new(title: self.pickerTitleText, message: nil, preferredStyle: .actionSheet)
+            if UIDevice.isIpad() {
+                alert.popoverPresentationController?.sourceView = viewController.view
+                if let frame = iPadStartFrame {
+                    alert.popoverPresentationController?.sourceRect = frame
+                } else {
+                    alert.popoverPresentationController?.sourceRect = viewController.view.frame
+                }
+            }
+            
             alert.addAction(UIAlertAction(title: self.photoCameraText, style: .default, handler: { (action) in
-                let pickerType: MRImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
+                let pickerType: PPImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
                 self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             }))
-        }
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             alert.addAction(UIAlertAction(title: self.cameraRollText, style: .default, handler: { (action) in
-                let pickerType: MRImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
+                let pickerType: PPImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
                 self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             }))
+            alert.addAction(UIAlertAction(title: self.cancelText, style: .cancel, handler: nil))
+            viewController.present(alert, animated: true, completion: nil)
+            
+        } else if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            
+            let pickerType: PPImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
+            self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+            
+        } else if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            
+            let pickerType: PPImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
+            self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
         }
-        alert.addAction(UIAlertAction(title: self.cancelText, style: .cancel, handler: nil))
-        viewController.present(alert, animated: true, completion: nil)
     }
     
     public func pick(in viewController: UIViewController, type: MRImagePickerType, editing: Bool, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {

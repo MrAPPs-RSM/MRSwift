@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SafariServices
 
 public extension URL {
     
@@ -168,6 +169,7 @@ public extension UIScreen {
     }
 }
 
+typealias UIAlertActionBlock = (_ action: UIAlertAction) -> Void
 public extension UIAlertController {
     
     public class func new(title: String?, message: String?, tintColor: UIColor?, preferredStyle: UIAlertControllerStyle) -> UIAlertController {
@@ -211,7 +213,7 @@ public extension UIApplication: SFSafariViewControllerDelegate {
         
         if #available(iOS 9.0, *) {
             
-            let safari = PPSafariViewController(url: url)
+            let safari = SFSafariViewController(url: url)
             viewController?.present(safari, animated: true, completion: nil)
             
         } else {
