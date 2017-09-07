@@ -106,6 +106,10 @@ public extension UIView {
 
 public extension UIDevice {
     
+    public var isIpad : Bool {
+        return UIDevice.current.userInterfaceIdiom == .pad
+    }
+    
     public var diskTotalSpace : Int64? {
         
         var value: Int64?
