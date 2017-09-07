@@ -208,7 +208,7 @@ public extension UIAlertController {
     }
 }
 
-public extension UIApplication: SFSafariViewControllerDelegate {
+extension UIApplication: SFSafariViewControllerDelegate {
     
     public func openUrl(stringUrl: String?, on viewController: UIViewController?) {
         

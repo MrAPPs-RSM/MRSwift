@@ -72,8 +72,8 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             
-            let alert = UIAlertController.new(title: self.pickerTitleText, message: nil, preferredStyle: .actionSheet)
-            if UIDevice.isIpad() {
+            let alert = UIAlertController.new(title: self.pickerTitleText, message: nil, tintColor: nil, preferredStyle: .actionSheet)
+            if UIDevice.isIpad {
                 alert.popoverPresentationController?.sourceView = viewController.view
                 if let frame = iPadStartFrame {
                     alert.popoverPresentationController?.sourceRect = frame
