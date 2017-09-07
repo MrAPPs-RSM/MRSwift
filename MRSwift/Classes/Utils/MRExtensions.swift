@@ -106,7 +106,7 @@ public extension UIView {
 
 public extension UIDevice {
     
-    public var isIpad : Bool {
+    public class var isIpad : Bool {
         return UIDevice.current.userInterfaceIdiom == .pad
     }
     
