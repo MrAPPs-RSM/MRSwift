@@ -1,5 +1,7 @@
 PODS:
-  - MRSwift (0.1.0)
+  - Alamofire (4.4.0)
+  - MRSwift (0.1.0):
+    - Alamofire
 
 DEPENDENCIES:
   - MRSwift (from `../`)
@@ -9,7 +11,8 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  MRSwift: 2559a825b24c0c4aef2c120f2ce1ee854f6051fb
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
+  MRSwift: 8ff50d17b85171fb996286c33a2b1b2fb7428617
 
 PODFILE CHECKSUM: eb911c69fb5cc24c98388f2498623af39001d987
 

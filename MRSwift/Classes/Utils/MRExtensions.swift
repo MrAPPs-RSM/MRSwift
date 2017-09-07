@@ -45,6 +45,15 @@ public extension String {
             return false
         }
     }
+    
+    public var isValidRemoteUrl : Bool {
+        
+        if let url = URL(string: self) {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 public extension UIColor {
@@ -83,6 +92,14 @@ public extension UIView {
             self.layer.borderColor = borderColor?.cgColor
         }
         self.layer.cornerRadius = cornerRadius
+    }
+    
+    public func addShadow(color: UIColor, offset: CGSize, opacity: Float) {
+        
+        layer.shadowColor = color.cgColor
+        layer.shadowOpacity = opacity
+        layer.shadowOffset = offset
+        layer.shadowRadius = offset.height
     }
 }
 
@@ -123,11 +140,116 @@ public extension UIDevice {
         }
         return value
     }
+    
+    public class var isPortrait : Bool {
+        return UIApplication.shared.statusBarOrientation == .portrait || UIApplication.shared.statusBarOrientation == .portraitUpsideDown
+    }
 }
 
 public extension Bundle {
     
     public var appName : String {
         return Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+    }
+}
+
+public extension UIScreen {
+    
+    public class var width : CGFloat {
+        return UIDevice.isPortrait ? UIScreen.main.bounds.size.width : UIScreen.main.bounds.size.height
+    }
+    
+    public class var height : CGFloat {
+        return UIDevice.isPortrait ? UIScreen.main.bounds.size.height : UIScreen.main.bounds.size.width
+    }
+    
+    public class var separatorHeight : CGFloat {
+        return 1/UIScreen.main.scale
+    }
+}
+
+public extension UIAlertController {
+    
+    public class func new(title: String?, message: String?, tintColor: UIColor?, preferredStyle: UIAlertControllerStyle) -> UIAlertController {
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
+        if let tint = tintColor {
+            alert.view.tintColor = tint
+        }
+        return alert
+    }
+    
+    public func addCancelAction(title: String?, handler: UIAlertActionBlock?) {
+        
+        let action = UIAlertAction(title: title, style: .cancel, handler: handler)
+        self.addAction(action)
+    }
+    
+    public func addDefaultAction(title: String?, handler: UIAlertActionBlock?) {
+        
+        let action = UIAlertAction(title: title, style: .default, handler: handler)
+        self.addAction(action)
+    }
+    
+    public func addDestructiveAction(title: String?, handler: UIAlertActionBlock?) {
+        
+        let action = UIAlertAction(title: title, style: .destructive, handler: handler)
+        if #available(iOS 9, *) {
+            action.setValue(UIColor.red, forKey: "titleTextColor")
+        }
+        self.addAction(action)
+        
+    }
+}
+
+public extension UIApplication: SFSafariViewControllerDelegate {
+    
+    public func openUrl(stringUrl: String?, on viewController: UIViewController?) {
+        
+        guard let stringUrl = stringUrl else { return }
+        guard let url = URL(string: stringUrl) else { return }
+        
+        if #available(iOS 9.0, *) {
+            
+            let safari = PPSafariViewController(url: url)
+            viewController?.present(safari, animated: true, completion: nil)
+            
+        } else {
+            
+            if self.canOpenURL(url) {
+                self.openURL(url)
+            }
+        }
+    }
+    
+    @available(iOS 9.0, *)
+    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+}
+
+public extension UICollectionViewCell {
+    
+    public func fixedContentSize(width: CGFloat) -> CGSize {
+        
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+        let size = self.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+        return CGSize(width: width, height: size.height)
+    }
+}
+
+public extension UINavigationController {
+    
+    public func addFirst(viewController: UIViewController?) {
+        
+        guard let viewController = viewController else { return }
+        viewControllers.insert(viewController, at: 0)
+    }
+    
+    public func addLast(viewController: UIViewController?) {
+        
+        guard let viewController = viewController else { return }
+        viewControllers.append(viewController)
     }
 }

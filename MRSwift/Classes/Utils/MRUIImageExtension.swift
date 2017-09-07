@@ -10,46 +10,31 @@ import Foundation
 
 public extension UIImage {
     
-    public var resized : UIImage {
-        return self.resizeIfNeeded(compressionQuality: 0.5)
-    }
-    
-    public var thumbnail : UIImage {
-        return self.resizeIfNeeded(compressionQuality: 0.05)
-    }
-    
-    public func resizeIfNeeded(compressionQuality: CGFloat) -> UIImage {
+    public func resize(percentage: CGFloat) -> UIImage? {
         
-        var newImage: UIImage = self.copy() as! UIImage
-        newImage = newImage.resizeWith(width: 800, height: 600)!
+        guard let cgImage = self.cgImage else {
+            return nil
+        }
         
-        let imgData = UIImageJPEGRepresentation(newImage, compressionQuality)!
-        let oldData: Data = UIImageJPEGRepresentation(self, 1.0)!
+        let width = cgImage.width / 4
+        let height = cgImage.height / 4
+        let bitsPerComponent = cgImage.bitsPerComponent
+        let bytesPerRow = cgImage.bytesPerRow
+        let colorSpace = cgImage.colorSpace
+        let bitmapInfo = cgImage.bitmapInfo
         
-        print("Compressed image from", (oldData.count/1024), "Kb to", (imgData.count/1024), "Kb")
+        guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace!, bitmapInfo: bitmapInfo.rawValue) else {
+            return nil
+        }
         
-        //return newImage
-        return UIImage(data: imgData)!
-    }
-    
-    public func resizeImage() -> UIImage {
+        context.interpolationQuality = .default
+        context.draw(cgImage, in: CGRect(origin: CGPoint.zero, size: CGSize(width: CGFloat(width), height: CGFloat(height))))
         
-        let cgImage = self.cgImage
-        
-        let width = cgImage!.width / 2
-        let height = cgImage!.height / 2
-        let bitsPerComponent = cgImage!.bitsPerComponent
-        let bytesPerRow = cgImage!.bytesPerRow
-        let colorSpace = cgImage!.colorSpace
-        let bitmapInfo = cgImage!.bitmapInfo
-        
-        let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace!, bitmapInfo: bitmapInfo.rawValue)
-        context?.interpolationQuality = CGInterpolationQuality(rawValue: CGInterpolationQuality.high.rawValue)!
-        context?.draw(cgImage!, in: CGRect(x: 0, y: 0, width: width, height: height))
-        let scaledCGImage = context?.makeImage()
-        let scaledImage = UIImage(cgImage: scaledCGImage!)
-        
-        return scaledImage
+        if let scaledImage = context.makeImage() {
+            return UIImage(cgImage: scaledImage)
+        } else {
+            return nil
+        }
     }
     
     public func fixOrientation() -> UIImage {
@@ -125,41 +110,6 @@ public extension UIImage {
         //CGImageRelease(cgimg);
         
         return img;
-    }
-    
-    public func resizeWith(percentage: CGFloat) -> UIImage? {
-        
-        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: size.width * percentage, height: size.height * percentage)))
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = self
-        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        imageView.layer.render(in: context)
-        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
-        UIGraphicsEndImageContext()
-        return result
-    }
-    
-    public func resizeWith(width: CGFloat, height: CGFloat) -> UIImage? {
-        
-        var newWidth = width
-        var newHeight = height
-        
-        if size.width > size.height {
-            newHeight = CGFloat(ceil(width/size.width * size.height))
-        } else {
-            newWidth = CGFloat(ceil(height/size.height * size.width))
-        }
-        
-        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: newWidth, height: newHeight)))
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = self
-        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        imageView.layer.render(in: context)
-        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
-        UIGraphicsEndImageContext()
-        return result
     }
     
     public func flipped() -> UIImage {
