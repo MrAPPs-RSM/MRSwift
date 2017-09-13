@@ -31,6 +31,10 @@ public extension URL {
 
 public extension String {
     
+    func localized(name: String) {
+        return NSLocalizedString(name, comment: "")
+    }
+    
     public var containsOnlyDecimals : Bool {
         
         let set = NSCharacterSet.decimalDigits.inverted
