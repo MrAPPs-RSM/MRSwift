@@ -52,7 +52,7 @@ public extension URL {
 
 public extension String {
     
-    public class func localized(name: String) -> String {
+    public static func localized(name: String) -> String {
         return NSLocalizedString(name, comment: "")
     }
     
