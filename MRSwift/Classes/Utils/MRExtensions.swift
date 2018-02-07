@@ -8,6 +8,27 @@
 
 import Foundation
 import SafariServices
+import SDWebImage
+
+extension UIScrollView {
+    
+    func scrollTop() {
+        self.setContentOffset(CGPoint(x: 0.0, y: 0.0), animated: true)
+    }
+}
+
+extension UITableViewCell {
+    
+    func prepareDisclosureIndicator() {
+        
+        for case let button as UIButton in subviews {
+            let image = button.backgroundImage(for: .normal)?.withRenderingMode(.
+                alwaysTemplate)
+            button.tintColor = self.tintColor
+            button.setBackgroundImage(image, for: .normal)
+        }
+    }
+}
 
 public extension URL {
     
@@ -31,7 +52,7 @@ public extension URL {
 
 public extension String {
     
-    func localized(name: String) {
+    func localized(name: String) -> String {
         return NSLocalizedString(name, comment: "")
     }
     
@@ -53,7 +74,7 @@ public extension String {
     
     public var isValidRemoteUrl : Bool {
         
-        if let url = URL(string: self) {
+        if let _ = URL(string: self) {
             return true
         } else {
             return false
@@ -105,6 +126,14 @@ public extension UIView {
         layer.shadowOpacity = opacity
         layer.shadowOffset = offset
         layer.shadowRadius = offset.height
+    }
+    
+    class var separatorHeight : CGFloat {
+        return 1.0/UIScreen.main.scale
+    }
+    
+    class var separatorColor : UIColor {
+        return UIColor.black.withAlphaComponent(0.2)
     }
 }
 
@@ -221,8 +250,14 @@ extension UIApplication: SFSafariViewControllerDelegate {
         
         if #available(iOS 9.0, *) {
             
-            let safari = SFSafariViewController(url: url)
-            viewController?.present(safari, animated: true, completion: nil)
+            if let viewController = viewController {
+                let safari = SFSafariViewController(url: url)
+                viewController.present(safari, animated: true, completion: nil)
+            } else {
+                if self.canOpenURL(url) {
+                    self.openURL(url)
+                }
+            }
             
         } else {
             
@@ -235,6 +270,18 @@ extension UIApplication: SFSafariViewControllerDelegate {
     @available(iOS 9.0, *)
     public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         controller.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension DateFormatter {
+    
+    var fixedShortWeekDays : [String] {
+        
+        var days = self.shortWeekdaySymbols!
+        let first = days.first!
+        days.removeFirst()
+        days.append(first)
+        return days
     }
 }
 
@@ -261,5 +308,23 @@ public extension UINavigationController {
         
         guard let viewController = viewController else { return }
         viewControllers.append(viewController)
+    }
+}
+
+public extension UIImageView {
+    
+    func setImage(with url: URL?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
+        
+        self.sd_setShowActivityIndicatorView(true)
+        self.sd_setImage(with: url, placeholderImage: placeholder, options: .continueInBackground) { (image, error, cacheType, url) in
+            
+            if let error = error {
+                print("[Image] Error: \(error.localizedDescription)")
+            }
+            
+            if let completion = completion {
+                completion(image)
+            }
+        }
     }
 }

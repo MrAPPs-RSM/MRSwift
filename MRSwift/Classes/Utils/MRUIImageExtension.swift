@@ -160,7 +160,7 @@ public extension UIImage {
         return maskedImage
     }
     
-    public func image(with color: UIColor) -> UIImage {
+    public func paint(with color: UIColor) -> UIImage {
         
         UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
         color.setFill()

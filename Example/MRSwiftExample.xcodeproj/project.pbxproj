@@ -21,6 +21,13 @@
 		EB7478321EB5E34000EACEB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB7478301EB5E34000EACEB8 /* LaunchScreen.storyboard */; };
 		EB74783D1EB5E34000EACEB8 /* MRSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB74783C1EB5E34000EACEB8 /* MRSwiftTests.swift */; };
 		EB7478481EB5E34000EACEB8 /* MRSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7478471EB5E34000EACEB8 /* MRSwiftUITests.swift */; };
+		EBB2E2422007BA0E00409182 /* MRMediaPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB2E2402007BA0E00409182 /* MRMediaPlayerViewController.swift */; };
+		EBB2E2432007BA0E00409182 /* MRMediaPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2E2412007BA0E00409182 /* MRMediaPlayerViewController.xib */; };
+		EBB2E2462007BCD700409182 /* MRImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB2E2442007BCD700409182 /* MRImageViewController.swift */; };
+		EBB2E2472007BCD700409182 /* MRImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2E2452007BCD700409182 /* MRImageViewController.xib */; };
+		EBB2E2492007C1A800409182 /* MRMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB2E2482007C1A800409182 /* MRMediaViewController.swift */; };
+		EBC63E7E20091763004BBED5 /* MRVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC63E7C20091763004BBED5 /* MRVideoViewController.swift */; };
+		EBC63E7F20091763004BBED5 /* MRVideoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBC63E7D20091763004BBED5 /* MRVideoViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +72,13 @@
 		EB7478431EB5E34000EACEB8 /* MRSwiftExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MRSwiftExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB7478471EB5E34000EACEB8 /* MRSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRSwiftUITests.swift; sourceTree = "<group>"; };
 		EB7478491EB5E34000EACEB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EBB2E2402007BA0E00409182 /* MRMediaPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRMediaPlayerViewController.swift; sourceTree = "<group>"; };
+		EBB2E2412007BA0E00409182 /* MRMediaPlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MRMediaPlayerViewController.xib; sourceTree = "<group>"; };
+		EBB2E2442007BCD700409182 /* MRImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRImageViewController.swift; sourceTree = "<group>"; };
+		EBB2E2452007BCD700409182 /* MRImageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MRImageViewController.xib; sourceTree = "<group>"; };
+		EBB2E2482007C1A800409182 /* MRMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRMediaViewController.swift; sourceTree = "<group>"; };
+		EBC63E7C20091763004BBED5 /* MRVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRVideoViewController.swift; sourceTree = "<group>"; };
+		EBC63E7D20091763004BBED5 /* MRVideoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MRVideoViewController.xib; sourceTree = "<group>"; };
 		ECB9EC1F4DA04B8A93BC6F1A /* Pods-MRSwiftExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRSwiftExampleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MRSwiftExampleUITests/Pods-MRSwiftExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		FA54DDF48154516885F470C6 /* Pods_MRSwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MRSwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -157,6 +171,13 @@
 				EB1B536B1EDB631E000621AC /* ViewController.swift */,
 				EB1B536C1EDB631E000621AC /* ViewController.xib */,
 				EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */,
+				EBB2E2402007BA0E00409182 /* MRMediaPlayerViewController.swift */,
+				EBB2E2412007BA0E00409182 /* MRMediaPlayerViewController.xib */,
+				EBB2E2442007BCD700409182 /* MRImageViewController.swift */,
+				EBB2E2452007BCD700409182 /* MRImageViewController.xib */,
+				EBB2E2482007C1A800409182 /* MRMediaViewController.swift */,
+				EBC63E7C20091763004BBED5 /* MRVideoViewController.swift */,
+				EBC63E7D20091763004BBED5 /* MRVideoViewController.xib */,
 			);
 			path = MRSwiftExample;
 			sourceTree = "<group>";
@@ -298,10 +319,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBC63E7F20091763004BBED5 /* MRVideoViewController.xib in Resources */,
 				EB1460ED1EEFDBD3003AC3E5 /* Info.plist in Resources */,
 				EB7478321EB5E34000EACEB8 /* LaunchScreen.storyboard in Resources */,
 				EB1B536E1EDB631E000621AC /* ViewController.xib in Resources */,
 				EB74782F1EB5E34000EACEB8 /* Assets.xcassets in Resources */,
+				EBB2E2472007BCD700409182 /* MRImageViewController.xib in Resources */,
+				EBB2E2432007BA0E00409182 /* MRMediaPlayerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,9 +352,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MRSwiftExample/Pods-MRSwiftExample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/MRSwift/MRSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MRSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -388,13 +419,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MRSwiftExampleUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		AD8CCBCCA4C02D6B75D89631 /* [CP] Check Pods Manifest.lock */ = {
@@ -403,13 +437,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MRSwiftExample-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CDB4AF7010E6BA7EBE263B6D /* [CP] Copy Pods Resources */ = {
@@ -433,13 +470,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MRSwiftExampleTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F7A2A368EA1B9E3E3B56742F /* [CP] Copy Pods Resources */ = {
@@ -466,6 +506,10 @@
 			files = (
 				EB1460EF1EF01E0F003AC3E5 /* MRWeb.swift in Sources */,
 				EB1B536D1EDB631E000621AC /* ViewController.swift in Sources */,
+				EBB2E2422007BA0E00409182 /* MRMediaPlayerViewController.swift in Sources */,
+				EBC63E7E20091763004BBED5 /* MRVideoViewController.swift in Sources */,
+				EBB2E2462007BCD700409182 /* MRImageViewController.swift in Sources */,
+				EBB2E2492007C1A800409182 /* MRMediaViewController.swift in Sources */,
 				EB7478281EB5E34000EACEB8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,20 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         UINavigationBar.appearance().isTranslucent = false
-        
-        let centerViewController = ViewController()
-        centerViewController.view.backgroundColor = UIColor.white
-        let navController = UINavigationController(rootViewController: centerViewController)
-        
-        let leftViewController = UIViewController()
-        leftViewController.view.backgroundColor = UIColor.red
-        
-        let rightViewController = UIViewController()
-        rightViewController.view.backgroundColor = UIColor.blue
-        
+
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let drawer = MRDrawerController(leftViewController: leftViewController, centerViewController: navController, rightViewController: rightViewController, drawerType: .overlay)
-        self.window?.rootViewController = drawer
+        self.window?.rootViewController = ViewController()
         self.window?.makeKeyAndVisible()
         
         return true

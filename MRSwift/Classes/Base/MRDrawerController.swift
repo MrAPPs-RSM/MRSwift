@@ -242,7 +242,7 @@ public class MRDrawerController: UIViewController {
     
     // MARK: - Other Methods
 
-    func didTapDarkBackground() {
+    @objc func didTapDarkBackground() {
         
         if self.isLeftViewVisible == true {
             self.closeLeftDrawer()

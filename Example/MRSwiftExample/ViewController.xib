@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController" customModule="SCSwiftExample" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController" customModule="MRSwiftExample" customModuleProvider="target">
             <connections>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -20,20 +20,31 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Le-MH-cVC">
-                    <rect key="frame" x="135" y="20" width="104" height="30"/>
+                    <rect key="frame" x="133.5" y="20" width="107" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="xJU-Nq-BrW"/>
                     </constraints>
-                    <state key="normal" title="SCImagePicker"/>
+                    <state key="normal" title="MRImagePicker"/>
                     <connections>
                         <action selector="didTapPickerButton:" destination="-1" eventType="touchUpInside" id="O3F-4S-RGk"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cm2-n8-lsE">
+                    <rect key="frame" x="133.5" y="66" width="107" height="30"/>
+                    <state key="normal" title="MRMediaPlayer"/>
+                    <connections>
+                        <action selector="didTapMediaPlayerButton:" destination="-1" eventType="touchUpInside" id="Pbe-bx-YWf"/>
                     </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="cm2-n8-lsE" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="1lL-5R-uem"/>
+                <constraint firstItem="cm2-n8-lsE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="590-Nb-92r"/>
                 <constraint firstItem="6Le-MH-cVC" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8VA-k9-WOZ"/>
                 <constraint firstItem="6Le-MH-cVC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="Ni6-gh-7Y8"/>
+                <constraint firstItem="cm2-n8-lsE" firstAttribute="top" secondItem="6Le-MH-cVC" secondAttribute="bottom" constant="16" id="ip2-Bs-jjV"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cm2-n8-lsE" secondAttribute="trailing" constant="16" id="yfB-Nv-Mev"/>
             </constraints>
         </view>
     </objects>
