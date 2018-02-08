@@ -40,8 +40,8 @@ public protocol MRMediaPlayerViewControllerDelegate : class {
     func mediaPlayerDidChangeTime(seconds: TimeInterval)
 }
 
-public class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, MRMediaViewControllerDelegate, MRVideoViewControllerDelegate {
-
+open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, MRMediaViewControllerDelegate, MRVideoViewControllerDelegate {
+    
     // MARK: - Xibs
     
     private var pageContainer: UIView!
@@ -71,9 +71,9 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
     
     // MARK: - UIViewController Methods
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
-
+        
         videoAutoPlay = true
         
         view.backgroundColor = backgroundColor
@@ -81,7 +81,7 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
         pageContainer = UIView(frame: view.frame)
         pageContainer.backgroundColor = .clear
         view.addSubview(pageContainer)
-
+        
         pageController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         pageController.dataSource = self
         pageController.delegate = self
@@ -96,7 +96,7 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
         self.addChildViewController(pageController)
     }
     
-    override public func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         pageContainer.frame = view.frame
@@ -148,7 +148,7 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
     }
     
     public func videoDidUpdateProgress(currentTime: TimeInterval, duration: TimeInterval) {
-
+        
     }
     
     // MARK: - Video Handlers
@@ -197,12 +197,13 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
         self.dismiss(animated: true, completion: nil)
     }
     
-    override public var prefersStatusBarHidden: Bool {
+    override open var prefersStatusBarHidden: Bool {
         return true
     }
-
-    override public func didReceiveMemoryWarning() {
+    
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 }
+

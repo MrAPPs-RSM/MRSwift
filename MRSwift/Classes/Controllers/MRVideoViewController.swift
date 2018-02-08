@@ -103,9 +103,9 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
         }
         
         switch(videoAspect){
-            case .resizeAspectFill: playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-            case .resizeAspect: playerLayer.videoGravity = AVLayerVideoGravityResizeAspect
-            case .resize: playerLayer.videoGravity = AVLayerVideoGravityResize
+        case .resizeAspectFill: playerLayer.videoGravity = .resizeAspectFill
+        case .resizeAspect: playerLayer.videoGravity = .resizeAspect
+        case .resize: playerLayer.videoGravity = .resize
         }
     }
     
@@ -195,7 +195,7 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
         player.seek(to: kCMTimeZero)
     }
     
-    public func playerDidFinishPlay(notification: Notification) {
+    @objc public func playerDidFinishPlay(notification: Notification) {
         self.stop()
         videoDelegate?.videoDidFinishPlay()
     }

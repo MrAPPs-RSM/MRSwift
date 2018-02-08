@@ -41,11 +41,11 @@ public class MRMediaViewController: UIViewController {
     
     // MARK: - Other Methods
     
-    public func didTap() {
+    @objc public func didTap() {
         delegate?.mediaDidTapView()
     }
     
-    public func didDoubleTap() {
+    @objc public func didDoubleTap() {
         delegate?.mediaDidDoubleTap()
     }
 
