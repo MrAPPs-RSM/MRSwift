@@ -35,24 +35,24 @@ public class MRMedia : NSObject {
 
 public protocol MRMediaPlayerViewControllerDelegate : class {
     func mediaPlayerDidTapPlay()
+    func mediaPlayerDidTapPause()
+    func mediaPlayerDidTapStop()
+    func mediaPlayerDidChangeTime(seconds: TimeInterval)
 }
 
 public class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, MRMediaViewControllerDelegate, MRVideoViewControllerDelegate {
 
     // MARK: - Xibs
     
-    @IBOutlet public weak var topView: UIView!
-    @IBOutlet public weak var btnClose: UIButton!
-    @IBOutlet public weak var pageContainer: UIView!
+    private var pageContainer: UIView!
     private var pageController: UIPageViewController!
-    @IBOutlet weak var bottomView: UIView!
-    @IBOutlet weak var btnPlay: UIButton!
     
     // MARK: - Constants & Variables
     
     public var backgroundColor: UIColor = .black
     public var topViewBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.5)
     public var bottomViewBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.5)
+    public var videoAutoPlay: Bool = false
     
     private var medias = [MRMedia]()
     private var selectedIndex: Int = 0
@@ -74,23 +74,13 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        videoAutoPlay = true
+        
         view.backgroundColor = backgroundColor
         
-        topView.isHidden = true
-        topView.backgroundColor = topViewBackgroundColor
-        btnClose.setTitle("Close", for: .normal)
-        btnClose.setTitleColor(.white, for: .normal)
-        btnClose.setTitleColor(UIColor.white.withAlphaComponent(0.5), for: .selected)
-        btnClose.addTarget(self, action: #selector(self.close), for: .touchUpInside)
-        
-        bottomView.isHidden = true
-        bottomView.backgroundColor = topViewBackgroundColor
-        btnPlay.setTitle("Play", for: .normal)
-        btnPlay.setTitleColor(.white, for: .normal)
-        btnPlay.setTitleColor(UIColor.white.withAlphaComponent(0.5), for: .selected)
-        btnPlay.addTarget(self, action: #selector(self.play), for: .touchUpInside)
-        
+        pageContainer = UIView(frame: view.frame)
         pageContainer.backgroundColor = .clear
+        view.addSubview(pageContainer)
 
         pageController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         pageController.dataSource = self
@@ -109,6 +99,7 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        pageContainer.frame = view.frame
         pageController.view.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: pageContainer.frame.size)
     }
     
@@ -136,22 +127,9 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
     
     public func mediaDidTapView() {
         
-        let show = topView.isHidden
-        
-        if show {
-            topView.isHidden = false
-            topView.alpha = 0.0
-        }
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.topView.alpha = show ? 1.0 : 0.0
-        }) { (completed) in
-            self.topView.isHidden = !show
-        }
     }
     
     public func mediaDidDoubleTap() {
-        
         
     }
     
@@ -169,19 +147,31 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
         
     }
     
+    public func videoDidUpdateProgress(currentTime: TimeInterval, duration: TimeInterval) {
+
+    }
+    
     // MARK: - Video Handlers
     
-    func play() {
+    public func play() {
         playerDelegate?.mediaPlayerDidTapPlay()
     }
     
-    func stop() {
-        
+    public func pause() {
+        playerDelegate?.mediaPlayerDidTapPause()
+    }
+    
+    public func stop() {
+        playerDelegate?.mediaPlayerDidTapStop()
+    }
+    
+    public func moveToSeconds(seconds: TimeInterval) {
+        playerDelegate?.mediaPlayerDidChangeTime(seconds: seconds)
     }
     
     // MARK: - Other Methods
     
-    func viewController(at index: Int) -> MRMediaViewController? {
+    public func viewController(at index: Int) -> MRMediaViewController? {
         
         if index < 0 || index > medias.count {
             return nil
@@ -194,7 +184,7 @@ public class MRMediaPlayerViewController: UIViewController, UIPageViewController
             viewController = MRImageViewController(media: media)
             playerDelegate = nil
         } else if media.type == .video {
-            viewController = MRVideoViewController(media: media, autoPlay: true, delegate: self)
+            viewController = MRVideoViewController(media: media, autoPlay: videoAutoPlay, delegate: self)
             playerDelegate = viewController as? MRVideoViewController
         }
         

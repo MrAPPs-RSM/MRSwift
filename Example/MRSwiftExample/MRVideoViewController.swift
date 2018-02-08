@@ -20,28 +20,32 @@ public protocol MRVideoViewControllerDelegate : class {
     func videoReadyToPlay()
     func videoDidFinishPlay()
     func videoDidFailLoad()
+    func videoDidUpdateProgress(currentTime: TimeInterval, duration: TimeInterval)
 }
 
 public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewControllerDelegate {
     
     // MARK: - Xibs
     
-    @IBOutlet weak var imgPlaceholder: UIImageView!
-    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    private var videoView: UIView!
+    private var imgPlaceholder: UIImageView!
+    private var spinner: UIActivityIndicatorView!
     
     // MARK: - Constants & Variables
     
     private var media: MRMedia!
     
-    internal var player = AVPlayer()
+    internal var player: AVPlayer!
     internal var playerLayer: AVPlayerLayer!
     
-    internal var videoAspect: VideoAspect = .resizeAspectFill
+    private var videoAspect: VideoAspect = .resizeAspectFill
     
     private var didFirstLoad: Bool = false
     public var autoPlay: Bool = false
     
     public var videoDelegate: MRVideoViewControllerDelegate?
+    
+    private var timeObserver: Any?
     
     // MARK: - Initialization
     
@@ -54,7 +58,11 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
     }
     
     deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
         player.removeObserver(self, forKeyPath: "status")
+        if let timeObserver = timeObserver {
+            player.removeTimeObserver(timeObserver)
+        }
     }
     
     // MARK: - UIViewController Methods
@@ -64,29 +72,35 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
 
         view.backgroundColor = .clear
         
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer.frame = view.frame
-        view.layer.addSublayer(playerLayer)
+        videoView = UIView(frame: view.frame)
+        view.addSubview(videoView)
+        
+        imgPlaceholder = UIImageView(frame: videoView.frame)
+        videoView.addSubview(imgPlaceholder)
+        
+        spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        spinner.color = .lightGray
+        spinner.center = videoView.center
+        videoView.addSubview(imgPlaceholder)
         
         spinner.hidesWhenStopped = true
         
         self.initialize()
     }
     
-    public override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if autoPlay && !didFirstLoad {
-            self.play()
-        }
-        
-        didFirstLoad = true
-    }
-    
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        playerLayer.frame = view.frame
+        videoView.frame = view.frame
+        imgPlaceholder.frame = videoView.frame
+        spinner.center = videoView.center
+        playerLayer.frame = videoView.frame
+        
+        if UIDevice.isPortrait {
+            videoAspect = .resizeAspect
+        } else {
+            videoAspect = .resizeAspectFill
+        }
         
         switch(videoAspect){
             case .resizeAspectFill: playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
@@ -128,14 +142,42 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
         guard let url = media.url else {
             return
         }
+        
         player = AVPlayer(url: url)
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = videoView.frame
+        videoView.layer.addSublayer(playerLayer)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlay(notification:)),
                                                name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
         player.addObserver(self, forKeyPath: "status", options: [], context: nil)
+        player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1.0, 10), queue: DispatchQueue.main) { (time) in
+            self.videoDelegate?.videoDidUpdateProgress(currentTime: time.seconds, duration: self.duration)
+        }
+        
+        self.loadThumbnail()
     }
     
-   public func play() {
+    public func loadThumbnail() {
+        
+        guard let asset = player.currentItem?.asset else {
+            imgPlaceholder.image = nil
+            return
+        }
+        
+        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+        assetImgGenerate.appliesPreferredTrackTransform = true
+        let time = CMTimeMakeWithSeconds(Float64(1), 100)
+        do {
+            let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+            let thumbnail = UIImage(cgImage: img)
+            imgPlaceholder.image = thumbnail
+        } catch {
+            imgPlaceholder.image = nil
+        }
+    }
+    
+    public func play() {
         player.play()
     }
     
@@ -169,6 +211,18 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
         }
     }
     
+    public func mediaPlayerDidTapPause() {
+        self.pause()
+    }
+    
+    public func mediaPlayerDidTapStop() {
+        self.stop()
+    }
+    
+    public func mediaPlayerDidChangeTime(seconds: TimeInterval) {
+        self.play(from: seconds)
+    }
+    
     // MARK: - Other Methods
     
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -178,7 +232,12 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
             if keyPath == "status" {
                 if player.status == .readyToPlay {
                     spinner.stopAnimating()
+                    imgPlaceholder.isHidden = true
                     videoDelegate?.videoReadyToPlay()
+                    if autoPlay && !didFirstLoad {
+                        self.play()
+                        didFirstLoad = true
+                    }
                 } else {
                     videoDelegate?.videoDidFailLoad()
                 }
