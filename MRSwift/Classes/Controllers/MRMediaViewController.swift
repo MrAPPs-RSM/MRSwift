@@ -13,7 +13,7 @@ protocol MRMediaViewControllerDelegate : class {
     func mediaDidDoubleTap()
 }
 
-public class MRMediaViewController: UIViewController {
+open class MRMediaViewController: UIViewController {
     
     var index: Int = 0
     var delegate: MRMediaViewControllerDelegate?
@@ -22,10 +22,10 @@ public class MRMediaViewController: UIViewController {
     private var doubleTap: UITapGestureRecognizer!
     
     // MARK: - UIViewController Methods
-
-    override public func viewDidLoad() {
+    
+    override open func viewDidLoad() {
         super.viewDidLoad()
-
+        
         tap = UITapGestureRecognizer(target: self, action: #selector(self.didTap))
         tap.numberOfTapsRequired = 1
         tap.cancelsTouchesInView = false
@@ -48,8 +48,8 @@ public class MRMediaViewController: UIViewController {
     @objc public func didDoubleTap() {
         delegate?.mediaDidDoubleTap()
     }
-
-    override public func didReceiveMemoryWarning() {
+    
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }

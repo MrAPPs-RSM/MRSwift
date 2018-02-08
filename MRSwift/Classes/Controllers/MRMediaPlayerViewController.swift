@@ -9,6 +9,7 @@
 import UIKit
 
 public enum MediaType : Int {
+    case none = 0
     case image = 1
     case video = 2
     case audio = 3
@@ -55,6 +56,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     public var videoAutoPlay: Bool = false
     
     private var medias = [MRMedia]()
+    private var nextIndex: Int = 0
     private var selectedIndex: Int = 0
     private var playerDelegate: MRMediaPlayerViewControllerDelegate?
     
@@ -74,13 +76,11 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        videoAutoPlay = true
-        
         view.backgroundColor = backgroundColor
         
         pageContainer = UIView(frame: view.frame)
         pageContainer.backgroundColor = .clear
-        view.addSubview(pageContainer)
+        view.insertSubview(pageContainer, at: 0)
         
         pageController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         pageController.dataSource = self
@@ -90,6 +90,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         
         if let viewController = self.viewController(at: selectedIndex) {
             pageController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+            self.didLoadNewMedia()
         }
         
         pageContainer.addSubview(pageController.view)
@@ -123,31 +124,56 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         return self.viewController(at: preview.index-1)
     }
     
+    public func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        
+        if completed {
+            if let viewController = pageViewController.viewControllers?.first as? MRMediaViewController {
+                selectedIndex = viewController.index
+                if viewController is MRVideoViewController {
+                    playerDelegate = viewController as? MRVideoViewController
+                }
+                self.didLoadNewMedia()
+            }
+        }
+    }
+    
     // MARK: - MRMediaViewController Delegate
     
-    public func mediaDidTapView() {
+    open func mediaDidTapView() {
         
     }
     
-    public func mediaDidDoubleTap() {
+    open func mediaDidDoubleTap() {
         
     }
     
     // MARK: - MRVideoViewController Delegate
     
-    public func videoReadyToPlay() {
+    open func videoReadyToPlay() {
         
     }
     
-    public func videoDidFailLoad() {
+    open func videoDidPlay() {
         
     }
     
-    public func videoDidFinishPlay() {
+    open func videoDidPause() {
         
     }
     
-    public func videoDidUpdateProgress(currentTime: TimeInterval, duration: TimeInterval) {
+    open func videoDidStop() {
+        
+    }
+    
+    open func videoDidFailLoad() {
+        
+    }
+    
+    open func videoDidFinishPlay() {
+        
+    }
+    
+    open func videoDidUpdateProgress(currentTime: TimeInterval, duration: TimeInterval) {
         
     }
     
@@ -171,9 +197,9 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     
     // MARK: - Other Methods
     
-    public func viewController(at index: Int) -> MRMediaViewController? {
+    open func viewController(at index: Int) -> MRMediaViewController? {
         
-        if index < 0 || index > medias.count {
+        if index < 0 || index >= medias.count {
             return nil
         }
         
@@ -189,12 +215,35 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         }
         
         viewController?.delegate = self
+        viewController?.index = index
         
         return viewController
     }
     
+    open func didLoadNewMedia() {
+        
+    }
+    
     public func close() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    public var selectedMediaType : MediaType {
+        
+        let media = medias[selectedIndex]
+        return media.type
+    }
+    
+    public var videoDuration : TimeInterval {
+        
+        guard let viewController = pageController.viewControllers?.first else {
+            return 0.0
+        }
+        
+        if let videoViewController = viewController as? MRVideoViewController {
+            return videoViewController.duration
+        }
+        return 0.0
     }
     
     override open var prefersStatusBarHidden: Bool {
@@ -206,4 +255,3 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         // Dispose of any resources that can be recreated.
     }
 }
-

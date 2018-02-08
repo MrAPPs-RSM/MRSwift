@@ -18,12 +18,15 @@ public enum VideoAspect: Int {
 
 public protocol MRVideoViewControllerDelegate : class {
     func videoReadyToPlay()
+    func videoDidPlay()
+    func videoDidPause()
+    func videoDidStop()
     func videoDidFinishPlay()
     func videoDidFailLoad()
     func videoDidUpdateProgress(currentTime: TimeInterval, duration: TimeInterval)
 }
 
-public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewControllerDelegate {
+open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewControllerDelegate {
     
     // MARK: - Xibs
     
@@ -35,8 +38,8 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
     
     private var media: MRMedia!
     
-    internal var player: AVPlayer!
-    internal var playerLayer: AVPlayerLayer!
+    internal var player: AVPlayer?
+    internal var playerLayer: AVPlayerLayer?
     
     private var videoAspect: VideoAspect = .resizeAspectFill
     
@@ -57,19 +60,11 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
         self.videoDelegate = delegate
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-        player.removeObserver(self, forKeyPath: "status")
-        if let timeObserver = timeObserver {
-            player.removeTimeObserver(timeObserver)
-        }
-    }
-    
     // MARK: - UIViewController Methods
-
-    override public func viewDidLoad() {
+    
+    override open func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = .clear
         
         videoView = UIView(frame: view.frame)
@@ -84,17 +79,38 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
         videoView.addSubview(imgPlaceholder)
         
         spinner.hidesWhenStopped = true
-        
-        self.initialize()
     }
     
-    override public func viewDidLayoutSubviews() {
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        videoDelegate?.videoDidUpdateProgress(currentTime: currentTime, duration: duration)
+        if !didFirstLoad {
+            self.initialize()
+        } else {
+            if player?.currentItem != nil {
+                self.addObservers()
+                if autoPlay {
+                    self.play()
+                }
+            }
+        }
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.pause()
+        self.removeObservers()
+    }
+    
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         videoView.frame = view.frame
         imgPlaceholder.frame = videoView.frame
         spinner.center = videoView.center
-        playerLayer.frame = videoView.frame
+        playerLayer?.frame = videoView.frame
         
         if UIDevice.isPortrait {
             videoAspect = .resizeAspect
@@ -103,32 +119,54 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
         }
         
         switch(videoAspect){
-        case .resizeAspectFill: playerLayer.videoGravity = .resizeAspectFill
-        case .resizeAspect: playerLayer.videoGravity = .resizeAspect
-        case .resize: playerLayer.videoGravity = .resize
+        case .resizeAspectFill: playerLayer?.videoGravity = .resizeAspectFill
+        case .resizeAspect: playerLayer?.videoGravity = .resizeAspect
+        case .resize: playerLayer?.videoGravity = .resize
         }
     }
     
     // MARK: - Player Methods
     
+    func addObservers() {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlay(notification:)),
+                                               name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
+        player?.addObserver(self, forKeyPath: "status", options: [], context: nil)
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 2), queue: DispatchQueue.main) { (time) in
+            self.videoDelegate?.videoDidUpdateProgress(currentTime: time.seconds, duration: self.duration)
+        }
+    }
+    
+    func removeObservers() {
+        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
+        player?.removeObserver(self, forKeyPath: "status")
+        if let observer = timeObserver {
+            player?.removeTimeObserver(observer)
+            timeObserver = nil
+        }
+    }
+    
     public var isReadyToPlay : Bool {
-        return player.status == .readyToPlay
+        return player?.status == .readyToPlay
     }
     
     public var isPlaying : Bool {
-        return player.rate != 0
+        return player?.rate != 0
     }
     
     public var duration : TimeInterval {
-        if let item = player.currentItem {
-            return item.duration.seconds
+        if let item = player?.currentItem {
+            let seconds = item.duration.seconds
+            return seconds.isNaN ? 0.0 : seconds
         }
         return 0.0
     }
     
     public var currentTime : TimeInterval {
-        if let item = player.currentItem {
-            return item.currentTime().seconds
+        if let item = player?.currentItem {
+            let seconds = item.currentTime().seconds
+            return seconds.isNaN ? 0.0 : seconds
         }
         return 0.0
     }
@@ -145,22 +183,16 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
         
         player = AVPlayer(url: url)
         playerLayer = AVPlayerLayer(player: player)
-        playerLayer.frame = videoView.frame
-        videoView.layer.addSublayer(playerLayer)
+        playerLayer?.frame = videoView.frame
+        videoView.layer.addSublayer(playerLayer!)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlay(notification:)),
-                                               name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-        player.addObserver(self, forKeyPath: "status", options: [], context: nil)
-        player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1.0, 10), queue: DispatchQueue.main) { (time) in
-            self.videoDelegate?.videoDidUpdateProgress(currentTime: time.seconds, duration: self.duration)
-        }
-        
+        self.addObservers()
         self.loadThumbnail()
     }
     
     public func loadThumbnail() {
         
-        guard let asset = player.currentItem?.asset else {
+        guard let asset = player?.currentItem?.asset else {
             imgPlaceholder.image = nil
             return
         }
@@ -178,21 +210,25 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
     }
     
     public func play() {
-        player.play()
+        player?.play()
+        videoDelegate?.videoDidPlay()
     }
     
     public func play(from seconds: TimeInterval) {
-        player.seek(to: CMTime(seconds: seconds, preferredTimescale: 1000), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
+        player?.seek(to: CMTime(seconds: seconds, preferredTimescale: 1000), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
         self.play()
+        videoDelegate?.videoDidPlay()
     }
     
     public func pause() {
-        player.pause()
+        player?.pause()
+        videoDelegate?.videoDidPause()
     }
     
     public func stop() {
-        player.pause()
-        player.seek(to: kCMTimeZero)
+        player?.pause()
+        player?.seek(to: kCMTimeZero)
+        videoDelegate?.videoDidStop()
     }
     
     @objc public func playerDidFinishPlay(notification: Notification) {
@@ -225,12 +261,12 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
     
     // MARK: - Other Methods
     
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         if (object as? AVPlayer) == player {
             
             if keyPath == "status" {
-                if player.status == .readyToPlay {
+                if player?.status == .readyToPlay {
                     spinner.stopAnimating()
                     imgPlaceholder.isHidden = true
                     videoDelegate?.videoReadyToPlay()
@@ -244,8 +280,8 @@ public class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewCont
             }
         }
     }
-
-    override public func didReceiveMemoryWarning() {
+    
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }

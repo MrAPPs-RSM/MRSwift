@@ -9,7 +9,7 @@
 import UIKit
 import SDWebImage
 
-class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
+open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     
     // MARK: - Xibs
     
@@ -30,8 +30,8 @@ class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     }
     
     // MARK: - UIViewController Methods
-
-    override func viewDidLoad() {
+    
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .clear
@@ -51,15 +51,15 @@ class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
         
         scrollView.maximumZoomScale = maxZoomScale > 4.0 ? 4.0 : maxZoomScale
         scrollView.minimumZoomScale = 1.0
-
+        
         imgImage.isUserInteractionEnabled = true
         imgImage.clipsToBounds = true
         imgImage.contentMode = .scaleAspectFit
-
+        
         self.setup()
     }
     
-    override func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         scrollView.frame = view.frame
@@ -71,10 +71,10 @@ class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     func showImage() {
         imgImage.setImage(with: media.url, placeholder: nil, completion: nil)
     }
-
+    
     // MARK: - UIScrollView Delegate
     
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imgImage
     }
     
@@ -87,7 +87,7 @@ class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
         }
     }
     
-    override func didDoubleTap() {
+    override public func didDoubleTap() {
         super.didDoubleTap()
         
         let zoomScale = scrollView.zoomScale
@@ -103,10 +103,11 @@ class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
             scrollView.setZoomScale(4.0, animated: true)
         }
     }
-
-    override func didReceiveMemoryWarning() {
+    
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }
+
