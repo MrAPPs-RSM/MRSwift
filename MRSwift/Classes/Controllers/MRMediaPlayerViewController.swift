@@ -20,17 +20,27 @@ open class MRMedia : NSObject {
     open var id: String?
     open var title: String?
     open var mediaDescription: String?
-    open var url: URL?
+    open var remoteUrl: URL?
+    open var localUrl: URL?
     open var type: MediaType = .image
     
-    public convenience init(id: String?, title: String?, description: String?, url: URL?, type: MediaType) {
+    public convenience init(id: String?, title: String?, description: String?, remoteUrl: URL?, localUrl: URL?, type: MediaType) {
         self.init()
         
         self.id = id
         self.title = title
         self.mediaDescription = description
-        self.url = url
+        self.remoteUrl = remoteUrl
+        self.localUrl = localUrl
         self.type = type
+    }
+    
+    var url: URL? {
+        
+        if localUrl?.fileExists == true {
+            return localUrl
+        }
+        return remoteUrl
     }
 }
 
