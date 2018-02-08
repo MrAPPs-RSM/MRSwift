@@ -90,9 +90,6 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
         } else {
             if player?.currentItem != nil {
                 self.addObservers()
-                if autoPlay {
-                    self.play()
-                }
             }
         }
     }
