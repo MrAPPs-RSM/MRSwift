@@ -15,13 +15,13 @@ public enum MediaType : Int {
     case audio = 3
 }
 
-public class MRMedia : NSObject {
+open class MRMedia : NSObject {
     
-    var id: String?
-    var title: String?
-    var mediaDescription: String?
-    var url: URL?
-    var type: MediaType = .image
+    open var id: String?
+    open var title: String?
+    open var mediaDescription: String?
+    open var url: URL?
+    open var type: MediaType = .image
     
     public convenience init(id: String?, title: String?, description: String?, url: URL?, type: MediaType) {
         self.init()
@@ -228,10 +228,8 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         self.dismiss(animated: true, completion: nil)
     }
     
-    public var selectedMediaType : MediaType {
-        
-        let media = medias[selectedIndex]
-        return media.type
+    public var selectedMedia : MRMedia {
+        return medias[selectedIndex]
     }
     
     public var videoDuration : TimeInterval {
@@ -255,3 +253,4 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         // Dispose of any resources that can be recreated.
     }
 }
+
