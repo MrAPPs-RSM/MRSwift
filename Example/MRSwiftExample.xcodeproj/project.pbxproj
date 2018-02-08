@@ -22,10 +22,6 @@
 		EB74783D1EB5E34000EACEB8 /* MRSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB74783C1EB5E34000EACEB8 /* MRSwiftTests.swift */; };
 		EB7478481EB5E34000EACEB8 /* MRSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7478471EB5E34000EACEB8 /* MRSwiftUITests.swift */; };
 		EB7AB41B202C3FCE005957A3 /* solo_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EB7AB41A202C3FCE005957A3 /* solo_video.mp4 */; };
-		EBB2E2422007BA0E00409182 /* MRMediaPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB2E2402007BA0E00409182 /* MRMediaPlayerViewController.swift */; };
-		EBB2E2462007BCD700409182 /* MRImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB2E2442007BCD700409182 /* MRImageViewController.swift */; };
-		EBB2E2492007C1A800409182 /* MRMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB2E2482007C1A800409182 /* MRMediaViewController.swift */; };
-		EBC63E7E20091763004BBED5 /* MRVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC63E7C20091763004BBED5 /* MRVideoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,10 +67,6 @@
 		EB7478471EB5E34000EACEB8 /* MRSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRSwiftUITests.swift; sourceTree = "<group>"; };
 		EB7478491EB5E34000EACEB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB7AB41A202C3FCE005957A3 /* solo_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = solo_video.mp4; sourceTree = "<group>"; };
-		EBB2E2402007BA0E00409182 /* MRMediaPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRMediaPlayerViewController.swift; sourceTree = "<group>"; };
-		EBB2E2442007BCD700409182 /* MRImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRImageViewController.swift; sourceTree = "<group>"; };
-		EBB2E2482007C1A800409182 /* MRMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRMediaViewController.swift; sourceTree = "<group>"; };
-		EBC63E7C20091763004BBED5 /* MRVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRVideoViewController.swift; sourceTree = "<group>"; };
 		ECB9EC1F4DA04B8A93BC6F1A /* Pods-MRSwiftExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRSwiftExampleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MRSwiftExampleUITests/Pods-MRSwiftExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		FA54DDF48154516885F470C6 /* Pods_MRSwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MRSwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -167,10 +159,6 @@
 				EB1B536B1EDB631E000621AC /* ViewController.swift */,
 				EB1B536C1EDB631E000621AC /* ViewController.xib */,
 				EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */,
-				EBB2E2402007BA0E00409182 /* MRMediaPlayerViewController.swift */,
-				EBB2E2442007BCD700409182 /* MRImageViewController.swift */,
-				EBB2E2482007C1A800409182 /* MRMediaViewController.swift */,
-				EBC63E7C20091763004BBED5 /* MRVideoViewController.swift */,
 				EB7AB41A202C3FCE005957A3 /* solo_video.mp4 */,
 			);
 			path = MRSwiftExample;
@@ -498,10 +486,6 @@
 			files = (
 				EB1460EF1EF01E0F003AC3E5 /* MRWeb.swift in Sources */,
 				EB1B536D1EDB631E000621AC /* ViewController.swift in Sources */,
-				EBB2E2422007BA0E00409182 /* MRMediaPlayerViewController.swift in Sources */,
-				EBC63E7E20091763004BBED5 /* MRVideoViewController.swift in Sources */,
-				EBB2E2462007BCD700409182 /* MRImageViewController.swift in Sources */,
-				EBB2E2492007C1A800409182 /* MRMediaViewController.swift in Sources */,
 				EB7478281EB5E34000EACEB8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
