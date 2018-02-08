@@ -35,7 +35,7 @@ open class MRMedia : NSObject {
         self.type = type
     }
     
-    var url: URL? {
+    open var url: URL? {
         
         if localUrl?.fileExists == true {
             return localUrl
