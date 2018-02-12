@@ -12,22 +12,22 @@ public protocol MRCollectionCellDelegate : class {
     func mrCollectionCellDidPress(cell: UICollectionViewCell)
 }
 
-public class MRCollectionCell : UICollectionViewCell, UIGestureRecognizerDelegate {
+open class MRCollectionCell : UICollectionViewCell, UIGestureRecognizerDelegate {
     
     // MARK: - Constants & Variables
     
-    public weak var mrDelegate: ShadowCollectionViewCellDelegate?
+    public weak var mrDelegate: MRCollectionCellDelegate?
     private var animationDuration: TimeInterval = 0.0
     public var pressGesture: UILongPressGestureRecognizer?
     
     // MARK: - Cell Methods
     
-    override public func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
         
     }
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         
         layer.shadowPath = UIBezierPath(roundedRect: contentView.bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
@@ -35,14 +35,14 @@ public class MRCollectionCell : UICollectionViewCell, UIGestureRecognizerDelegat
     
     // MARK: - Gestures Methods
     
-    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         UIView.animate(withDuration: animationDuration, animations: {
             self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
         })
     }
     
-    override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if let touch = touches.first {
             let location = touch.location(in: self)
@@ -55,18 +55,19 @@ public class MRCollectionCell : UICollectionViewCell, UIGestureRecognizerDelegat
         }
     }
     
-    override public func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         UIView.animate(withDuration: animationDuration, animations: {
             self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         })
     }
     
-    override public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    override open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress) -> Bool {
+    @available(iOS 9.0, *)
+    open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress) -> Bool {
         return true
     }
     
