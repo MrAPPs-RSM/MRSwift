@@ -1,0 +1,101 @@
+//
+//  MrCollectionCell.swift
+//  MRSwiftExample
+//
+//  Created by Nicola Innocenti on 12/02/18.
+//  Copyright © 2018 Nicola Innocenti. All rights reserved.
+//
+
+import Foundation
+
+public protocol MRCollectionCellDelegate : class {
+    func mrCollectionCellDidPress(cell: UICollectionViewCell)
+}
+
+public class MRCollectionCell : UICollectionViewCell, UIGestureRecognizerDelegate {
+    
+    // MARK: - Constants & Variables
+    
+    public weak var mrDelegate: ShadowCollectionViewCellDelegate?
+    private var animationDuration: TimeInterval = 0.0
+    public var pressGesture: UILongPressGestureRecognizer?
+    
+    // MARK: - Cell Methods
+    
+    override public func awakeFromNib() {
+        super.awakeFromNib()
+        
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        layer.shadowPath = UIBezierPath(roundedRect: contentView.bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
+    }
+    
+    // MARK: - Gestures Methods
+    
+    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        })
+    }
+    
+    override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        if let touch = touches.first {
+            let location = touch.location(in: self)
+            UIView.animate(withDuration: animationDuration, animations: {
+                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            })
+            if (location.x > 0 && location.x < frame.size.width) && (location.y > 0 && location.y < frame.size.height) {
+                mrDelegate?.mrCollectionCellDidPress(cell: self)
+            }
+        }
+    }
+    
+    override public func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        })
+    }
+    
+    override public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress) -> Bool {
+        return true
+    }
+    
+    // MARK: - Custom Methods
+    
+    public func applyPressAnimation(duration: TimeInterval) {
+        
+        animationDuration = duration
+        
+        pressGesture = UILongPressGestureRecognizer(target: self, action: nil)
+        pressGesture?.cancelsTouchesInView = false
+        pressGesture?.minimumPressDuration = 0
+        pressGesture?.delegate = self
+        self.addGestureRecognizer(pressGesture!)
+    }
+    
+    public func applyCornerRadius(value: CGFloat) {
+        contentView.setBorders(borderWidth: UIScreen.separatorHeight, borderColor: .clear, cornerRadius: value)
+        contentView.layer.masksToBounds = true
+    }
+    
+    public func applyShadow(color: UIColor, offset: CGSize, radius: CGFloat, opacity: Float) {
+        
+        layer.shadowColor = color.cgColor
+        layer.shadowOffset = offset
+        layer.shadowRadius = radius
+        layer.shadowOpacity = opacity
+        layer.masksToBounds = false
+        layer.shadowPath = UIBezierPath(roundedRect: contentView.bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
+    }
+}
+
