@@ -19,7 +19,7 @@ extension UIScrollView {
 
 extension UITableViewCell {
     
-    func prepareDisclosureIndicator() {
+    public func prepareDisclosureIndicator() {
         
         for case let button as UIButton in subviews {
             let image = button.backgroundImage(for: .normal)?.withRenderingMode(.
@@ -52,8 +52,8 @@ public extension URL {
 
 public extension String {
     
-    public static func localized(name: String) -> String {
-        return NSLocalizedString(name, comment: "")
+    public var localized : String {
+        return NSLocalizedString(self, comment: "")
     }
     
     public var containsOnlyDecimals : Bool {
@@ -143,10 +143,6 @@ public extension UIView {
     
     class var separatorHeight : CGFloat {
         return 1.0/UIScreen.main.scale
-    }
-    
-    class var separatorColor : UIColor {
-        return UIColor.black.withAlphaComponent(0.2)
     }
 }
 
@@ -326,7 +322,7 @@ public extension UINavigationController {
 
 public extension UIImageView {
     
-    func setImage(with url: URL?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
+    public func setImage(with url: URL?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
         
         self.sd_setShowActivityIndicatorView(true)
         self.sd_setImage(with: url, placeholderImage: placeholder, options: .continueInBackground) { (image, error, cacheType, url) in
@@ -340,4 +336,61 @@ public extension UIImageView {
             }
         }
     }
+    
+    public func setImage(url: String?, placeholder: UIImage?) {
+        
+        guard let url = url else {
+            self.image = nil
+            return
+        }
+        
+        self.setImage(stringUrl: url, placeholder: placeholder, completion: nil)
+    }
+    
+    public func setImage(stringUrl: String?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
+        
+        guard let stringUrl = stringUrl else {
+            self.image = nil
+            if let completion = completion {
+                completion(nil)
+            }
+            return
+        }
+        
+        var url: URL?
+        if let remoteUrl = URL(string: stringUrl) {
+            url = remoteUrl
+        } else {
+            url = URL(fileURLWithPath: stringUrl)
+        }
+        
+        guard url != nil else {
+            self.image = nil
+            if let completion = completion {
+                completion(nil)
+            }
+            return
+        }
+        
+        self.sd_setImage(with: url) { (image, error, cacheType, url) in
+            
+            if error == nil && image != nil {
+                
+                self.image = image
+                
+                if cacheType == .none {
+                    let transition = CATransition()
+                    transition.type = kCATransitionFade
+                    transition.duration = 0.3
+                    transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+                    self.layer.add(transition, forKey: nil)
+                }
+            }
+            
+            if let completion = completion {
+                completion(image)
+            }
+        }
+    }
 }
+
