@@ -134,8 +134,8 @@ Pod::Spec.new do |s|
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   # s.dependency "JSONKit", "~> 1.4"
 
-  s.dependency "Alamofire"
-  s.dependency "SDWebImage"
-  s.dependency "PDFReader", :git => 'https://github.com/MrAPPs-RSM/iOS-PDF-Reader'
+  s.dependency 'Alamofire'
+  s.dependency 'SDWebImage'
+  s.dependency 'PDFReader', :git => 'git@github.com:MrAPPs-RSM/iOS-PDF-Reader.git'
 
 end
