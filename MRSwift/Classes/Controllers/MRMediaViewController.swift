@@ -35,20 +35,27 @@ open class MRMediaViewController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
+        setGestures(on: view)
+    }
+    
+    // MARK: - Other Methods
+    
+    func setGestures(on view: UIView) {
+        
         tap = UITapGestureRecognizer(target: self, action: #selector(self.didTap))
         tap.numberOfTapsRequired = 1
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
         
-        doubleTap = UITapGestureRecognizer(target: self, action: #selector(self.didDoubleTap))
-        doubleTap.cancelsTouchesInView = true
-        doubleTap.numberOfTapsRequired = 2
-        view.addGestureRecognizer(doubleTap)
-        
-        tap.require(toFail: doubleTap)
+        if media.type != .pdf {
+            doubleTap = UITapGestureRecognizer(target: self, action: #selector(self.didDoubleTap))
+            doubleTap.cancelsTouchesInView = false
+            doubleTap.numberOfTapsRequired = 2
+            view.addGestureRecognizer(doubleTap)
+            
+            tap.require(toFail: doubleTap)
+        }
     }
-    
-    // MARK: - Other Methods
     
     @objc public func didTap() {
         delegate?.mediaDidTapView()
@@ -63,3 +70,4 @@ open class MRMediaViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 }
+
