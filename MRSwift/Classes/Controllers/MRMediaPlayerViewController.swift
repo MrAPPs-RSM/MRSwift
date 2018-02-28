@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import PDFReader
 
 public enum MediaType : Int {
     case none = 0
