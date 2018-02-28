@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import PDFReader
 
 open class MRPDFViewController: MRMediaViewController {
     
