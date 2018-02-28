@@ -136,6 +136,6 @@ Pod::Spec.new do |s|
 
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
-  s.dependency 'PDFReader', :git => 'git@github.com:MrAPPs-RSM/iOS-PDF-Reader.git'
+s.dependency 'PDFReader', :git => 'https://github.com/MrAPPs-RSM/iOS-PDF-Reader.git'
 
 end
