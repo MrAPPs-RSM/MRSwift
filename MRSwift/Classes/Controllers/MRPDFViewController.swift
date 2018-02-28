@@ -6,29 +6,49 @@
 //
 
 import UIKit
+import PDFReader
 
-class MRPdfViewController: UIViewController {
+open class MRPDFViewController: MRMediaViewController {
 
-    override func viewDidLoad() {
+    // MARK: - Constants & Variables
+    
+    var pdfViewController: PDFViewController?
+    
+    // MARK: - UIViewController Methods
+    
+    override open func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .clear
 
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        if let localUrl = media.localUrl, localUrl.fileExists {
+            self.showPDF(with: localUrl)
+        } else if let remoteUrl = media.remoteUrl {
+            self.showPDF(with: remoteUrl)
+        }
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override open func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        pdfViewController?.frame = view.frame
     }
-    */
+    
+    // MARK: - Other Methods
+    
+    private func showPDF(with url: URL) {
+        
+        let document = PDFDocument(url: documentRemoteURL)!
+        guard let viewController = PDFViewController.createNew(with: document) else { return }
+        
+        pdfViewController = viewController
+        view.addSubview(viewController.view)
+        addChildViewController(viewController)
+    }
+
+    override open func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+    }
 
 }

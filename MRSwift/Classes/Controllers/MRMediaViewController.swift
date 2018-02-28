@@ -20,6 +20,15 @@ open class MRMediaViewController: UIViewController {
     
     private var tap: UITapGestureRecognizer!
     private var doubleTap: UITapGestureRecognizer!
+    internal var media: MRMedia!
+    
+    // MARK: - Initialization
+    
+    convenience init(media: MRMedia) {
+        self.init()
+        
+        self.media = media
+    }
     
     // MARK: - UIViewController Methods
     

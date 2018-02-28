@@ -36,8 +36,6 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
     
     // MARK: - Constants & Variables
     
-    private var media: MRMedia!
-    
     internal var player: AVPlayer?
     internal var playerLayer: AVPlayerLayer?
     

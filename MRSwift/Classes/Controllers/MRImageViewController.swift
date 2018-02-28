@@ -17,17 +17,8 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     private var imgImage: UIImageView!
     
     // MARK: - Constants & Variables
-    
-    private var media: MRMedia!
+
     var maxZoomScale: CGFloat = 4.0
-    
-    // MARK: - Initialization
-    
-    convenience init(media: MRMedia) {
-        self.init()
-        
-        self.media = media
-    }
     
     // MARK: - UIViewController Methods
     

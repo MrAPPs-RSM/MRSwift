@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import PDFReader
 
 public enum MediaType : Int {
     case none = 0
     case image = 1
     case video = 2
     case audio = 3
+    case pdf = 4
 }
 
 open class MRMedia : NSObject {
@@ -222,6 +224,8 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         } else if media.type == .video {
             viewController = MRVideoViewController(media: media, autoPlay: videoAutoPlay, delegate: self)
             playerDelegate = viewController as? MRVideoViewController
+        } else if media.type == .pdf {
+            viewController = MRPDFViewController(media: media)
         }
         
         viewController?.delegate = self
