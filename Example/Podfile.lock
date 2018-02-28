@@ -2,10 +2,12 @@ PODS:
   - Alamofire (4.6.0)
   - MRSwift (0.1.0):
     - Alamofire
+    - PDFReader
     - SDWebImage
-  - SDWebImage (4.3.0):
-    - SDWebImage/Core (= 4.3.0)
-  - SDWebImage/Core (4.3.0)
+  - PDFReader (2.5.1)
+  - SDWebImage (4.3.2):
+    - SDWebImage/Core (= 4.3.2)
+  - SDWebImage/Core (4.3.2)
 
 DEPENDENCIES:
   - MRSwift (from `../`)
@@ -16,8 +18,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
-  MRSwift: 834c95635f33978c572da3c43e1b5b70c11cfe4d
-  SDWebImage: 6da6c8bca115addc4de8613362e1b15f66333825
+  MRSwift: 73258107cf225a973f3cc49c868d5314402706d9
+  PDFReader: 2c4a845d0560f33221cf911516e3b700967680f6
+  SDWebImage: 29bd3c0bc1f01e5eb59720847c64ad4c4ca1af5d
 
 PODFILE CHECKSUM: eb911c69fb5cc24c98388f2498623af39001d987
 

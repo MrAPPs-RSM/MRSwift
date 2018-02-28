@@ -22,7 +22,6 @@
 		EB74783D1EB5E34000EACEB8 /* MRSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB74783C1EB5E34000EACEB8 /* MRSwiftTests.swift */; };
 		EB7478481EB5E34000EACEB8 /* MRSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7478471EB5E34000EACEB8 /* MRSwiftUITests.swift */; };
 		EB7AB41B202C3FCE005957A3 /* solo_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EB7AB41A202C3FCE005957A3 /* solo_video.mp4 */; };
-		EBE30AD32031B63700BEF8BA /* MRCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE30AD22031B63700BEF8BA /* MRCollectionCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,7 +67,6 @@
 		EB7478471EB5E34000EACEB8 /* MRSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRSwiftUITests.swift; sourceTree = "<group>"; };
 		EB7478491EB5E34000EACEB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB7AB41A202C3FCE005957A3 /* solo_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = solo_video.mp4; sourceTree = "<group>"; };
-		EBE30AD22031B63700BEF8BA /* MRCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRCollectionCell.swift; sourceTree = "<group>"; };
 		ECB9EC1F4DA04B8A93BC6F1A /* Pods-MRSwiftExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRSwiftExampleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MRSwiftExampleUITests/Pods-MRSwiftExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		FA54DDF48154516885F470C6 /* Pods_MRSwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MRSwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -162,7 +160,6 @@
 				EB1B536C1EDB631E000621AC /* ViewController.xib */,
 				EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */,
 				EB7AB41A202C3FCE005957A3 /* solo_video.mp4 */,
-				EBE30AD22031B63700BEF8BA /* MRCollectionCell.swift */,
 			);
 			path = MRSwiftExample;
 			sourceTree = "<group>";
@@ -338,12 +335,14 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-MRSwiftExample/Pods-MRSwiftExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/MRSwift/MRSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/PDFReader/PDFReader.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MRSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PDFReader.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -487,7 +486,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBE30AD32031B63700BEF8BA /* MRCollectionCell.swift in Sources */,
 				EB1460EF1EF01E0F003AC3E5 /* MRWeb.swift in Sources */,
 				EB1B536D1EDB631E000621AC /* ViewController.swift in Sources */,
 				EB7478281EB5E34000EACEB8 /* AppDelegate.swift in Sources */,
