@@ -104,7 +104,7 @@ Pod::Spec.new do |s|
   #
 
   # s.resource  = "icon.png"
-  # s.resources = "MRSwift/Resources/**/*.*"
+  s.resources = "MRSwift/Resources/**/*.*"
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
