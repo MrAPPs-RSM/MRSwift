@@ -17,7 +17,7 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     private var imgImage: UIImageView!
     
     // MARK: - Constants & Variables
-
+    
     var maxZoomScale: CGFloat = 4.0
     
     // MARK: - UIViewController Methods
@@ -47,7 +47,7 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
         imgImage.clipsToBounds = true
         imgImage.contentMode = .scaleAspectFit
         
-        self.setup()
+        self.showImage()
     }
     
     override open func viewDidLayoutSubviews() {
@@ -60,7 +60,12 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     // MARK: - Image Methods
     
     func showImage() {
-        imgImage.setImage(with: media.url, placeholder: nil, completion: nil)
+        
+        if let image = media.image {
+            imgImage.image = image
+        } else {
+            imgImage.setImage(with: media.url, placeholder: nil, completion: nil)
+        }
     }
     
     // MARK: - UIScrollView Delegate
@@ -70,13 +75,6 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     }
     
     // MARK: - Other Methods
-    
-    public func setup() {
-        
-        if media.type == .image {
-            self.showImage()
-        }
-    }
     
     override public func didDoubleTap() {
         super.didDoubleTap()

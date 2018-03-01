@@ -23,6 +23,7 @@ open class MRMedia : NSObject {
     open var mediaDescription: String?
     open var remoteUrl: URL?
     open var localUrl: URL?
+    open var image: UIImage?
     open var type: MediaType = .image
     
     public convenience init(id: String?, title: String?, description: String?, remoteUrl: URL?, localUrl: URL?, type: MediaType) {
@@ -52,7 +53,7 @@ public protocol MRMediaPlayerViewControllerDelegate : class {
     func mediaPlayerDidChangeTime(seconds: TimeInterval)
 }
 
-open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, MRMediaViewControllerDelegate, MRVideoViewControllerDelegate {
+open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, MRMediaViewControllerDelegate, MRVideoViewControllerDelegate, MRPDFViewControllerDelegate {
     
     // MARK: - Xibs
     
@@ -188,6 +189,12 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         
     }
     
+    // MARK: - MRPDFViewController Delegate
+    
+    public func pdfDidLoad(page: Int, totalPages: Int) {
+        
+    }
+    
     // MARK: - Video Handlers
     
     public func play() {
@@ -224,7 +231,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
             viewController = MRVideoViewController(media: media, autoPlay: videoAutoPlay, delegate: self)
             playerDelegate = viewController as? MRVideoViewController
         } else if media.type == .pdf {
-            viewController = MRPDFViewController(media: media)
+            viewController = MRPDFViewController(media: media, delegate: self)
         }
         
         viewController?.delegate = self
