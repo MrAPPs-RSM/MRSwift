@@ -15,16 +15,16 @@ protocol MRMediaViewControllerDelegate : class {
 
 open class MRMediaViewController: UIViewController {
     
-    var index: Int = 0
+    public var index: Int = 0
     var delegate: MRMediaViewControllerDelegate?
     
     private var tap: UITapGestureRecognizer!
     private var doubleTap: UITapGestureRecognizer!
-    internal var media: MRMedia!
+    public var media: MRMedia!
     
     // MARK: - Initialization
     
-    convenience init(media: MRMedia) {
+    public convenience init(media: MRMedia) {
         self.init()
         
         self.media = media
