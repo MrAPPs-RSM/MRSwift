@@ -32,7 +32,7 @@ public protocol MRPDFViewControllerDelegate : class {
     func pdfDidLoad(page: Int, totalPages: Int)
 }
 
-open class MRPDFViewController: MRMediaViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     // MARK: - Xibs
     
@@ -114,6 +114,16 @@ open class MRPDFViewController: MRMediaViewController, UIPageViewControllerDataS
         }
     }
     
+    // MARK: - MRMediaViewController Delegate
+    
+    func mediaDidTapView() {
+        delegate?.mediaDidTapView()
+    }
+    
+    func mediaDidDoubleTap() {
+        delegate?.mediaDidDoubleTap()
+    }
+    
     // MARK: - PDF Methods
     
     private func setupPDF() {
@@ -127,25 +137,28 @@ open class MRPDFViewController: MRMediaViewController, UIPageViewControllerDataS
     
     private func initializePDF(with url: URL) {
         
-        do {
-            let data = try Data(contentsOf: url)
-            if let provider = CGDataProvider(data: data as CFData) {
-                document = CGPDFDocument(provider)
-                if let document = document {
-                    for _ in 0..<document.numberOfPages {
-                        pages.append(MRMedia())
-                    }
-                    self.getImagesFromPDF(at: 0, completion: {
-                        DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
-                            if let viewController = self.viewController(at: self.selectedIndex) {
-                                self.pageController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
-                            }
-                        })
-                    })
-                }
-            }
-        } catch {
+        DispatchQueue.global(qos: .background).async {
             
+            do {
+                let data = try Data(contentsOf: url)
+                if let provider = CGDataProvider(data: data as CFData) {
+                    self.document = CGPDFDocument(provider)
+                    if let document = self.document {
+                        for _ in 0..<document.numberOfPages {
+                            self.pages.append(MRMedia())
+                        }
+                        self.getImagesFromPDF(at: 0, completion: {
+                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
+                                if let viewController = self.viewController(at: self.selectedIndex) {
+                                    self.pageController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+                                }
+                            })
+                        })
+                    }
+                }
+            } catch {
+                
+            }
         }
     }
     
@@ -292,6 +305,7 @@ open class MRPDFViewController: MRMediaViewController, UIPageViewControllerDataS
         let page = pages[index]
         var viewController: MRMediaViewController?
         viewController = MRImageViewController(media: page)
+        viewController?.delegate = self
         viewController?.index = index
         
         getImagesFromPDF(at: index) {

@@ -191,7 +191,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     
     // MARK: - MRPDFViewController Delegate
     
-    public func pdfDidLoad(page: Int, totalPages: Int) {
+    open func pdfDidLoad(page: Int, totalPages: Int) {
         
     }
     
