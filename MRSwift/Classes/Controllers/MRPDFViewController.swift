@@ -38,6 +38,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
     
     private var pageContainer: UIView!
     private var pageController: UIPageViewController!
+    private var spinner: UIActivityIndicatorView!
     
     // MARK: - Constants & Variables
     
@@ -72,8 +73,19 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         pageController.view.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: pageContainer.frame.size)
         pageController.view.backgroundColor = .clear
         
+        let blankController = UIViewController()
+        blankController.view.backgroundColor = .clear
+        pageController.setViewControllers([blankController], direction: .forward, animated: true, completion: nil)
+        
         pageContainer.addSubview(pageController.view)
         addChildViewController(pageController)
+        
+        spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        spinner.color = .lightGray
+        spinner.center = view.center
+        spinner.hidesWhenStopped = true
+        view.addSubview(spinner)
+        spinner.startAnimating()
         
         setupPDF()
     }
@@ -83,6 +95,8 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         pageContainer.frame = view.frame
         pageController.view.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: pageContainer.frame.size)
+        
+        spinner.center = view.center
     }
     
     // MARK: - UIPageViewController DataSource & Delegate
@@ -149,6 +163,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
                         }
                         self.getImagesFromPDF(at: 0, completion: {
                             DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
+                                self.spinner.stopAnimating()
                                 if let viewController = self.viewController(at: self.selectedIndex) {
                                     self.pageController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
                                 }
@@ -182,15 +197,22 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
     private func getImagesFromPDF(at index: Int, completion: @escaping () -> Void) {
         
         var indexes = [Int]()
-        if index > 0 {
-            if pages[index-1].image == nil {
-                indexes.append(index-1)
-            }
-        }
+        /*if index > 0 {
+         if pages[index-1].image == nil {
+         indexes.append(index-1)
+         }
+         }*/
         if pages[index].image == nil {
             indexes.append(index)
         }
-        if index < (pages.count-1) {
+        if index < (pages.count-2) {
+            if pages[index+1].image == nil {
+                indexes.append(index+1)
+            }
+            if pages[index+2].image == nil {
+                indexes.append(index+2)
+            }
+        } else if index < (pages.count-1) {
             if pages[index+1].image == nil {
                 indexes.append(index+1)
             }
