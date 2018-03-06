@@ -32,7 +32,8 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
     @IBOutlet private var tableView : UITableView!
     @IBOutlet private var cntTableViewTrailing : NSLayoutConstraint!
     @IBOutlet private var cntTableViewLeading : NSLayoutConstraint!
-
+    @IBOutlet weak var cntGradientViewHeight: NSLayoutConstraint!
+    
     private var elements : [CreditsElement] = []
     private var bundle : Bundle!
     private var navGradient : CAGradientLayer!
@@ -99,100 +100,110 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
     override open func viewDidLoad() {
         
         super.viewDidLoad()
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-        self.lblAppName.text = self.appName
+        lblAppName.text = self.appName
         
-        self.tableView.tableHeaderView = self.headerView
-        self.tableView.alwaysBounceVertical = false
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.tableHeaderView = self.headerView
+        tableView.alwaysBounceVertical = false
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.contentInset = .zero
         
-        self.elements = [
-            CreditsElement(title: NSLocalizedString("Scopri Mr. APPs", tableName: nil, bundle: self.localizationBundle, value: "", comment: ""),
+        elements = [
+            CreditsElement(title: NSLocalizedString("Scopri Mr. APPs", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_mrapps.png",
                            link: "http://www.mr-apps.com"),
-            CreditsElement(title: NSLocalizedString("Sviluppo App", tableName: nil, bundle: self.localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("Sviluppo App", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_appdesign.png",
                            link: "http://www.mr-apps.com/it/servizi/sviluppo-app"),
-            CreditsElement(title: NSLocalizedString("Realizzazione Siti Web", tableName: nil, bundle: self.localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("Realizzazione Siti Web", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_webdesign.png",
                            link: "http://www.mr-apps.com/it/servizi/realizzazione-siti-web"),
-            CreditsElement(title: NSLocalizedString("Progettazione E-Commerce", tableName: nil, bundle: self.localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("Progettazione E-Commerce", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_standard.png",
                            link: "http://www.mr-apps.com/it/servizi/realizzazione-ecommerce"),
-            CreditsElement(title: NSLocalizedString("Le nostre App", tableName: nil, bundle: self.localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("Le nostre App", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_portfolio.png",
                            link: "itms://itunes.apple.com/it/artist/mr.-apps-s.r.l./id493882589"),
-            CreditsElement(title: NSLocalizedString("Contattaci ora", tableName: nil, bundle: self.localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("Contattaci ora", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_mail.png",
                            link: "http://www.mr-apps.com/it/contatti"),
-            CreditsElement(title: NSLocalizedString("Richiedi un preventivo", tableName: nil, bundle: self.localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("Richiedi un preventivo", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_file.png",
                            link: "http://www.mr-apps.com/it/il-tuo-progetto")
             
         ]
         
-        self.lblIntroMrApps.text = NSLocalizedString("è un'applicazione realizzata da Mr. APPs", tableName: nil, bundle: self.localizationBundle, value: "", comment: "")
-        self.lblIntroMrApps.font = self.regularFont
-        self.lblAppName.font = self.boldFont
+        lblIntroMrApps.text = NSLocalizedString("è un'applicazione realizzata da Mr. APPs", tableName: nil, bundle: localizationBundle, value: "", comment: "")
+        lblIntroMrApps.font = regularFont
+        lblAppName.font = boldFont
         
-        self.navGradient = CAGradientLayer()
-        self.navGradient.frame = self.gradientView.bounds
-        self.navGradient.colors = [
+        navGradient = CAGradientLayer()
+        navGradient.frame = gradientView.bounds
+        navGradient.colors = [
             UIColor.black.withAlphaComponent(0.8).cgColor,
             UIColor.black.withAlphaComponent(0.3).cgColor,
             UIColor.clear.cgColor
         ]
-        self.gradientView.layer.insertSublayer(self.navGradient, at: 0)
+        
+        gradientView.layer.insertSublayer(navGradient, at: 0)
+        cntGradientViewHeight.constant = 64.0 + UIView.safeArea.top
         
         
-        if let boldFont = self.boldFont {
-            self.lblNavTitle.font = boldFont
+        if let boldFont = boldFont {
+            lblNavTitle.font = boldFont
         }
         
-        if self.navigationController != nil && self.navigationController!.viewControllers.count > 1  {
-            self.backButton.setImage(UIImage(named: "ico_back", in: self.bundle, compatibleWith: self.traitCollection)?.paint(with: UIColor.white), for: .normal)
-            self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        if navigationController != nil && navigationController!.viewControllers.count > 1  {
+            backButton.setImage(UIImage(named: "ico_back", in: bundle, compatibleWith: self.traitCollection)?.paint(with: UIColor.white), for: .normal)
+            backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         } else  {
-            self.backButton.setImage(UIImage(named: "ico_nav_chiudi", in: self.bundle, compatibleWith: self.traitCollection)?.paint(with: UIColor.white), for: .normal)
-            self.backButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
+            backButton.setImage(UIImage(named: "ico_nav_chiudi", in: bundle, compatibleWith: self.traitCollection)?.paint(with: UIColor.white), for: .normal)
+            backButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         }
         
     }
     
-    deinit {
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         if !isPresenting {
-            self.navigationController?.setNavigationBarHidden(false, animated: false)
+            navigationController?.setNavigationBarHidden(true, animated: true)
         }
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
+        if !isPresenting {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+        }
     }
     
     override open func viewDidAppear(_ animated: Bool) {
-        self.isPresenting = false
+        isPresenting = false
     }
     
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.navGradient.frame = self.gradientView.bounds
+        navGradient.frame = gradientView.bounds
     }
     
     func showNavigationBar(_ show : Bool) {
         
         if show {
-            self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
-            self.navigationController?.navigationBar.shadowImage = nil;
-            self.navigationController?.navigationBar.isTranslucent = false;
+            navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
+            navigationController?.navigationBar.shadowImage = nil;
+            navigationController?.navigationBar.isTranslucent = false;
         } else {
-            self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            self.navigationController?.navigationBar.shadowImage = UIImage();
-            self.navigationController?.navigationBar.isTranslucent = true;
+            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            navigationController?.navigationBar.shadowImage = UIImage();
+            navigationController?.navigationBar.isTranslucent = true;
         }
         
     }
     
-    @objc func dismissView() {
-        self.dismiss(animated: true, completion: nil)
+    @objc open func dismissView() {
+        dismiss(animated: true, completion: nil)
     }
     
     //Tableview delegate methods
@@ -202,28 +213,28 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.elements.count
+        return elements.count
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: self.cellIdentifier)!
-        let element = self.elements[indexPath.row]
-        cell.textLabel?.font = self.regularFont
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)!
+        let element = elements[indexPath.row]
+        cell.textLabel?.font = regularFont
         cell.textLabel?.text = element.title
         cell.accessoryType = .disclosureIndicator
-        cell.imageView?.image = UIImage(named: element.image, in: self.bundle, compatibleWith: self.traitCollection)?.paint(with: self.color)
+        cell.imageView?.image = UIImage(named: element.image, in: bundle, compatibleWith: self.traitCollection)?.paint(with: color)
         
         return cell
     }
     
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.isPresenting = true
-        UIApplication.shared.openURL(URL(string: self.elements[indexPath.row].link)!)
+        isPresenting = true
+        UIApplication.shared.openURL(URL(string: elements[indexPath.row].link)!)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    @objc func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+    @objc open func didTapBackButton() {
+        navigationController?.popViewController(animated: true)
     }
 }
     
