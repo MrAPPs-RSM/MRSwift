@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreGraphics
+import Alamofire
 
 extension CGPDFPage {
     /// original size of the PDF page.
@@ -138,6 +139,10 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         delegate?.mediaDidDoubleTap()
     }
     
+    func mediaDidFailLoad(media: MRMedia) {
+        
+    }
+    
     // MARK: - PDF Methods
     
     private func setupPDF() {
@@ -153,8 +158,13 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         DispatchQueue.global(qos: .background).async {
             
-            do {
-                let data = try Data(contentsOf: url)
+            Alamofire.request(url).responseData(completionHandler: { (response) in
+                
+                guard let data = response.data, data.count > 0 else {
+                    self.delegate?.mediaDidFailLoad(media: self.media)
+                    return
+                }
+                
                 if let provider = CGDataProvider(data: data as CFData) {
                     self.document = CGPDFDocument(provider)
                     if let document = self.document {
@@ -171,9 +181,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
                         })
                     }
                 }
-            } catch {
-                
-            }
+            })
         }
     }
     
@@ -232,7 +240,9 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
                     self.pages[index].image = image
                     completedImages += 1
                     if completedImages == indexes.count {
-                        completion()
+                        DispatchQueue.main.sync {
+                            completion()
+                        }
                     }
                 })
             }
@@ -331,7 +341,11 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         viewController?.index = index
         
         getImagesFromPDF(at: index) {
-            
+            for viewController in self.pageController.viewControllers! {
+                if let view = viewController as? MRImageViewController {
+                    view.refresh(media: self.pages[view.index])
+                }
+            }
         }
         pdfDelegate?.pdfDidLoad(page: index+1, totalPages: pages.count)
         

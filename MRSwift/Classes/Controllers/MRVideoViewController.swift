@@ -74,6 +74,7 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
         spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         spinner.color = .lightGray
         spinner.center = videoView.center
+        spinner.startAnimating()
         videoView.addSubview(imgPlaceholder)
         
         spinner.hidesWhenStopped = true
@@ -192,15 +193,23 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
             return
         }
         
-        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
-        assetImgGenerate.appliesPreferredTrackTransform = true
-        let time = CMTimeMakeWithSeconds(Float64(1), 100)
-        do {
-            let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
-            let thumbnail = UIImage(cgImage: img)
-            imgPlaceholder.image = thumbnail
-        } catch {
-            imgPlaceholder.image = nil
+        DispatchQueue.global(qos: .background).async {
+            
+            let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+            assetImgGenerate.appliesPreferredTrackTransform = true
+            let time = CMTimeMakeWithSeconds(Float64(self.media.videoThumbnailSecond), 100)
+            var thumbnail: UIImage?
+            
+            do {
+                let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+                thumbnail = UIImage(cgImage: img)
+            } catch {
+                
+            }
+            
+            DispatchQueue.main.sync {
+                self.imgPlaceholder.image = thumbnail
+            }
         }
     }
     
@@ -262,15 +271,19 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
             
             if keyPath == "status" {
                 if player?.status == .readyToPlay {
-                    spinner.stopAnimating()
-                    imgPlaceholder.isHidden = true
-                    videoDelegate?.videoReadyToPlay()
-                    if autoPlay && !didFirstLoad {
-                        self.play()
-                        didFirstLoad = true
+                    let playable = player?.currentItem?.asset.isPlayable
+                    if playable == true {
+                        spinner.stopAnimating()
+                        imgPlaceholder.isHidden = true
+                        videoDelegate?.videoReadyToPlay()
+                        if autoPlay && !didFirstLoad {
+                            self.play()
+                            didFirstLoad = true
+                        }
+                    } else {
+                        videoDelegate?.videoDidFailLoad()
+                        self.delegate?.mediaDidFailLoad(media: self.media)
                     }
-                } else {
-                    videoDelegate?.videoDidFailLoad()
                 }
             }
         }

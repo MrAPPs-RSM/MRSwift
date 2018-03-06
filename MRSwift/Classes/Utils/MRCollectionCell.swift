@@ -36,30 +36,39 @@ open class MRCollectionCell : UICollectionViewCell, UIGestureRecognizerDelegate 
     // MARK: - Gestures Methods
     
     override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
         
-        UIView.animate(withDuration: animationDuration, animations: {
-            self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        })
+        if pressGesture != nil {
+            UIView.animate(withDuration: animationDuration, animations: {
+                self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            })
+        }
     }
     
     override open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
         
-        if let touch = touches.first {
-            let location = touch.location(in: self)
-            UIView.animate(withDuration: animationDuration, animations: {
-                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-            })
-            if (location.x > 0 && location.x < frame.size.width) && (location.y > 0 && location.y < frame.size.height) {
-                mrDelegate?.mrCollectionCellDidPress(cell: self)
+        if pressGesture != nil {
+            if let touch = touches.first {
+                let location = touch.location(in: self)
+                UIView.animate(withDuration: animationDuration, animations: {
+                    self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                })
+                if (location.x > 0 && location.x < frame.size.width) && (location.y > 0 && location.y < frame.size.height) {
+                    mrDelegate?.mrCollectionCellDidPress(cell: self)
+                }
             }
         }
     }
     
     override open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
         
-        UIView.animate(withDuration: animationDuration, animations: {
-            self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-        })
+        if pressGesture != nil {
+            UIView.animate(withDuration: animationDuration, animations: {
+                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            })
+        }
     }
     
     override open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {

@@ -25,6 +25,7 @@ open class MRMedia : NSObject {
     open var localUrl: URL?
     open var image: UIImage?
     open var type: MediaType = .image
+    open var videoThumbnailSecond: Double = 1
     
     public convenience init(id: String?, title: String?, description: String?, remoteUrl: URL?, localUrl: URL?, type: MediaType) {
         self.init()
@@ -58,7 +59,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     // MARK: - Xibs
     
     private var pageContainer: UIView!
-    private var pageController: UIPageViewController!
+    public var pageController: UIPageViewController!
     
     // MARK: - Constants & Variables
     
@@ -69,7 +70,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     
     private var medias = [MRMedia]()
     private var nextIndex: Int = 0
-    private var selectedIndex: Int = 0
+    public var selectedIndex: Int = 0
     private var playerDelegate: MRMediaPlayerViewControllerDelegate?
     
     // MARK: - Initialization
@@ -156,6 +157,10 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     }
     
     open func mediaDidDoubleTap() {
+        
+    }
+    
+    open func mediaDidFailLoad(media: MRMedia) {
         
     }
     

@@ -144,6 +144,13 @@ public extension UIView {
     class var separatorHeight : CGFloat {
         return 1.0/UIScreen.main.scale
     }
+    
+    class var safeArea : UIEdgeInsets {
+        if #available(iOS 11, *) {
+            return UIApplication.shared.keyWindow!.safeAreaInsets
+        }
+        return .zero
+    }
 }
 
 public extension UIDevice {
@@ -324,7 +331,6 @@ public extension UIImageView {
     
     public func setImage(with url: URL?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
         
-        self.sd_setShowActivityIndicatorView(true)
         self.sd_setImage(with: url, placeholderImage: placeholder, options: .continueInBackground) { (image, error, cacheType, url) in
             
             if let error = error {

@@ -11,6 +11,7 @@ import UIKit
 protocol MRMediaViewControllerDelegate : class {
     func mediaDidTapView()
     func mediaDidDoubleTap()
+    func mediaDidFailLoad(media: MRMedia)
 }
 
 open class MRMediaViewController: UIViewController {
@@ -63,6 +64,10 @@ open class MRMediaViewController: UIViewController {
     
     @objc public func didDoubleTap() {
         delegate?.mediaDidDoubleTap()
+    }
+    
+    open func refresh(media: MRMedia) {
+        self.media = media
     }
     
     override open func didReceiveMemoryWarning() {

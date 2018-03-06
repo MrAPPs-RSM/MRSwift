@@ -14,7 +14,8 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     // MARK: - Xibs
     
     private var scrollView: UIScrollView!
-    private var imgImage: UIImageView!
+    public var imgImage: UIImageView!
+    private var spinner: UIActivityIndicatorView!
     
     // MARK: - Constants & Variables
     
@@ -47,6 +48,12 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
         imgImage.clipsToBounds = true
         imgImage.contentMode = .scaleAspectFit
         
+        spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        spinner.hidesWhenStopped = true
+        view.addSubview(spinner)
+        spinner.startAnimating()
+        spinner.center = view.center
+        
         self.showImage()
     }
     
@@ -55,6 +62,7 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
         
         scrollView.frame = view.frame
         imgImage.frame = scrollView.frame
+        spinner.center = view.center
     }
     
     // MARK: - Image Methods
@@ -62,9 +70,15 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     func showImage() {
         
         if let image = media.image {
+            spinner.stopAnimating()
             imgImage.image = image
-        } else {
-            imgImage.setImage(with: media.url, placeholder: nil, completion: nil)
+        } else if let url = media.url {
+            spinner.stopAnimating()
+            imgImage.setImage(with: url, placeholder: nil, completion: { (image) in
+                if image == nil {
+                    self.delegate?.mediaDidFailLoad(media: self.media)
+                }
+            })
         }
     }
     
@@ -91,6 +105,11 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
         } else if zoomScale >= 2.5 && zoomScale < 4.0 {
             scrollView.setZoomScale(4.0, animated: true)
         }
+    }
+    
+    open override func refresh(media: MRMedia) {
+        super.refresh(media: media)
+        showImage()
     }
     
     override open func didReceiveMemoryWarning() {
