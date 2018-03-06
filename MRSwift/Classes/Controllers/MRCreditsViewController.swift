@@ -155,7 +155,7 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
             self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         } else  {
             self.backButton.setImage(UIImage(named: "ico_nav_chiudi", in: self.bundle, compatibleWith: self.traitCollection)?.paint(with: UIColor.white), for: .normal)
-            self.backButton.addTarget(self, action: #selector(MdismissView), for: .touchUpInside)
+            self.backButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         }
         
     }
