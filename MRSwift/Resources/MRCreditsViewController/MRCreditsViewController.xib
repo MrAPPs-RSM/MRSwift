@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MRCreditsViewController">
             <connections>
-                <outlet property="backButton" destination="JGK-Ho-qEs" id="KMR-O5-iEf"/>
-                <outlet property="cntGradientViewHeight" destination="iCv-Ar-uPI" id="zft-3s-Mly"/>
                 <outlet property="cntTableViewLeading" destination="Tz2-3S-Y4G" id="pEh-Gm-08L"/>
                 <outlet property="cntTableViewTrailing" destination="JDu-2q-Kk8" id="ucc-fn-kkd"/>
-                <outlet property="gradientView" destination="g89-vO-hFa" id="UvL-KX-aNS"/>
                 <outlet property="headerView" destination="8Kw-9E-ZHZ" id="0YD-X9-fli"/>
                 <outlet property="imgHeaderBackground" destination="4Nd-yJ-N7U" id="2w9-fn-pAY"/>
                 <outlet property="lblAppName" destination="Dco-e0-QSE" id="gPU-x9-sLa"/>
                 <outlet property="lblIntroMrApps" destination="VTe-RX-Opm" id="H6B-kH-IVJ"/>
-                <outlet property="lblNavTitle" destination="aBA-tt-thq" id="ApL-p4-Wp4"/>
                 <outlet property="tableView" destination="i5M-Pr-FkT" id="1uF-lp-ULX"/>
                 <outlet property="view" destination="L0d-TN-d8n" id="97C-s6-o4A"/>
             </connections>
@@ -79,6 +75,7 @@
                 <constraint firstItem="4Nd-yJ-N7U" firstAttribute="leading" secondItem="8Kw-9E-ZHZ" secondAttribute="leading" id="xpA-3K-Cim"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="UpF-a8-xBx"/>
             <point key="canvasLocation" x="11" y="-227.5"/>
         </view>
         <view contentMode="scaleToFill" id="L0d-TN-d8n">
@@ -86,55 +83,23 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bouncesZoom="NO" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="i5M-Pr-FkT">
-                    <rect key="frame" x="0.0" y="-20" width="375" height="687"/>
+                    <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="Tng-2m-Rnh"/>
                         <outlet property="delegate" destination="-1" id="9aC-8N-iBw"/>
                     </connections>
                 </tableView>
-                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g89-vO-hFa">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JGK-Ho-qEs">
-                            <rect key="frame" x="5" y="18" width="44" height="46"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="46" id="deW-lV-W9d"/>
-                                <constraint firstAttribute="width" constant="44" id="meS-AA-dkc"/>
-                            </constraints>
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Credits" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aBA-tt-thq">
-                            <rect key="frame" x="160" y="20" width="55" height="44"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="44" id="ls6-Wf-RzT"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="bottom" secondItem="aBA-tt-thq" secondAttribute="bottom" id="2S6-Xb-rWd"/>
-                        <constraint firstItem="aBA-tt-thq" firstAttribute="centerX" secondItem="g89-vO-hFa" secondAttribute="centerX" id="5PD-9q-J4N"/>
-                        <constraint firstItem="JGK-Ho-qEs" firstAttribute="leading" secondItem="g89-vO-hFa" secondAttribute="leading" constant="5" id="NG1-G5-WzH"/>
-                        <constraint firstAttribute="height" constant="64" id="iCv-Ar-uPI"/>
-                        <constraint firstAttribute="bottom" secondItem="JGK-Ho-qEs" secondAttribute="bottom" id="v1x-Yu-eTN"/>
-                    </constraints>
-                </view>
             </subviews>
             <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="i5M-Pr-FkT" firstAttribute="top" secondItem="L0d-TN-d8n" secondAttribute="top" constant="-20" id="9fv-aO-vHA"/>
                 <constraint firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="JDu-2q-Kk8"/>
-                <constraint firstItem="g89-vO-hFa" firstAttribute="leading" secondItem="L0d-TN-d8n" secondAttribute="leading" id="QZt-zn-T1O"/>
-                <constraint firstItem="g89-vO-hFa" firstAttribute="top" secondItem="L0d-TN-d8n" secondAttribute="top" id="Sw5-e4-dCk"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="leading" secondItem="L0d-TN-d8n" secondAttribute="leading" id="Tz2-3S-Y4G"/>
                 <constraint firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="ahv-BK-l93"/>
-                <constraint firstAttribute="trailing" secondItem="g89-vO-hFa" secondAttribute="trailing" id="eYV-fA-yAX"/>
+                <constraint firstItem="i5M-Pr-FkT" firstAttribute="top" secondItem="0M3-mn-xhd" secondAttribute="top" id="gyL-1x-9MM"/>
             </constraints>
-            <point key="canvasLocation" x="-12" y="271"/>
+            <viewLayoutGuide key="safeArea" id="0M3-mn-xhd"/>
+            <point key="canvasLocation" x="-12.5" y="270.5"/>
         </view>
     </objects>
     <resources>
