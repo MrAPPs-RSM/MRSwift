@@ -1,7 +1,9 @@
 PODS:
-  - Alamofire (4.6.0)
+  - Alamofire (4.7.0)
+  - Cache (4.1.2)
   - MRSwift (0.1.0):
     - Alamofire
+    - Cache
     - SDWebImage
   - SDWebImage (4.3.2):
     - SDWebImage/Core (= 4.3.2)
@@ -15,8 +17,9 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
-  MRSwift: bf000cab82ef0b8be0e92cee6b54bdf6cf9fdc6f
+  Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
+  Cache: bd0233fc688b5e83a27bcd87807db7e6f23adcc5
+  MRSwift: 00fadc855ed9efa420531d165f32995c3bb086b0
   SDWebImage: 29bd3c0bc1f01e5eb59720847c64ad4c4ca1af5d
 
 PODFILE CHECKSUM: 9045741e71eb897aee58493ed31889f03e0654db
