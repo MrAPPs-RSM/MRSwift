@@ -73,6 +73,10 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     public var selectedIndex: Int = 0
     private var playerDelegate: MRMediaPlayerViewControllerDelegate?
     
+    public var dragAnimation: Bool = false
+    private var dragGesture: UIPanGestureRecognizer?
+    private var dragYTranslation: CGFloat = 0.0
+    
     // MARK: - Initialization
     
     public convenience init(medias: [MRMedia], selectedIndex: Int?) {
@@ -108,6 +112,11 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         
         pageContainer.addSubview(pageController.view)
         self.addChildViewController(pageController)
+        
+        if dragAnimation {
+            dragGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDrag(pan:)))
+            view.addGestureRecognizer(dragGesture!)
+        }
     }
     
     override open func viewDidLayoutSubviews() {
@@ -115,6 +124,39 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         
         pageContainer.frame = view.frame
         pageController.view.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: pageContainer.frame.size)
+    }
+    
+    // MARK: - DragGesture Delegate
+    
+    @objc func handleDrag(pan: UIPanGestureRecognizer) {
+        
+        if pan.state == .began {
+            
+            dragYTranslation = 0.0
+            
+        } else if pan.state == .changed {
+            
+            let translation = pan.translation(in: view)
+            dragYTranslation += translation.y
+            pan.view!.center = CGPoint(x: pan.view!.center.x, y: pan.view!.center.y + translation.y)
+            pan.setTranslation(CGPoint.zero, in: view)
+            
+        } else if pan.state == .ended || pan.state == .cancelled {
+            
+            if dragYTranslation > pan.view!.frame.size.height/2 {
+                UIView.animate(withDuration: 0.3, animations: {
+                    pan.view!.frame.origin.y = pan.view!.frame.size.height
+                }, completion: { (completed) in
+                    self.dismiss(animated: false, completion: nil)
+                })
+            } else {
+                UIView.animate(withDuration: 0.3, animations: {
+                    pan.view!.frame.origin.y = 0
+                }, completion: { (completed) in
+                    
+                })
+            }
+        }
     }
     
     // MARK: - UIPageViewController DataSource & Delegate
