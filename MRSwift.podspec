@@ -136,6 +136,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
-  s.dependency 'HanekeSwift'
 
 end
