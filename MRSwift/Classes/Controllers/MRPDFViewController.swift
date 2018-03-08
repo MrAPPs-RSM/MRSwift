@@ -158,30 +158,39 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         DispatchQueue.global(qos: .background).async {
             
-            Alamofire.request(url).responseData(completionHandler: { (response) in
-                
-                guard let data = response.data, data.count > 0 else {
-                    self.delegate?.mediaDidFailLoad(media: self.media)
-                    return
-                }
-                
-                if let provider = CGDataProvider(data: data as CFData) {
-                    self.document = CGPDFDocument(provider)
-                    if let document = self.document {
-                        for _ in 0..<document.numberOfPages {
-                            self.pages.append(MRMedia())
-                        }
-                        self.getImagesFromPDF(at: 0, completion: {
-                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
-                                self.spinner.stopAnimating()
-                                if let viewController = self.viewController(at: self.selectedIndex) {
-                                    self.pageController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
-                                }
-                            })
-                        })
+            if let data = Cache.shared.object(ofType: Data.self, forKey: url.absoluteString) {
+                self.loadPdf(fromData: data)
+            } else {
+                Alamofire.request(url).responseData(completionHandler: { (response) in
+                    
+                    guard let data = response.data, data.count > 0 else {
+                        self.delegate?.mediaDidFailLoad(media: self.media)
+                        return
                     }
+                    Cache.shared.setObject(data, forKey: url.absoluteString)
+                    self.loadPdf(fromData: data)
+                })
+            }
+        }
+    }
+    
+    private func loadPdf(fromData data: Data) {
+        
+        if let provider = CGDataProvider(data: data as CFData) {
+            self.document = CGPDFDocument(provider)
+            if let document = self.document {
+                for _ in 0..<document.numberOfPages {
+                    self.pages.append(MRMedia())
                 }
-            })
+                self.getImagesFromPDF(at: 0, completion: {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
+                        self.spinner.stopAnimating()
+                        if let viewController = self.viewController(at: self.selectedIndex) {
+                            self.pageController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+                        }
+                    })
+                })
+            }
         }
     }
     
