@@ -271,21 +271,27 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         var scaledPageSize: CGSize = .zero
         var scaledPageRect: CGRect = .zero
         
-        let originalPageRect = page.originalPageRect
+        var originalPageRect = page.getBoxRect(.trimBox)
+        if originalPageRect.origin.x < originalPageRect.size.width {
+            originalPageRect = page.originalPageRect
+        }
+        var xTranslate = originalPageRect.origin.x
         
         if thumbnail {
             
             scalingConstant = 240
             pdfScale = min(scalingConstant/originalPageRect.width, scalingConstant/originalPageRect.height)
             scaledPageSize = CGSize(width: originalPageRect.width * pdfScale, height: originalPageRect.height * pdfScale)
-            scaledPageRect = CGRect(origin: originalPageRect.origin, size: scaledPageSize)
+            scaledPageRect = CGRect(origin: .zero, size: scaledPageSize)
+            xTranslate = originalPageRect.origin.x * pdfScale
             
         } else {
             
             scalingConstant = originalPageRect.size.width
             pdfScale = min(scalingConstant/originalPageRect.width, scalingConstant/originalPageRect.height)
             scaledPageSize = CGSize(width: originalPageRect.width * pdfScale, height: originalPageRect.height * pdfScale)
-            scaledPageRect = CGRect(origin: originalPageRect.origin, size: scaledPageSize)
+            scaledPageRect = CGRect(origin: .zero, size: scaledPageSize)
+            xTranslate = originalPageRect.origin.x * pdfScale
         }
         
         // Create a low resolution image representation of the PDF page to display before the TiledPDFView renders its content.
@@ -306,7 +312,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         switch page.rotationAngle {
         case 90:
             rotationAngle = 270
-            //context.translateBy(x: scaledPageSize.width, y: scaledPageSize.height)
+        //context.translateBy(x: 0, y: scaledPageSize.height)
         case 180:
             rotationAngle = 180
             context.translateBy(x: 0, y: scaledPageSize.height)
@@ -315,7 +321,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             context.translateBy(x: scaledPageSize.width, y: scaledPageSize.height)
         default:
             rotationAngle = 0
-            context.translateBy(x: 0, y: scaledPageSize.height)
+            context.translateBy(x: -xTranslate, y: scaledPageSize.height)
         }
         
         context.scaleBy(x: 1, y: -1)
