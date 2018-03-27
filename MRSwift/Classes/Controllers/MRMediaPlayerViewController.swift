@@ -24,6 +24,7 @@ open class MRMedia : NSObject {
     open var remoteUrl: URL?
     open var localUrl: URL?
     open var image: UIImage?
+    open var thumbnail: UIImage?
     open var type: MediaType = .image
     open var videoThumbnailSecond: Double = 1
     

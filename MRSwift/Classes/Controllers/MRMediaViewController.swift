@@ -43,7 +43,7 @@ open class MRMediaViewController: UIViewController {
     
     func setGestures(on view: UIView) {
         
-        tap = UITapGestureRecognizer(target: self, action: #selector(self.didTap))
+        tap = UITapGestureRecognizer(target: self, action: #selector(self.didSingleTap(gesture:)))
         tap.numberOfTapsRequired = 1
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -56,6 +56,10 @@ open class MRMediaViewController: UIViewController {
             
             tap.require(toFail: doubleTap)
         }
+    }
+    
+    @objc public func didSingleTap(gesture: UITapGestureRecognizer) {
+        self.didTap()
     }
     
     @objc public func didTap() {

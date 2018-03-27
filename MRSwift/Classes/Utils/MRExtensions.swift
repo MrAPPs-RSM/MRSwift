@@ -398,5 +398,13 @@ public extension UIImageView {
             }
         }
     }
+    
+    public func rotate(by degrees: CGFloat) {
+        transform = CGAffineTransform(rotationAngle: degrees)
+    }
+    
+    public func cancelTransform() {
+        transform = .identity
+    }
 }
 

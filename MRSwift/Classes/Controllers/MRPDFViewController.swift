@@ -9,6 +9,7 @@
 import UIKit
 import CoreGraphics
 import Alamofire
+import PureLayout
 
 extension CGPDFPage {
     /// original size of the PDF page.
@@ -29,17 +30,69 @@ extension FloatingPoint {
     var radiansToDegrees: Self { return self * 180 / .pi }
 }
 
+class GridPreviewCell : UICollectionViewCell {
+    
+    var imgImage: UIImageView?
+    var lblText: UILabel?
+    
+    func setupLayout() {
+        
+        backgroundColor = .clear
+        
+        imgImage = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height-15))
+        imgImage!.contentMode = .scaleAspectFill
+        imgImage!.clipsToBounds = true
+        self.addSubview(imgImage!)
+        
+        lblText = UILabel()
+        lblText!.font = UIFont.systemFont(ofSize: 12)
+        lblText!.textAlignment = .center
+        lblText!.textColor = .white
+        self.addSubview(lblText!)
+        
+        imgImage!.autoPinEdge(toSuperviewEdge: .top)
+        imgImage!.autoPinEdge(toSuperviewEdge: .left)
+        imgImage!.autoPinEdge(toSuperviewEdge: .right)
+        imgImage!.autoSetDimension(.height, toSize: frame.size.height-15)
+        lblText!.autoPinEdge(.top, to: .bottom, of: imgImage!)
+        lblText!.autoPinEdge(toSuperviewEdge: .left)
+        lblText!.autoPinEdge(toSuperviewEdge: .right)
+        lblText!.autoPinEdge(toSuperviewEdge: .bottom, withInset: 3)
+    }
+    
+    func configure(media: MRMedia, pageNumber: Int) {
+        
+        if imgImage == nil {
+            setupLayout()
+        }
+        
+        imgImage?.image = media.thumbnail
+        lblText?.text = "\(pageNumber)"
+    }
+}
+
+
+
+
 public protocol MRPDFViewControllerDelegate : class {
     func pdfDidLoad(page: Int, totalPages: Int)
 }
 
-open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Xibs
     
     private var pageContainer: UIView!
     private var pageController: UIPageViewController!
     private var spinner: UIActivityIndicatorView!
+    private var gridContainer: UIView!
+    private var gridPreview: UICollectionView!
+    private var gridSpinner: UIActivityIndicatorView!
+    private var gridButton: MRButton!
+    
+    // MARK: - Constraints
+    
+    private var cntGridContainerBottom: NSLayoutConstraint!
     
     // MARK: - Constants & Variables
     
@@ -48,6 +101,8 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
     private var selectedIndex: Int = 0
     private var document: CGPDFDocument?
     public var pdfDelegate: MRPDFViewControllerDelegate?
+    private let cellIdentifier = "cellIdentifier"
+    private var didLoadThumbnails: Bool = false
     
     // MARK: - Initialization
     
@@ -125,6 +180,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         if completed {
             if let viewController = pageViewController.viewControllers?.first as? MRMediaViewController {
                 selectedIndex = viewController.index
+                gridPreview.scrollToItem(at: IndexPath(row: selectedIndex, section: 0), at: .centeredHorizontally, animated: true)
             }
         }
     }
@@ -156,21 +212,18 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
     
     private func initializePDF(with url: URL) {
         
-        DispatchQueue.global(qos: .background).async {
-            
-            if let data = Cache.shared.object(ofType: Data.self, forKey: url.absoluteString) {
+        if let data = Cache.shared.object(ofType: Data.self, forKey: url.absoluteString) {
+            self.loadPdf(fromData: data)
+        } else {
+            Alamofire.request(url).responseData(completionHandler: { (response) in
+                
+                guard let data = response.data, data.count > 0 else {
+                    self.delegate?.mediaDidFailLoad(media: self.media)
+                    return
+                }
+                Cache.shared.setObject(data, forKey: url.absoluteString)
                 self.loadPdf(fromData: data)
-            } else {
-                Alamofire.request(url).responseData(completionHandler: { (response) in
-                    
-                    guard let data = response.data, data.count > 0 else {
-                        self.delegate?.mediaDidFailLoad(media: self.media)
-                        return
-                    }
-                    Cache.shared.setObject(data, forKey: url.absoluteString)
-                    self.loadPdf(fromData: data)
-                })
-            }
+            })
         }
     }
     
@@ -182,6 +235,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
                 for _ in 0..<document.numberOfPages {
                     self.pages.append(MRMedia())
                 }
+                self.setupGridPreview()
                 self.getImagesFromPDF(at: 0, completion: {
                     DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
                         self.spinner.stopAnimating()
@@ -194,16 +248,17 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         }
     }
     
-    private func getImagesFromPDF(completion: @escaping () -> Void) {
+    private func getThumbnailsFromPDF(completion: @escaping () -> Void) {
         
         var completedImages: Int = 0
         
         DispatchQueue.global(qos: .background).async {
             for i in 1..<(self.pages.count+1) {
-                self.imageFromPDFPage(at: i, thumbnail: false, completion: { (image) in
-                    self.pages[i-1].image = image
+                self.imageFromPDFPage(at: i, thumbnail: true, completion: { (image) in
+                    self.pages[i-1].thumbnail = image
                     completedImages += 1
                     if completedImages == self.pages.count {
+                        self.didLoadThumbnails = true
                         completion()
                     }
                 })
@@ -265,6 +320,13 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             return
         }
         
+        let contentId = media.id ?? ""
+        let imageId = "\(contentId)_\(index)"
+        if let data = Cache.shared.object(ofType: Data.self, forKey: imageId) {
+            completion(UIImage(data: data))
+            return
+        }
+        
         var originalPagerect: CGFloat = 0.0
         var scalingConstant: CGFloat = 0.0
         var pdfScale: CGFloat = 0.0
@@ -279,7 +341,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         if thumbnail {
             
-            scalingConstant = 240
+            scalingConstant = 120
             pdfScale = min(scalingConstant/originalPageRect.width, scalingConstant/originalPageRect.height)
             scaledPageSize = CGSize(width: originalPageRect.width * pdfScale, height: originalPageRect.height * pdfScale)
             scaledPageRect = CGRect(origin: .zero, size: scaledPageSize)
@@ -294,20 +356,17 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             xTranslate = originalPageRect.origin.x * pdfScale
         }
         
-        // Create a low resolution image representation of the PDF page to display before the TiledPDFView renders its content.
         UIGraphicsBeginImageContextWithOptions(scaledPageSize, true, 1)
         guard let context = UIGraphicsGetCurrentContext() else {
             completion(nil)
             return
         }
         
-        // First fill the background with white.
         context.setFillColor(red: 1, green: 1, blue: 1, alpha: 1)
         context.fill(scaledPageRect)
         
         context.saveGState()
         
-        // Flip the context so that the PDF page is rendered right side up.
         let rotationAngle: CGFloat
         switch page.rotationAngle {
         case 90:
@@ -338,10 +397,122 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             return
         }
         
+        Cache.shared.setObject(UIImageJPEGRepresentation(backgroundImage, 1.0), forKey: imageId)
         completion(backgroundImage)
     }
     
+    // MARK: - UICollectionView DataSource & Delegate
+    
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return pages.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! GridPreviewCell
+        
+        cell.configure(media: pages[indexPath.row], pageNumber: indexPath.row+1)
+        
+        return cell
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if let viewController = self.viewController(at: indexPath.row) {
+            self.pageController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+        }
+    }
+    
+    // MARK: - UICollectionViewFlowLayout Delegate
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let height = collectionView.frame.size.height
+        let width = height - 15
+        return CGSize(width: width, height: height)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return .zero
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 8
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
     // MARK: - Other Methods
+    
+    func setupGridPreview() {
+        
+        if pages.count == 0 {
+            return
+        }
+        
+        gridContainer = UIView()
+        gridContainer.clipsToBounds = true
+        gridContainer.backgroundColor = .darkGray
+        
+        view.addSubview(gridContainer)
+        gridContainer.autoPinEdge(.left, to: .left, of: view)
+        gridContainer.autoPinEdge(.right, to: .right, of: view)
+        gridContainer.autoSetDimension(.height, toSize: 95+UIView.safeArea.bottom)
+        
+        cntGridContainerBottom = NSLayoutConstraint(item: gridContainer, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
+        view.addConstraint(cntGridContainerBottom)
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        gridPreview = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        gridPreview.isHidden = true
+        gridPreview.backgroundColor = .clear
+        gridPreview.dataSource = self
+        gridPreview.delegate = self
+        gridPreview.register(GridPreviewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        
+        gridContainer.addSubview(gridPreview)
+        gridPreview.autoPinEdge(toSuperviewEdge: .left)
+        gridPreview.autoPinEdge(toSuperviewEdge: .right)
+        gridPreview.autoPinEdge(toSuperviewEdge: .top)
+        gridPreview.autoSetDimension(.height, toSize: 95)
+        
+        gridSpinner = UIActivityIndicatorView(activityIndicatorStyle: .white)
+        gridSpinner.hidesWhenStopped = true
+        gridSpinner.startAnimating()
+        
+        gridContainer.addSubview(gridSpinner)
+        gridSpinner.autoPinEdge(toSuperviewEdge: .top, withInset: 20)
+        gridSpinner.autoAlignAxis(toSuperviewAxis: .vertical)
+        
+        gridButton = MRButton()
+        gridButton.setColors(mainBg: .darkGray, highlightedBg: .darkGray, standardTxt: .white, highlightedTxt: .white)
+        gridButton.backgroundColor = .darkGray
+        gridButton.setImage(UIImage(named: "ico_back"), for: .normal)
+        gridButton.imageView?.rotate(by: -(CGFloat.pi/2))
+        gridButton.addTarget(self, action: #selector(didTapGridButton), for: .touchUpInside)
+        
+        view.addSubview(gridButton)
+        gridButton.autoPinEdge(.bottom, to: .top, of: gridContainer)
+        gridButton.autoPinEdge(toSuperviewEdge: .right)
+        gridButton.autoSetDimensions(to: CGSize(width: 50, height: 35))
+        
+        self.getThumbnailsFromPDF {
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.2) { () -> Void in
+                self.gridSpinner.stopAnimating()
+                self.gridPreview.isHidden = false
+                self.gridPreview.collectionViewLayout.invalidateLayout()
+                self.gridPreview.reloadData()
+            }
+        }
+    }
     
     open func viewController(at index: Int) -> MRMediaViewController? {
         
@@ -365,6 +536,24 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         pdfDelegate?.pdfDidLoad(page: index+1, totalPages: pages.count)
         
         return viewController
+    }
+    
+    @objc func didTapGridButton() {
+        
+        let show = gridContainer.frame.origin.y >= view.frame.size.height
+        gridButton.imageView?.rotate(by: show ? -(CGFloat.pi/2) : CGFloat.pi/2)
+        cntGridContainerBottom.constant = show ? 0 : gridContainer.frame.size.height
+        UIView.animate(withDuration: 0.2) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    public override func didSingleTap(gesture: UITapGestureRecognizer) {
+        
+        let point = gesture.location(in: view)
+        if point.y < (gridContainer.frame.origin.y-gridButton.frame.size.height) {
+            didTap()
+        }
     }
     
     override open var prefersStatusBarHidden: Bool {
