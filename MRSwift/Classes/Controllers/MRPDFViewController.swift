@@ -256,6 +256,9 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             for i in 1..<(self.pages.count+1) {
                 self.imageFromPDFPage(at: i, thumbnail: true, completion: { (image) in
                     self.pages[i-1].thumbnail = image
+                    DispatchQueue.main.sync {
+                        self.gridPreview.reloadItems(at: [IndexPath(row: i-1, section: 0)])
+                    }
                     completedImages += 1
                     if completedImages == self.pages.count {
                         self.didLoadThumbnails = true
@@ -322,7 +325,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         let contentId = media.id ?? ""
         let imageId = "\(contentId)_\(index)"
-        if let data = Cache.shared.object(ofType: Data.self, forKey: imageId) {
+        if let data = Cache.shared.object(ofType: Data.self, forKey: imageId), thumbnail == true {
             completion(UIImage(data: data))
             return
         }
@@ -397,7 +400,10 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             return
         }
         
-        Cache.shared.setObject(UIImageJPEGRepresentation(backgroundImage, 1.0), forKey: imageId)
+        if thumbnail == true {
+            Cache.shared.setObject(UIImageJPEGRepresentation(backgroundImage, 1.0), forKey: imageId)
+        }
+        
         completion(backgroundImage)
     }
     
@@ -465,7 +471,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         gridContainer.autoPinEdge(.right, to: .right, of: view)
         gridContainer.autoSetDimension(.height, toSize: 95+UIView.safeArea.bottom)
         
-        cntGridContainerBottom = NSLayoutConstraint(item: gridContainer, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
+        cntGridContainerBottom = NSLayoutConstraint(item: gridContainer, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 95+UIView.safeArea.bottom)
         view.addConstraint(cntGridContainerBottom)
         
         let layout = UICollectionViewFlowLayout()
@@ -496,7 +502,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         gridButton.setColors(mainBg: .darkGray, highlightedBg: .darkGray, standardTxt: .white, highlightedTxt: .white)
         gridButton.backgroundColor = .darkGray
         gridButton.setImage(UIImage(named: "ico_back"), for: .normal)
-        gridButton.imageView?.rotate(by: -(CGFloat.pi/2))
+        gridButton.imageView?.rotate(by: CGFloat.pi/2)
         gridButton.addTarget(self, action: #selector(didTapGridButton), for: .touchUpInside)
         
         view.addSubview(gridButton)
@@ -505,7 +511,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         gridButton.autoSetDimensions(to: CGSize(width: 50, height: 35))
         
         self.getThumbnailsFromPDF {
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.2) { () -> Void in
+            DispatchQueue.main.sync {
                 self.gridSpinner.stopAnimating()
                 self.gridPreview.isHidden = false
                 self.gridPreview.collectionViewLayout.invalidateLayout()
