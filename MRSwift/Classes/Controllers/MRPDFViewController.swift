@@ -431,6 +431,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         if let viewController = self.viewController(at: indexPath.row) {
             self.pageController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
         }
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     
     // MARK: - UICollectionViewFlowLayout Delegate
