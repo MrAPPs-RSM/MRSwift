@@ -45,19 +45,25 @@ class GridPreviewCell : UICollectionViewCell {
         self.addSubview(imgImage!)
         
         lblText = UILabel()
-        lblText!.font = UIFont.systemFont(ofSize: 12)
-        lblText!.textAlignment = .center
-        lblText!.textColor = .white
+        lblText?.font = UIFont.systemFont(ofSize: 12)
+        lblText?.textAlignment = .center
+        lblText?.textColor = .white
         self.addSubview(lblText!)
         
-        imgImage!.autoPinEdge(toSuperviewEdge: .top)
-        imgImage!.autoPinEdge(toSuperviewEdge: .left)
-        imgImage!.autoPinEdge(toSuperviewEdge: .right)
-        imgImage!.autoSetDimension(.height, toSize: frame.size.height-15)
-        lblText!.autoPinEdge(.top, to: .bottom, of: imgImage!)
-        lblText!.autoPinEdge(toSuperviewEdge: .left)
-        lblText!.autoPinEdge(toSuperviewEdge: .right)
-        lblText!.autoPinEdge(toSuperviewEdge: .bottom, withInset: 3)
+        imgImage?.autoPinEdge(toSuperviewEdge: .top)
+        imgImage?.autoPinEdge(toSuperviewEdge: .left)
+        imgImage?.autoPinEdge(toSuperviewEdge: .right)
+        imgImage?.autoSetDimension(.height, toSize: frame.size.height-15)
+        lblText?.autoPinEdge(.top, to: .bottom, of: imgImage!)
+        lblText?.autoPinEdge(toSuperviewEdge: .left)
+        lblText?.autoPinEdge(toSuperviewEdge: .right)
+        lblText?.autoPinEdge(toSuperviewEdge: .bottom, withInset: 3)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        imgImage?.autoSetDimension(.height, toSize: frame.size.height-15)
     }
     
     func configure(media: MRMedia, pageNumber: Int) {
@@ -326,7 +332,8 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         let contentId = media.id ?? ""
         let imageId = "\(contentId)_\(index)"
         if let data = Cache.shared.object(ofType: Data.self, forKey: imageId), thumbnail == true {
-            completion(UIImage(data: data))
+            let image = UIImage(data: data)
+            completion(image)
             return
         }
         

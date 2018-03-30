@@ -264,6 +264,11 @@ extension UIApplication: SFSafariViewControllerDelegate {
         guard let stringUrl = stringUrl else { return }
         guard let url = URL(string: stringUrl) else { return }
         
+        openUrl(url: url, on: viewController)
+    }
+    
+    public func openUrl(url: URL, on viewController: UIViewController?) {
+        
         if #available(iOS 9.0, *) {
             
             if let viewController = viewController {
