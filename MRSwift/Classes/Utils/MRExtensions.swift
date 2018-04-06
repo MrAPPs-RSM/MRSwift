@@ -273,6 +273,7 @@ extension UIApplication: SFSafariViewControllerDelegate {
             
             if let viewController = viewController {
                 let safari = SFSafariViewController(url: url)
+                safari.modalPresentationStyle = .overFullScreen
                 viewController.present(safari, animated: true, completion: nil)
             } else {
                 if self.canOpenURL(url) {
