@@ -8,8 +8,9 @@
 
 import UIKit
 import MobileCoreServices
+import Photos
 
-public typealias MRImagePickerCompletionBlock = (_ image: UIImage?, _ videoUrl: URL?) -> Void
+public typealias MRImagePickerCompletionBlock = (_ image: UIImage?, _ videoUrl: URL?, _ fileName: String) -> Void
 public typealias MRImagePickerErrorBlock = (_ error: String) -> Void
 
 public enum MRImagePickerType {
@@ -158,26 +159,44 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
+        var image: UIImage?
+        var videoUrl: URL?
+        var fileUrl: URL?
+        var fileName: String = ""
+        
         if (info[UIImagePickerControllerMediaType] as! String) == (kUTTypeImage as String) {
             
-            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-                self.completionBlock(image, nil)
-            } else {
-                self.completionBlock(nil, nil)
+            if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                if let imageUrl = info[UIImagePickerControllerReferenceURL] as? URL {
+                    fileUrl = imageUrl
+                }
+                image = pickedImage
             }
             
         } else if (info[UIImagePickerControllerMediaType] as! String) == (kUTTypeMovie as String) {
             
-            if let videoUrl = info[UIImagePickerControllerMediaURL] as? URL {
-                self.completionBlock(nil, videoUrl)
-            } else {
-                self.completionBlock(nil, nil)
+            if let pickedVideoUrl = info[UIImagePickerControllerMediaURL] as? URL {
+                fileUrl = pickedVideoUrl
+                videoUrl = pickedVideoUrl
             }
         }
         
-        picker.dismiss(animated: true, completion: nil)
+        if let fileUrl = fileUrl {
+            if let asset = PHAsset.fetchAssets(withALAssetURLs: [fileUrl], options: nil).firstObject {
+                PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { _, _, _, info in
+                    if let url = info!["PHImageFileURLKey"] as? URL {
+                        fileName = url.lastPathComponent
+                    }
+                    self.completionBlock(image, videoUrl, fileName)
+                    picker.dismiss(animated: true, completion: nil)
+                })
+            } else {
+                self.completionBlock(image, videoUrl, fileName)
+                picker.dismiss(animated: true, completion: nil)
+            }
+        }
     }
-
+    
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
