@@ -84,7 +84,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     private var medias = [MRMedia]()
     private var nextIndex: Int = 0
     public var selectedIndex: Int = 0
-    private var playerDelegate: MRMediaPlayerViewControllerDelegate?
+    private weak var playerDelegate: MRMediaPlayerViewControllerDelegate?
     
     public var dragAnimation: Bool = false
     private var dragGesture: UIPanGestureRecognizer?

@@ -106,7 +106,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
     private var nextIndex: Int = 0
     private var selectedIndex: Int = 0
     private var document: CGPDFDocument?
-    public var pdfDelegate: MRPDFViewControllerDelegate?
+    public weak var pdfDelegate: MRPDFViewControllerDelegate?
     private let cellIdentifier = "cellIdentifier"
     private var didLoadThumbnails: Bool = false
     
@@ -258,7 +258,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         var completedImages: Int = 0
         
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async {
             for i in 1..<(self.pages.count+1) {
                 self.imageFromPDFPage(at: i, thumbnail: true, completion: { (image) in
                     self.pages[i-1].thumbnail = image
@@ -306,7 +306,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         var completedImages: Int = 0
         
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async {
             
             for index in indexes {
                 self.imageFromPDFPage(at: index+1, thumbnail: false, completion: { (image) in

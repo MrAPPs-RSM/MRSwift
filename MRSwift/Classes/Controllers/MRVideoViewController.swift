@@ -45,7 +45,7 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
     public var autoPlay: Bool = false
     public var loop: Bool = false
     
-    public var videoDelegate: MRVideoViewControllerDelegate?
+    public weak var videoDelegate: MRVideoViewControllerDelegate?
     
     private var timeObserver: Any?
     

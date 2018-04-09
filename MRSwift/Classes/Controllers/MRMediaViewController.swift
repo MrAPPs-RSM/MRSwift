@@ -17,7 +17,7 @@ protocol MRMediaViewControllerDelegate : class {
 open class MRMediaViewController: UIViewController {
     
     public var index: Int = 0
-    var delegate: MRMediaViewControllerDelegate?
+    weak var delegate: MRMediaViewControllerDelegate?
     
     private var tap: UITapGestureRecognizer!
     private var doubleTap: UITapGestureRecognizer!
