@@ -169,6 +169,8 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 if let imageUrl = info[UIImagePickerControllerReferenceURL] as? URL {
                     fileUrl = imageUrl
+                } else {
+                    fileName = "\(UUID().uuidString).jpg"
                 }
                 image = pickedImage
             }
@@ -178,6 +180,8 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             if let pickedVideoUrl = info[UIImagePickerControllerMediaURL] as? URL {
                 fileUrl = pickedVideoUrl
                 videoUrl = pickedVideoUrl
+            } else {
+                fileName = "\(UUID().uuidString).mp4"
             }
         }
         
@@ -194,6 +198,9 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
                 self.completionBlock(image, videoUrl, fileName)
                 picker.dismiss(animated: true, completion: nil)
             }
+        } else {
+            self.completionBlock(image, videoUrl, fileName)
+            picker.dismiss(animated: true, completion: nil)
         }
     }
     

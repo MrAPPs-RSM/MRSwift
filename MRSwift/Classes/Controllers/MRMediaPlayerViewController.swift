@@ -16,6 +16,16 @@ public enum MediaType : Int {
     case pdf = 4
 }
 
+public enum MediaExtension : String {
+    case none = ""
+    case jpg = "jpge"
+    case png = "png"
+    case gif = "gif"
+    case mp4 = "mp4"
+    case mkv = "mkv"
+    case avi = "avi"
+}
+
 open class MRMedia : NSObject {
     
     open var id: String?
@@ -26,9 +36,10 @@ open class MRMedia : NSObject {
     open var image: UIImage?
     open var thumbnail: UIImage?
     open var type: MediaType = .image
+    open var fileExtension: MediaExtension = .none
     open var videoThumbnailSecond: Double = 1
     
-    public convenience init(id: String?, title: String?, description: String?, remoteUrl: URL?, localUrl: URL?, type: MediaType) {
+    public convenience init(id: String?, title: String?, description: String?, remoteUrl: URL?, localUrl: URL?, type: MediaType, fileExtension: MediaExtension) {
         self.init()
         
         self.id = id
@@ -37,6 +48,7 @@ open class MRMedia : NSObject {
         self.remoteUrl = remoteUrl
         self.localUrl = localUrl
         self.type = type
+        self.fileExtension = fileExtension
     }
     
     open var url: URL? {
@@ -276,7 +288,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
             viewController = MRImageViewController(media: media)
             playerDelegate = nil
         } else if media.type == .video {
-            viewController = MRVideoViewController(media: media, autoPlay: videoAutoPlay, delegate: self)
+            viewController = MRVideoViewController(media: media, autoPlay: videoAutoPlay, loop: media.fileExtension == .gif, delegate: self)
             playerDelegate = viewController as? MRVideoViewController
         } else if media.type == .pdf {
             viewController = MRPDFViewController(media: media, delegate: self)

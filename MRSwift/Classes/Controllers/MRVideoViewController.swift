@@ -43,6 +43,7 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
     
     private var didFirstLoad: Bool = false
     public var autoPlay: Bool = false
+    public var loop: Bool = false
     
     public var videoDelegate: MRVideoViewControllerDelegate?
     
@@ -50,11 +51,12 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
     
     // MARK: - Initialization
     
-    public convenience init(media: MRMedia, autoPlay: Bool, delegate: MRVideoViewControllerDelegate?) {
+    public convenience init(media: MRMedia, autoPlay: Bool, loop: Bool, delegate: MRVideoViewControllerDelegate?) {
         self.init()
         
         self.media = media
         self.autoPlay = autoPlay
+        self.loop = loop
         self.videoDelegate = delegate
     }
     
@@ -238,6 +240,9 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
     @objc public func playerDidFinishPlay(notification: Notification) {
         self.stop()
         videoDelegate?.videoDidFinishPlay()
+        if loop {
+            play()
+        }
     }
     
     // MARK: - MRMediaPlayerViewController Delegate
