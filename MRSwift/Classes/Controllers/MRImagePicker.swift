@@ -169,8 +169,6 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 if let imageUrl = info[UIImagePickerControllerReferenceURL] as? URL {
                     fileUrl = imageUrl
-                } else {
-                    fileName = "\(UUID().uuidString).jpg"
                 }
                 image = pickedImage
             }
@@ -180,27 +178,29 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             if let pickedVideoUrl = info[UIImagePickerControllerMediaURL] as? URL {
                 fileUrl = pickedVideoUrl
                 videoUrl = pickedVideoUrl
-            } else {
-                fileName = "\(UUID().uuidString).mp4"
             }
         }
         
         if let fileUrl = fileUrl {
-            if let asset = PHAsset.fetchAssets(withALAssetURLs: [fileUrl], options: nil).firstObject {
-                PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { _, _, _, info in
-                    if let url = info!["PHImageFileURLKey"] as? URL {
-                        fileName = url.lastPathComponent
+            PHPhotoLibrary.requestAuthorization { (status) in
+                if status == .authorized {
+                    if let asset = PHAsset.fetchAssets(withALAssetURLs: [fileUrl], options: nil).firstObject {
+                        PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { _, _, _, info in
+                            if let url = info!["PHImageFileURLKey"] as? URL {
+                                fileName = url.lastPathComponent
+                            }
+                            self.completionBlock(image, videoUrl, fileName)
+                            picker.dismiss(animated: true, completion: nil)
+                        })
+                    } else {
+                        self.completionBlock(image, videoUrl, fileName)
+                        picker.dismiss(animated: true, completion: nil)
                     }
+                } else {
                     self.completionBlock(image, videoUrl, fileName)
                     picker.dismiss(animated: true, completion: nil)
-                })
-            } else {
-                self.completionBlock(image, videoUrl, fileName)
-                picker.dismiss(animated: true, completion: nil)
+                }
             }
-        } else {
-            self.completionBlock(image, videoUrl, fileName)
-            picker.dismiss(animated: true, completion: nil)
         }
     }
     
