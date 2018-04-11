@@ -186,6 +186,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         if completed {
             if let viewController = pageViewController.viewControllers?.first as? MRMediaViewController {
                 selectedIndex = viewController.index
+                pdfDelegate?.pdfDidLoad(page: viewController.index+1, totalPages: pages.count)
                 gridPreview.scrollToItem(at: IndexPath(row: selectedIndex, section: 0), at: .centeredHorizontally, animated: true)
             }
         }
@@ -547,7 +548,6 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
                 }
             }
         }
-        pdfDelegate?.pdfDidLoad(page: index+1, totalPages: pages.count)
         
         return viewController
     }
