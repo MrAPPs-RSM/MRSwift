@@ -201,6 +201,9 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
                     picker.dismiss(animated: true, completion: nil)
                 }
             }
+        } else {
+            self.completionBlock(image, videoUrl, fileName)
+            picker.dismiss(animated: true, completion: nil)
         }
     }
     
