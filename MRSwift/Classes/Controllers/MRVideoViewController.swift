@@ -109,12 +109,13 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
         imgPlaceholder.frame = videoView.frame
         spinner.center = videoView.center
         playerLayer?.frame = videoView.frame
-        
-        if UIDevice.isPortrait {
-            videoAspect = .resizeAspect
-        } else {
-            videoAspect = .resizeAspectFill
-        }
+        /*
+         if UIDevice.isPortrait {
+         videoAspect = .resizeAspect
+         } else {
+         videoAspect = .resizeAspectFill
+         }*/
+        videoAspect = .resizeAspect
         
         switch(videoAspect){
         case .resizeAspectFill: playerLayer?.videoGravity = .resizeAspectFill
