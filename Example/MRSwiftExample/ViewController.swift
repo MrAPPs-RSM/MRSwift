@@ -17,12 +17,12 @@ class ViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Left", style: .plain, target: self, action: #selector(self.didTapLeftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Right", style: .plain, target: self, action: #selector(self.didTapRightButton))
     }
-    
-    func didTapLeftButton() {
+
+	@objc func didTapLeftButton() {
         self.openLeftDrawerView()
     }
     
-    func didTapRightButton() {
+   @objc func didTapRightButton() {
         self.openRightDrawerView()
     }
 

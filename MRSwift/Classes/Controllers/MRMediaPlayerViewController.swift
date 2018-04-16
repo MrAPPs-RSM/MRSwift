@@ -18,7 +18,7 @@ public enum MediaType : Int {
 
 public enum MediaExtension : String {
     case none = ""
-    case jpg = "jpge"
+    case jpg = "jpg"
     case png = "png"
     case gif = "gif"
     case mp4 = "mp4"

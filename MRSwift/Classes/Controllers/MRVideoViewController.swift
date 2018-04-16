@@ -118,9 +118,9 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
         videoAspect = .resizeAspect
         
         switch(videoAspect){
-        case .resizeAspectFill: playerLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
-        case .resizeAspect: playerLayer?.videoGravity = AVLayerVideoGravityResizeAspect
-        case .resize: playerLayer?.videoGravity = AVLayerVideoGravityResize
+		case .resizeAspectFill: playerLayer?.videoGravity = .resizeAspectFill
+		case .resizeAspect: playerLayer?.videoGravity = .resizeAspect
+		case .resize: playerLayer?.videoGravity = .resize
         }
     }
     
