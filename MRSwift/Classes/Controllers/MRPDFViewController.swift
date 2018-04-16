@@ -360,11 +360,11 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             
         } else {
             
-            scalingConstant = originalPageRect.size.width
-            pdfScale = min(scalingConstant/originalPageRect.width, scalingConstant/originalPageRect.height)
-            scaledPageSize = CGSize(width: originalPageRect.width * pdfScale, height: originalPageRect.height * pdfScale)
-            scaledPageRect = CGRect(origin: .zero, size: scaledPageSize)
-            xTranslate = originalPageRect.origin.x * pdfScale
+			scalingConstant = originalPageRect.size.width
+			pdfScale = 1
+			scaledPageSize = CGSize(width: originalPageRect.width, height: originalPageRect.height)
+			scaledPageRect = CGRect(origin: .zero, size: scaledPageSize)
+			xTranslate = originalPageRect.origin.x
         }
         
         UIGraphicsBeginImageContextWithOptions(scaledPageSize, true, 1)
