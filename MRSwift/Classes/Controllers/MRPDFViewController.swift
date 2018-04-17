@@ -81,6 +81,9 @@ class GridPreviewCell : UICollectionViewCell {
 
 
 public protocol MRPDFViewControllerDelegate : class {
+    func pdfDidStartDownload()
+    func pdfDidFinishDownload()
+    func pdfDidUpdateDownload(progress: Float)
     func pdfDidLoad(page: Int, totalPages: Int)
 }
 
@@ -222,15 +225,18 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         if let data = Cache.shared.object(ofType: Data.self, forKey: url.absoluteString) {
             self.loadPdf(fromData: data)
         } else {
+            pdfDelegate?.pdfDidStartDownload()
             Alamofire.request(url).responseData(completionHandler: { (response) in
-                
+                self.pdfDelegate?.pdfDidFinishDownload()
                 guard let data = response.data, data.count > 0 else {
                     self.delegate?.mediaDidFailLoad(media: self.media)
                     return
                 }
                 Cache.shared.setObject(data, forKey: url.absoluteString)
                 self.loadPdf(fromData: data)
-            })
+            }).downloadProgress { (progress) in
+                self.pdfDelegate?.pdfDidUpdateDownload(progress: Float(progress.fractionCompleted))
+            }
         }
     }
     
@@ -306,7 +312,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         }
         
         var completedImages: Int = 0
-        
+        print("PDF INDEXES: \(indexes)")
         DispatchQueue.global(qos: .userInitiated).async {
             
             for index in indexes {
