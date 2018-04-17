@@ -360,11 +360,11 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             
         } else {
             
-			scalingConstant = originalPageRect.size.width
-			pdfScale = 1
-			scaledPageSize = CGSize(width: originalPageRect.width, height: originalPageRect.height)
-			scaledPageRect = CGRect(origin: .zero, size: scaledPageSize)
-			xTranslate = originalPageRect.origin.x
+            scalingConstant = originalPageRect.size.width
+            pdfScale = 2
+            scaledPageSize = CGSize(width: originalPageRect.width*pdfScale, height: originalPageRect.height*pdfScale)
+            scaledPageRect = CGRect(origin: .zero, size: scaledPageSize)
+            xTranslate = originalPageRect.origin.x*pdfScale
         }
         
         UIGraphicsBeginImageContextWithOptions(scaledPageSize, true, 1)
@@ -579,6 +579,3 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         // Dispose of any resources that can be recreated.
     }
 }
-
-
-
