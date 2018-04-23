@@ -570,6 +570,11 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
     
     public override func didSingleTap(gesture: UITapGestureRecognizer) {
         
+        if gridContainer == nil {
+            didTap()
+            return
+        }
+        
         let point = gesture.location(in: view)
         if point.y < (gridContainer.frame.origin.y-gridButton.frame.size.height) {
             didTap()
