@@ -41,6 +41,7 @@ open class MRHud: UIView, MRLabelDelegate {
     
     open var hudView: UIView!
     private var progressView: UIView!
+    private var progressBar: UIProgressView!
     open var textLabel: MRLabel!
     
     // MARK: - Constraints
@@ -113,7 +114,11 @@ open class MRHud: UIView, MRLabelDelegate {
      
         let validText = textLabel.text != nil && textLabel.text?.isEmpty == false
         let offset: CGFloat = validText ? contentOffset : 0
-        textLabel.autoPinEdge(.top, to: .bottom, of: progressView, withOffset: contentOffset)
+        if cntTextLabelTop == nil {
+            cntTextLabelTop = textLabel.autoPinEdge(.top, to: .bottom, of: progressView, withOffset: offset)
+        } else {
+            cntTextLabelTop.constant = offset
+        }
     }
     
     // MARK: - Other Methods
@@ -131,7 +136,17 @@ open class MRHud: UIView, MRLabelDelegate {
             
         } else if style == .linearProgress {
             
+            progressBar = UIProgressView(progressViewStyle: .default)
+            progressBar.autoSetDimensions(to: CGSize(width: 150, height: 6))
+            progressBar.clipsToBounds = true
+            progressBar.layer.cornerRadius = 3
             
+            progressView.addSubview(progressBar)
+            progressBar.trackTintColor = UIColor(netHex: 0x999999)
+            progressBar.progressTintColor = .green
+            progressBar.progress = 0.5
+            progressBar.autoAlignAxis(toSuperviewAxis: .vertical)
+            progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16))
         }
     }
     
@@ -191,6 +206,8 @@ open class MRHud: UIView, MRLabelDelegate {
     
     open func set(progress: Float) {
         
-        
+        if progressBar != nil {
+            progressBar.setProgress(progress, animated: true)
+        }
     }
 }

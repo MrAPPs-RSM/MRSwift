@@ -45,10 +45,17 @@ class ViewController: UIViewController {
     
     @IBAction func didTapHudButton(_ sender: Any) {
         
-        let hud = MRHud(theme: .custom(hudColor: .red, textColor: .white), style: .indefinite)
+        let hud = MRHud(theme: .custom(hudColor: .red, textColor: .white), style: .linearProgress)
         hud.textLabel.text = "Download"
         hud.enableShadow(enable: true)
         hud.show(in: view, animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+            hud.set(progress: 0.2)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now()+3) {
+            hud.set(progress: 0.75)
+        }
     }
     
     override func didReceiveMemoryWarning() {
