@@ -43,6 +43,14 @@ class ViewController: UIViewController {
         self.present(viewController, animated: true, completion: nil)
     }
     
+    @IBAction func didTapHudButton(_ sender: Any) {
+        
+        let hud = MRHud(theme: .custom(hudColor: .red, textColor: .white), style: .indefinite)
+        hud.textLabel.text = "Download"
+        hud.enableShadow(enable: true)
+        hud.show(in: view, animated: true)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

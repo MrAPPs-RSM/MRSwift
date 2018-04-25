@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -36,12 +36,23 @@
                         <action selector="didTapMediaPlayerButton:" destination="-1" eventType="touchUpInside" id="Pbe-bx-YWf"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cWo-a5-Oou">
+                    <rect key="frame" x="162" y="112" width="51" height="30"/>
+                    <state key="normal" title="MRHud"/>
+                    <connections>
+                        <action selector="didTapHudButton:" destination="-1" eventType="touchUpInside" id="Wxg-4x-a0g"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="cm2-n8-lsE" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="1lL-5R-uem"/>
+                <constraint firstItem="cWo-a5-Oou" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="2hE-6P-7WA"/>
                 <constraint firstItem="cm2-n8-lsE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="590-Nb-92r"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cWo-a5-Oou" secondAttribute="trailing" constant="16" id="740-nX-F4P"/>
+                <constraint firstItem="cWo-a5-Oou" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8PN-FD-BFh"/>
                 <constraint firstItem="6Le-MH-cVC" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8VA-k9-WOZ"/>
+                <constraint firstItem="cWo-a5-Oou" firstAttribute="top" secondItem="cm2-n8-lsE" secondAttribute="bottom" constant="16" id="KHm-Qe-adr"/>
                 <constraint firstItem="6Le-MH-cVC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="Ni6-gh-7Y8"/>
                 <constraint firstItem="cm2-n8-lsE" firstAttribute="top" secondItem="6Le-MH-cVC" secondAttribute="bottom" constant="16" id="ip2-Bs-jjV"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cm2-n8-lsE" secondAttribute="trailing" constant="16" id="yfB-Nv-Mev"/>
