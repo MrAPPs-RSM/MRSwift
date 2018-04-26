@@ -175,7 +175,7 @@ open class MRHud: UIView, MRLabelDelegate {
                 setupHudView()
                 
                 progressBar = UIProgressView(progressViewStyle: .default)
-                progressBar.autoSetDimensions(to: CGSize(width: 150, height: 6))
+                progressBar.autoSetDimensions(to: CGSize(width: 200, height: 6))
                 progressBar.clipsToBounds = true
                 progressBar.layer.cornerRadius = 3
                 
@@ -184,7 +184,7 @@ open class MRHud: UIView, MRLabelDelegate {
                 progressBar.progressTintColor = .green
                 progressBar.progress = 0.5
                 progressBar.autoAlignAxis(toSuperviewAxis: .vertical)
-                progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 16))
+                progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
             
             case .rotationInside(image: let image, duration: let duration):
             
@@ -245,8 +245,8 @@ open class MRHud: UIView, MRLabelDelegate {
         hudView.layer.cornerRadius = 8
         hudView.layer.borderWidth = 1/UIScreen.main.scale
         hudView.layer.borderColor = UIColor.lightGray.cgColor
-        hudView.autoSetDimension(.width, toSize: 60, relation: .greaterThanOrEqual)
-        hudView.autoSetDimension(.height, toSize: 60, relation: .greaterThanOrEqual)
+        hudView.autoSetDimension(.width, toSize: 30, relation: .greaterThanOrEqual)
+        hudView.autoSetDimension(.height, toSize: 30, relation: .greaterThanOrEqual)
         
         progressView = UIView()
         

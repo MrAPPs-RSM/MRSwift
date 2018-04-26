@@ -51,26 +51,8 @@ class ViewController: UIViewController {
         hud.show(in: view, animated: true)
         
         DispatchQueue.main.asyncAfter(deadline: .now()+2) {
-            hud.set(style: .rotationInside(image: UIImage(named: "empire_logo.png")!, duration: 2))
-            hud.enableShadow(enable: true)
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+4) {
             hud.set(style: .linearProgress)
-            hud.textLabel?.text = "Download..."
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+5) {
-            hud.set(progress: 0.9)
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+7) {
-            hud.set(progress: 0.1)
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+9) {
-            hud.set(style: .indeterminate)
-            hud.textLabel?.text = "aaaaa caricamento infinito aaaaaaaa ooooooooo eeeeeeeee loooool"
+            hud.enableShadow(enable: true)
         }
     }
     
