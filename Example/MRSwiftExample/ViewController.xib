@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Le-MH-cVC">
-                    <rect key="frame" x="133.5" y="20" width="107" height="30"/>
+                    <rect key="frame" x="133.5" y="50" width="107" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="xJU-Nq-BrW"/>
                     </constraints>
@@ -30,14 +31,14 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cm2-n8-lsE">
-                    <rect key="frame" x="133.5" y="66" width="107" height="30"/>
+                    <rect key="frame" x="133.5" y="96" width="107" height="30"/>
                     <state key="normal" title="MRMediaPlayer"/>
                     <connections>
                         <action selector="didTapMediaPlayerButton:" destination="-1" eventType="touchUpInside" id="Pbe-bx-YWf"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cWo-a5-Oou">
-                    <rect key="frame" x="162" y="112" width="51" height="30"/>
+                    <rect key="frame" x="162" y="142" width="51" height="30"/>
                     <state key="normal" title="MRHud"/>
                     <connections>
                         <action selector="didTapHudButton:" destination="-1" eventType="touchUpInside" id="Wxg-4x-a0g"/>
@@ -53,10 +54,11 @@
                 <constraint firstItem="cWo-a5-Oou" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8PN-FD-BFh"/>
                 <constraint firstItem="6Le-MH-cVC" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8VA-k9-WOZ"/>
                 <constraint firstItem="cWo-a5-Oou" firstAttribute="top" secondItem="cm2-n8-lsE" secondAttribute="bottom" constant="16" id="KHm-Qe-adr"/>
-                <constraint firstItem="6Le-MH-cVC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="Ni6-gh-7Y8"/>
                 <constraint firstItem="cm2-n8-lsE" firstAttribute="top" secondItem="6Le-MH-cVC" secondAttribute="bottom" constant="16" id="ip2-Bs-jjV"/>
+                <constraint firstItem="6Le-MH-cVC" firstAttribute="top" secondItem="YnI-Mi-g8z" secondAttribute="top" constant="30" id="kdO-HS-eh9"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cm2-n8-lsE" secondAttribute="trailing" constant="16" id="yfB-Nv-Mev"/>
             </constraints>
+            <viewLayoutGuide key="safeArea" id="YnI-Mi-g8z"/>
         </view>
     </objects>
 </document>

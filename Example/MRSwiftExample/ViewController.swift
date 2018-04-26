@@ -45,16 +45,15 @@ class ViewController: UIViewController {
     
     @IBAction func didTapHudButton(_ sender: Any) {
         
-        let hud = MRHud(theme: .custom(hudColor: .red, textColor: .white), style: .linearProgress)
+        let hud = MRHud(theme: .custom(hudColor: .white, textColor: .black), style: .linearProgress)
         hud.textLabel.text = "Download"
         hud.enableShadow(enable: true)
+        hud.setProgressColors(emptyColor: UIColor(netHex: 0xdddddd), filledColor: UIColor(netHex: 0x00ba0e))
+        //hud.setShadow(color: .red, offset: .zero, radius: 10, opacity: 0.5)
         hud.show(in: view, animated: true)
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-            hud.set(progress: 0.2)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now()+3) {
-            hud.set(progress: 0.75)
+        DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+            hud.textLabel.text = "Bla bla bla bla bla bla Bla bla bla bla bla bla Bla bla bla bla bla bla";
         }
     }
     

@@ -18,6 +18,7 @@ open class MRLabel : UILabel {
     weak var delegate: MRLabelDelegate?
     
     override open var text: String? {
+        
         didSet {
             delegate?.labelDidChangeText(text: text)
         }
@@ -52,6 +53,10 @@ open class MRHud: UIView, MRLabelDelegate {
     
     var progress: Float = 0
     private var contentOffset: CGFloat = 16
+    private var shadowColor: UIColor = .black
+    private var shadowOffset: CGSize = .zero
+    private var shadowRadius: CGFloat = 3
+    private var shadowOpacity: Float = 0.3
     
     // MARK: - Initialization
 
@@ -73,6 +78,7 @@ open class MRHud: UIView, MRLabelDelegate {
         textLabel.delegate = self
         textLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         textLabel.textAlignment = .center
+        textLabel.numberOfLines = 0
         
         switch theme {
             case .light:
@@ -102,12 +108,17 @@ open class MRHud: UIView, MRLabelDelegate {
         
         addSubview(hudView)
         hudView.autoCenterInSuperview()
+        hudView.autoPinEdge(toSuperviewEdge: .left, withInset: 32, relation: .greaterThanOrEqual)
+        hudView.autoPinEdge(toSuperviewEdge: .right, withInset: 32, relation: .greaterThanOrEqual)
     }
     
     // MARK: - MRLabel Delegate
     
     public func labelDidChangeText(text: String?) {
         fixLabelPosition()
+        UIView.animate(withDuration: 0.1) {
+            self.layoutIfNeeded()
+        }
     }
     
     private func fixLabelPosition() {
@@ -121,7 +132,50 @@ open class MRHud: UIView, MRLabelDelegate {
         }
     }
     
-    // MARK: - Other Methods
+    // MARK: - Linear Progress Handlers
+    
+    open func set(progress: Float) {
+        
+        if progressBar != nil {
+            progressBar.setProgress(progress, animated: true)
+        }
+    }
+    
+    open func setProgressColors(emptyColor: UIColor, filledColor: UIColor) {
+        
+        if progressBar != nil {
+            progressBar.trackTintColor = emptyColor
+            progressBar.progressTintColor = filledColor
+        }
+    }
+    
+    // MARK: - Shadow Handlers
+    
+    open func enableShadow(enable: Bool) {
+        
+        if enable {
+            hudView.layer.shadowColor = shadowColor.cgColor
+            hudView.layer.shadowOffset = shadowOffset
+            hudView.layer.shadowRadius = shadowRadius
+            hudView.layer.shadowOpacity = shadowOpacity
+        } else {
+            hudView.layer.shadowColor = UIColor.black.cgColor
+            hudView.layer.shadowOffset = .zero
+            hudView.layer.shadowRadius = 0
+            hudView.layer.shadowOpacity = 0
+        }
+    }
+    
+    open func setShadow(color: UIColor, offset: CGSize, radius: CGFloat, opacity: Float) {
+        
+        shadowColor = color
+        shadowOffset = offset
+        shadowRadius = radius
+        shadowOpacity = opacity
+        enableShadow(enable: true)
+    }
+    
+    // MARK: - Hud Visibility Handlers
     
     open func set(style: MRHudStyle) {
         
@@ -146,22 +200,7 @@ open class MRHud: UIView, MRLabelDelegate {
             progressBar.progressTintColor = .green
             progressBar.progress = 0.5
             progressBar.autoAlignAxis(toSuperviewAxis: .vertical)
-            progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16))
-        }
-    }
-    
-    open func enableShadow(enable: Bool) {
-        
-        if enable {
-            hudView.layer.shadowColor = UIColor.black.cgColor
-            hudView.layer.shadowOffset = .zero
-            hudView.layer.shadowRadius = 5
-            hudView.layer.shadowOpacity = 0.3
-        } else {
-            hudView.layer.shadowColor = UIColor.black.cgColor
-            hudView.layer.shadowOffset = .zero
-            hudView.layer.shadowRadius = 0
-            hudView.layer.shadowOpacity = 0
+            progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 16))
         }
     }
     
@@ -201,13 +240,6 @@ open class MRHud: UIView, MRLabelDelegate {
             }
         } else {
             removeFromSuperview()
-        }
-    }
-    
-    open func set(progress: Float) {
-        
-        if progressBar != nil {
-            progressBar.setProgress(progress, animated: true)
         }
     }
 }
