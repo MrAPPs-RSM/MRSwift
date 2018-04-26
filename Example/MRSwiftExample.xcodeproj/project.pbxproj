@@ -16,6 +16,7 @@
 		EB1460EF1EF01E0F003AC3E5 /* MRWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */; };
 		EB1B536D1EDB631E000621AC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1B536B1EDB631E000621AC /* ViewController.swift */; };
 		EB1B536E1EDB631E000621AC /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB1B536C1EDB631E000621AC /* ViewController.xib */; };
+		EB4462DD2091C2120004A3CE /* empire_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = EB4462DC2091C2120004A3CE /* empire_logo.png */; };
 		EB7478281EB5E34000EACEB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7478271EB5E34000EACEB8 /* AppDelegate.swift */; };
 		EB74782F1EB5E34000EACEB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB74782E1EB5E34000EACEB8 /* Assets.xcassets */; };
 		EB7478321EB5E34000EACEB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB7478301EB5E34000EACEB8 /* LaunchScreen.storyboard */; };
@@ -55,6 +56,7 @@
 		EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MRWeb.swift; sourceTree = "<group>"; };
 		EB1B536B1EDB631E000621AC /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		EB1B536C1EDB631E000621AC /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		EB4462DC2091C2120004A3CE /* empire_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empire_logo.png; sourceTree = "<group>"; };
 		EB7478241EB5E34000EACEB8 /* MRSwiftExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MRSwiftExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB7478271EB5E34000EACEB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EB74782E1EB5E34000EACEB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				EB1B536C1EDB631E000621AC /* ViewController.xib */,
 				EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */,
 				EB7AB41A202C3FCE005957A3 /* solo_video.mp4 */,
+				EB4462DC2091C2120004A3CE /* empire_logo.png */,
 			);
 			path = MRSwiftExample;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				EB7AB41B202C3FCE005957A3 /* solo_video.mp4 in Resources */,
 				EB1460ED1EEFDBD3003AC3E5 /* Info.plist in Resources */,
 				EB7478321EB5E34000EACEB8 /* LaunchScreen.storyboard in Resources */,
+				EB4462DD2091C2120004A3CE /* empire_logo.png in Resources */,
 				EB1B536E1EDB631E000621AC /* ViewController.xib in Resources */,
 				EB74782F1EB5E34000EACEB8 /* Assets.xcassets in Resources */,
 			);

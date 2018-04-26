@@ -34,6 +34,8 @@ public enum MRHudTheme {
 public enum MRHudStyle {
     case indefinite
     case linearProgress
+    case rotationInside(image: UIImage, duration: TimeInterval)
+    case rotationOnly(image: UIImage, duration: TimeInterval)
 }
 
 open class MRHud: UIView, MRLabelDelegate {
@@ -43,7 +45,8 @@ open class MRHud: UIView, MRLabelDelegate {
     open var hudView: UIView!
     private var progressView: UIView!
     private var progressBar: UIProgressView!
-    open var textLabel: MRLabel!
+    private var imageView: UIImageView!
+    open var textLabel: MRLabel?
     
     // MARK: - Constraints
     
@@ -51,6 +54,8 @@ open class MRHud: UIView, MRLabelDelegate {
     
     // MARK: - Constants & Variables
     
+    private var theme = MRHudTheme.dark
+    private var style = MRHudStyle.indefinite
     var progress: Float = 0
     private var contentOffset: CGFloat = 16
     private var shadowColor: UIColor = .black
@@ -66,69 +71,34 @@ open class MRHud: UIView, MRLabelDelegate {
         backgroundColor = .clear
         clipsToBounds = true
         
-        hudView = UIView()
-        hudView.layer.cornerRadius = 8
-        hudView.layer.borderWidth = 1/UIScreen.main.scale
-        hudView.layer.borderColor = UIColor.lightGray.cgColor
-        hudView.autoSetDimension(.width, toSize: 120, relation: .greaterThanOrEqual)
-        hudView.autoSetDimension(.height, toSize: 80, relation: .greaterThanOrEqual)
-        
-        progressView = UIView()
-        textLabel = MRLabel()
-        textLabel.delegate = self
-        textLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
-        textLabel.textAlignment = .center
-        textLabel.numberOfLines = 0
-        
-        switch theme {
-            case .light:
-                hudView.backgroundColor = UIColor(netHex: 0xffffff)
-                textLabel.textColor = .white
-            case .dark:
-                hudView.backgroundColor = UIColor(netHex: 0x555555)
-                textLabel.textColor = .black
-            case .custom(hudColor: let hudColor, textColor: let textColor):
-                hudView.backgroundColor = hudColor
-                textLabel.textColor = textColor
-        }
-
-        hudView.addSubview(progressView)
-        progressView.autoAlignAxis(toSuperviewAxis: .vertical)
-        progressView.autoPinEdge(toSuperviewEdge: .top, withInset: contentOffset)
-        progressView.autoPinEdge(toSuperviewEdge: .left, withInset: contentOffset, relation: .greaterThanOrEqual)
-        progressView.autoPinEdge(toSuperviewEdge: .right, withInset: contentOffset, relation: .greaterThanOrEqual)
-        
-        hudView.addSubview(textLabel)
-        fixLabelPosition()
-        textLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: contentOffset)
-        textLabel.autoPinEdge(toSuperviewEdge: .left, withInset: contentOffset)
-        textLabel.autoPinEdge(toSuperviewEdge: .right, withInset: contentOffset)
+        self.theme = theme
+        self.style = style
         
         set(style: style)
-        
-        addSubview(hudView)
-        hudView.autoCenterInSuperview()
-        hudView.autoPinEdge(toSuperviewEdge: .left, withInset: 32, relation: .greaterThanOrEqual)
-        hudView.autoPinEdge(toSuperviewEdge: .right, withInset: 32, relation: .greaterThanOrEqual)
     }
     
     // MARK: - MRLabel Delegate
     
     public func labelDidChangeText(text: String?) {
+        
         fixLabelPosition()
-        UIView.animate(withDuration: 0.1) {
-            self.layoutIfNeeded()
+        if superview != nil {
+            UIView.animate(withDuration: 0.1) {
+                self.layoutIfNeeded()
+            }
         }
     }
     
     private func fixLabelPosition() {
-     
-        let validText = textLabel.text != nil && textLabel.text?.isEmpty == false
-        let offset: CGFloat = validText ? contentOffset : 0
-        if cntTextLabelTop == nil {
-            cntTextLabelTop = textLabel.autoPinEdge(.top, to: .bottom, of: progressView, withOffset: offset)
-        } else {
-            cntTextLabelTop.constant = offset
+        
+        if textLabel != nil {
+            let validText = textLabel?.text != nil && textLabel?.text?.isEmpty == false
+            let offset: CGFloat = validText ? contentOffset : 0
+            if cntTextLabelTop == nil {
+                cntTextLabelTop = textLabel?.autoPinEdge(.top, to: .bottom, of: progressView, withOffset: offset)
+            } else {
+                cntTextLabelTop.constant = offset
+            }
         }
     }
     
@@ -153,16 +123,18 @@ open class MRHud: UIView, MRLabelDelegate {
     
     open func enableShadow(enable: Bool) {
         
-        if enable {
-            hudView.layer.shadowColor = shadowColor.cgColor
-            hudView.layer.shadowOffset = shadowOffset
-            hudView.layer.shadowRadius = shadowRadius
-            hudView.layer.shadowOpacity = shadowOpacity
-        } else {
-            hudView.layer.shadowColor = UIColor.black.cgColor
-            hudView.layer.shadowOffset = .zero
-            hudView.layer.shadowRadius = 0
-            hudView.layer.shadowOpacity = 0
+        if hudView != nil {
+            if enable {
+                hudView.layer.shadowColor = shadowColor.cgColor
+                hudView.layer.shadowOffset = shadowOffset
+                hudView.layer.shadowRadius = shadowRadius
+                hudView.layer.shadowOpacity = shadowOpacity
+            } else {
+                hudView.layer.shadowColor = UIColor.black.cgColor
+                hudView.layer.shadowOffset = .zero
+                hudView.layer.shadowRadius = 0
+                hudView.layer.shadowOpacity = 0
+            }
         }
     }
     
@@ -179,28 +151,140 @@ open class MRHud: UIView, MRLabelDelegate {
     
     open func set(style: MRHudStyle) {
         
-        if style == .indefinite {
+        self.style = style
+        
+        switch style {
             
-            progressView.removeSubviews()
-            let spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+            case .indefinite:
             
-            progressView.addSubview(spinner)
-            spinner.autoPinEdgesToSuperviewEdges()
-            spinner.startAnimating()
+                setupHudView()
+                
+                progressView.removeSubviews()
+                let spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+                spinner.color = .lightGray
+                
+                progressView.addSubview(spinner)
+                spinner.autoPinEdgesToSuperviewEdges()
+                spinner.startAnimating()
             
-        } else if style == .linearProgress {
+            case .linearProgress:
             
-            progressBar = UIProgressView(progressViewStyle: .default)
-            progressBar.autoSetDimensions(to: CGSize(width: 150, height: 6))
-            progressBar.clipsToBounds = true
-            progressBar.layer.cornerRadius = 3
+                setupHudView()
+                
+                progressBar = UIProgressView(progressViewStyle: .default)
+                progressBar.autoSetDimensions(to: CGSize(width: 150, height: 6))
+                progressBar.clipsToBounds = true
+                progressBar.layer.cornerRadius = 3
+                
+                progressView.addSubview(progressBar)
+                progressBar.trackTintColor = UIColor(netHex: 0x999999)
+                progressBar.progressTintColor = .green
+                progressBar.progress = 0.5
+                progressBar.autoAlignAxis(toSuperviewAxis: .vertical)
+                progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 16))
             
-            progressView.addSubview(progressBar)
-            progressBar.trackTintColor = UIColor(netHex: 0x999999)
-            progressBar.progressTintColor = .green
-            progressBar.progress = 0.5
-            progressBar.autoAlignAxis(toSuperviewAxis: .vertical)
-            progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 16))
+            case .rotationInside(image: let image, duration: let duration):
+            
+                setupHudView()
+                
+                imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+                imageView.image = image
+                imageView.clipsToBounds = true
+                imageView.contentMode = .scaleAspectFit
+                imageView.autoSetDimensions(to: CGSize(width: 60, height: 60))
+                
+                progressView.addSubview(imageView)
+                imageView.autoAlignAxis(toSuperviewAxis: .vertical)
+                imageView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 16))
+            
+                imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
+                
+                UIView.animateKeyframes(withDuration: duration, delay: 0, options:[.repeat, .autoreverse], animations: {
+                        self.imageView.layer.transform = CATransform3DMakeScale(-1.0, 1.0, 1.0)
+                }) { (completed) in
+                    
+                }
+            
+            case .rotationOnly(image: let image, duration: let duration):
+                
+                removeHudView()
+            
+                imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+                imageView.image = image
+                imageView.clipsToBounds = true
+                imageView.contentMode = .scaleAspectFit
+                imageView.autoSetDimensions(to: CGSize(width: 80, height: 80))
+            
+                addSubview(imageView)
+                imageView.autoCenterInSuperview()
+            
+                imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
+                
+                UIView.animateKeyframes(withDuration: duration, delay: 0, options:[.repeat, .autoreverse], animations: {
+                    self.imageView.layer.transform = CATransform3DMakeScale(-1.0, 1.0, 1.0)
+                }) { (completed) in
+                    
+                }
+        }
+    }
+    
+    private func setupHudView() {
+        
+        if imageView != nil {
+            imageView.removeFromSuperview()
+        }
+        
+        hudView = UIView()
+        hudView.layer.cornerRadius = 8
+        hudView.layer.borderWidth = 1/UIScreen.main.scale
+        hudView.layer.borderColor = UIColor.lightGray.cgColor
+        hudView.autoSetDimension(.width, toSize: 60, relation: .greaterThanOrEqual)
+        hudView.autoSetDimension(.height, toSize: 60, relation: .greaterThanOrEqual)
+        
+        progressView = UIView()
+        
+        textLabel = MRLabel()
+        textLabel?.delegate = self
+        textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        textLabel?.textAlignment = .center
+        textLabel?.numberOfLines = 0
+        
+        switch theme {
+            case .light:
+                hudView.backgroundColor = UIColor(netHex: 0xffffff)
+                textLabel?.textColor = .white
+            case .dark:
+                hudView.backgroundColor = UIColor(netHex: 0x555555)
+                textLabel?.textColor = .black
+            case .custom(hudColor: let hudColor, textColor: let textColor):
+                hudView.backgroundColor = hudColor
+                textLabel?.textColor = textColor
+        }
+        
+        hudView.addSubview(progressView)
+        progressView.autoAlignAxis(toSuperviewAxis: .vertical)
+        progressView.autoPinEdge(toSuperviewEdge: .top, withInset: contentOffset)
+        progressView.autoPinEdge(toSuperviewEdge: .left, withInset: contentOffset, relation: .greaterThanOrEqual)
+        progressView.autoPinEdge(toSuperviewEdge: .right, withInset: contentOffset, relation: .greaterThanOrEqual)
+        
+        hudView.addSubview(textLabel!)
+        fixLabelPosition()
+        textLabel?.autoPinEdge(toSuperviewEdge: .bottom, withInset: contentOffset)
+        textLabel?.autoPinEdge(toSuperviewEdge: .left, withInset: contentOffset)
+        textLabel?.autoPinEdge(toSuperviewEdge: .right, withInset: contentOffset)
+
+        addSubview(hudView)
+        hudView.autoCenterInSuperview()
+        hudView.autoPinEdge(toSuperviewEdge: .top, withInset: 32, relation: .greaterThanOrEqual)
+        hudView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 32, relation: .greaterThanOrEqual)
+        hudView.autoPinEdge(toSuperviewEdge: .left, withInset: 32, relation: .greaterThanOrEqual)
+        hudView.autoPinEdge(toSuperviewEdge: .right, withInset: 32, relation: .greaterThanOrEqual)
+    }
+    
+    private func removeHudView() {
+        
+        if self.hudView != nil {
+            self.hudView.removeFromSuperview()
         }
     }
     
