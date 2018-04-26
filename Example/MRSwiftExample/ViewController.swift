@@ -46,14 +46,31 @@ class ViewController: UIViewController {
     @IBAction func didTapHudButton(_ sender: Any) {
         
         let hud = MRHud(theme: .custom(hudColor: .white, textColor: .black), style: .rotationOnly(image: UIImage(named: "empire_logo.png")!, duration: 1))
-        hud.textLabel?.text = "Download"
-        hud.enableShadow(enable: true)
         //hud.setProgressColors(emptyColor: UIColor(netHex: 0xdddddd), filledColor: UIColor(netHex: 0x00ba0e))
         //hud.setShadow(color: .red, offset: .zero, radius: 10, opacity: 0.5)
         hud.show(in: view, animated: true)
         
         DispatchQueue.main.asyncAfter(deadline: .now()+2) {
-            hud.set(style: .indefinite)
+            hud.set(style: .rotationInside(image: UIImage(named: "empire_logo.png")!, duration: 2))
+            hud.enableShadow(enable: true)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+4) {
+            hud.set(style: .linearProgress)
+            hud.textLabel?.text = "Download..."
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+5) {
+            hud.set(progress: 0.9)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+7) {
+            hud.set(progress: 0.1)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+9) {
+            hud.set(style: .indeterminate)
+            hud.textLabel?.text = "aaaaa caricamento infinito aaaaaaaa ooooooooo eeeeeeeee loooool"
         }
     }
     

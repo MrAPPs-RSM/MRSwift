@@ -32,7 +32,7 @@ public enum MRHudTheme {
 }
 
 public enum MRHudStyle {
-    case indefinite
+    case indeterminate
     case linearProgress
     case rotationInside(image: UIImage, duration: TimeInterval)
     case rotationOnly(image: UIImage, duration: TimeInterval)
@@ -55,7 +55,7 @@ open class MRHud: UIView, MRLabelDelegate {
     // MARK: - Constants & Variables
     
     private var theme = MRHudTheme.dark
-    private var style = MRHudStyle.indefinite
+    private var style = MRHudStyle.indeterminate
     var progress: Float = 0
     private var contentOffset: CGFloat = 16
     private var shadowColor: UIColor = .black
@@ -152,10 +152,13 @@ open class MRHud: UIView, MRLabelDelegate {
     open func set(style: MRHudStyle) {
         
         self.style = style
+        if progressView != nil {
+            progressView.removeSubviews()
+        }
         
         switch style {
             
-            case .indefinite:
+            case .indeterminate:
             
                 setupHudView()
                 
@@ -195,7 +198,7 @@ open class MRHud: UIView, MRLabelDelegate {
                 
                 progressView.addSubview(imageView)
                 imageView.autoAlignAxis(toSuperviewAxis: .vertical)
-                imageView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 16))
+                imageView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
             
                 imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
                 
@@ -232,6 +235,10 @@ open class MRHud: UIView, MRLabelDelegate {
         
         if imageView != nil {
             imageView.removeFromSuperview()
+        }
+        
+        if hudView != nil {
+            return
         }
         
         hudView = UIView()
