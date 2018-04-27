@@ -9,6 +9,45 @@
 import UIKit
 import PureLayout
 
+class MRHudButtonCell : UITableViewCell {
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        clipsToBounds = true
+        selectionStyle = .none
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: true)
+        
+        if highlighted {
+            self.backgroundColor = superview?.superview?.backgroundColor?.lighter
+        } else {
+            self.backgroundColor = .clear
+        }
+    }
+}
+
+open class MRHudButton : NSObject {
+
+    var title: String?
+    var highlighted: Bool = false
+    var action: (() -> Void)?
+    
+    public convenience init(title: String?, highlighted: Bool, action: (() -> Void)?) {
+        self.init()
+        
+        self.title = title
+        self.highlighted = highlighted
+        self.action = action
+    }
+}
+
 public protocol MRLabelDelegate : class {
     func labelDidChangeText(text: String?)
 }
@@ -38,7 +77,7 @@ public enum MRHudStyle {
     case rotationOnly(image: UIImage, duration: TimeInterval)
 }
 
-open class MRHud: UIView, MRLabelDelegate {
+open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Views
     
@@ -46,11 +85,15 @@ open class MRHud: UIView, MRLabelDelegate {
     private var progressView: UIView!
     private var progressBar: UIProgressView!
     private var imageView: UIImageView!
+    private var tblButtons: UITableView!
     open var textLabel: MRLabel?
     
     // MARK: - Constraints
     
     var cntTextLabelTop: NSLayoutConstraint!
+    var cntTextLabelBottomSuperview: NSLayoutConstraint!
+    var cntTextLabelBottomButtons: NSLayoutConstraint!
+    var cntTblButtonsHeight: NSLayoutConstraint!
     
     // MARK: - Constants & Variables
     
@@ -62,6 +105,9 @@ open class MRHud: UIView, MRLabelDelegate {
     private var shadowOffset: CGSize = .zero
     private var shadowRadius: CGFloat = 3
     private var shadowOpacity: Float = 0.3
+    private let cellIdentifier = "cellIdentifier"
+    private var buttons = [MRHudButton]()
+    private let buttonRowHeight: CGFloat = 50
     
     // MARK: - Initialization
 
@@ -81,12 +127,12 @@ open class MRHud: UIView, MRLabelDelegate {
     
     public func labelDidChangeText(text: String?) {
         
-        fixLabelPosition()
+        fixLabelPosition()/*
         if superview != nil {
             UIView.animate(withDuration: 0.1) {
-                self.layoutIfNeeded()
+                self.textLabel?.layoutIfNeeded()
             }
-        }
+        }*/
     }
     
     private func fixLabelPosition() {
@@ -147,7 +193,7 @@ open class MRHud: UIView, MRLabelDelegate {
         enableShadow(enable: true)
     }
     
-    // MARK: - Hud Visibility Handlers
+    // MARK: - Appearance Handlers
     
     open func set(style: MRHudStyle) {
         
@@ -242,6 +288,7 @@ open class MRHud: UIView, MRLabelDelegate {
         }
         
         hudView = UIView()
+        hudView.clipsToBounds = true
         hudView.layer.cornerRadius = 8
         hudView.layer.borderWidth = 1/UIScreen.main.scale
         hudView.layer.borderColor = UIColor.lightGray.cgColor
@@ -276,7 +323,11 @@ open class MRHud: UIView, MRLabelDelegate {
         
         hudView.addSubview(textLabel!)
         fixLabelPosition()
-        textLabel?.autoPinEdge(toSuperviewEdge: .bottom, withInset: contentOffset)
+        if cntTextLabelBottomSuperview == nil {
+            cntTextLabelBottomSuperview = textLabel?.autoPinEdge(toSuperviewEdge: .bottom, withInset: contentOffset)
+        } else {
+            textLabel?.addConstraint(cntTextLabelBottomSuperview)
+        }
         textLabel?.autoPinEdge(toSuperviewEdge: .left, withInset: contentOffset)
         textLabel?.autoPinEdge(toSuperviewEdge: .right, withInset: contentOffset)
 
@@ -318,6 +369,9 @@ open class MRHud: UIView, MRLabelDelegate {
     }
     
     open func hide() {
+        if tblButtons != nil {
+            tblButtons.removeObserver(self, forKeyPath: "contentSize")
+        }
         removeFromSuperview()
     }
     
@@ -327,10 +381,153 @@ open class MRHud: UIView, MRLabelDelegate {
             UIView.animate(withDuration: 0.3, animations: {
                 self.alpha = 1.0
             }) { (completed) in
-                self.removeFromSuperview()
+                self.hide()
             }
         } else {
-            removeFromSuperview()
+            hide()
+        }
+    }
+    
+    // MARK: - Buttons Handlers
+    
+    open func set(buttons newButtons: [MRHudButton]) {
+        
+        switch style {
+            case .rotationOnly(image: _, duration: _):
+                removeButtons()
+                break
+            default:
+                
+                self.buttons = newButtons
+                
+                if tblButtons == nil {
+                    
+                    tblButtons = UITableView(frame: .zero, style: .grouped)
+                    tblButtons.dataSource = self
+                    tblButtons.delegate = self
+                    tblButtons.backgroundColor = .clear
+                    tblButtons.separatorInset = .zero
+                    tblButtons.tableFooterView = nil
+                    tblButtons.contentInset = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
+                    tblButtons.register(MRHudButtonCell.self, forCellReuseIdentifier: cellIdentifier)
+                    tblButtons.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+                    
+                    let footer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.00001))
+                    footer.backgroundColor = .clear
+                    tblButtons.tableFooterView = footer
+                }
+                
+                if tblButtons.superview == nil {
+                    
+                    hudView.addSubview(tblButtons)
+                    tblButtons.autoSetDimension(.width, toSize: 150, relation: .greaterThanOrEqual)
+                    tblButtons.autoPinEdge(toSuperviewEdge: .bottom)
+                    tblButtons.autoPinEdge(toSuperviewEdge: .left)
+                    tblButtons.autoPinEdge(toSuperviewEdge: .right)
+                    
+                    if cntTextLabelBottomSuperview != nil {
+                        NSLayoutConstraint.deactivate([cntTextLabelBottomSuperview])
+                    }
+                    
+                    if cntTextLabelBottomButtons == nil {
+                        cntTextLabelBottomButtons = textLabel?.autoPinEdge(.bottom, to: .top, of: tblButtons, withOffset: -contentOffset)
+                    } else {
+                        textLabel?.addConstraint(cntTextLabelBottomButtons)
+                    }
+                }
+
+                tblButtons.reloadData()
+        }
+    }
+    
+    open func addButtons(buttons newButtons: [MRHudButton]) {
+        
+        buttons.append(contentsOf: newButtons)
+        if tblButtons != nil {
+            tblButtons.reloadData()
+        }
+    }
+    
+    private func removeButtons() {
+        
+        buttons = []
+        
+        if cntTextLabelBottomButtons != nil {
+            NSLayoutConstraint.deactivate([cntTextLabelBottomButtons])
+        }
+        if cntTextLabelBottomSuperview == nil {
+            cntTextLabelBottomSuperview = textLabel?.autoPinEdge(toSuperviewEdge: .bottom, withInset: contentOffset)
+        } else {
+            NSLayoutConstraint.activate([cntTextLabelBottomSuperview])
+        }
+        
+        textLabel?.autoPinEdge(toSuperviewEdge: .bottom, withInset: contentOffset, relation: .equal)
+        if tblButtons != nil {
+            tblButtons.removeObserver(self, forKeyPath: "contentSize")
+            tblButtons.removeFromSuperview()
+        }
+    }
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return buttons.count
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return buttonRowHeight
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! MRHudButtonCell
+        cell.backgroundColor = .clear
+        cell.textLabel?.textAlignment = .center
+        
+        let button = buttons[indexPath.row]
+        switch theme {
+        case .custom(hudColor: _, textColor: let textColor):
+            cell.textLabel?.textColor = textColor
+        case .dark:
+            cell.textLabel?.textColor = .white
+        case .light:
+            cell.textLabel?.textColor = .black
+        }
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: button.highlighted ? .bold : .regular)
+        cell.textLabel?.text = button.title
+        
+        return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let button = buttons[indexPath.row]
+        if let action = button.action {
+            action()
+        }
+    }
+    
+    // MARK: - Other Methods
+    
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        if keyPath == "contentSize" && object is UITableView {
+            if tblButtons != nil {
+                let height = buttons.count > 4 ? buttonRowHeight*4 : buttonRowHeight*CGFloat(buttons.count)
+                tblButtons.isScrollEnabled = buttons.count > 4
+                if cntTblButtonsHeight == nil {
+                    cntTblButtonsHeight = tblButtons.autoSetDimension(.height, toSize: height)
+                } else {
+                    cntTblButtonsHeight.constant = height
+                }
+            }
         }
     }
 }

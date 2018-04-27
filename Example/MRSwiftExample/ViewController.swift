@@ -45,14 +45,34 @@ class ViewController: UIViewController {
     
     @IBAction func didTapHudButton(_ sender: Any) {
         
-        let hud = MRHud(theme: .custom(hudColor: .white, textColor: .black), style: .rotationOnly(image: UIImage(named: "empire_logo.png")!, duration: 1))
+        let hud = MRHud(theme: .custom(hudColor: UIColor(netHex: 0x333333), textColor: UIColor(netHex: 0xeeeeee)), style: .linearProgress)
+        hud.textLabel?.text = "Ciao sono una label"
+        hud.enableShadow(enable: true)
         //hud.setProgressColors(emptyColor: UIColor(netHex: 0xdddddd), filledColor: UIColor(netHex: 0x00ba0e))
         //hud.setShadow(color: .red, offset: .zero, radius: 10, opacity: 0.5)
         hud.show(in: view, animated: true)
         
         DispatchQueue.main.asyncAfter(deadline: .now()+2) {
-            hud.set(style: .linearProgress)
-            hud.enableShadow(enable: true)
+            hud.set(style: .indeterminate)
+            hud.set(buttons: [
+                MRHudButton(title: "Button 1", highlighted: false, action: {
+                    print("Tapped Button 1")
+                }),
+                MRHudButton(title: "Button 2", highlighted: false, action: {
+                    print("Tapped Button 2")
+                })
+            ])
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+4) {
+            hud.addButtons(buttons: [
+                MRHudButton(title: "Button 3", highlighted: false, action: {
+                    print("Tapped Button 3")
+                }),
+                MRHudButton(title: "Button 4", highlighted: true, action: {
+                    print("Tapped Button 4")
+                })
+            ])
         }
     }
     
