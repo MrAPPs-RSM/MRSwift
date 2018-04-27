@@ -26,7 +26,15 @@ class MRHudButtonCell : UITableViewCell {
         super.setHighlighted(highlighted, animated: true)
         
         if highlighted {
-            self.backgroundColor = superview?.superview?.backgroundColor?.lighter
+            if let rgb = superview?.superview?.backgroundColor?.getRGB() {
+                if rgb.red > 225 && rgb.green > 225 && rgb.blue > 225 {
+                    self.backgroundColor = UIColor(netHex: 0xeeeeee)
+                } else {
+                    self.backgroundColor = superview?.superview?.backgroundColor?.lighter
+                }
+            } else {
+                self.backgroundColor = superview?.superview?.backgroundColor?.lighter
+            }
         } else {
             self.backgroundColor = .clear
         }
@@ -306,10 +314,10 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
         switch theme {
             case .light:
                 hudView.backgroundColor = UIColor(netHex: 0xffffff)
-                textLabel?.textColor = .white
+                textLabel?.textColor = .black
             case .dark:
                 hudView.backgroundColor = UIColor(netHex: 0x555555)
-                textLabel?.textColor = .black
+                textLabel?.textColor = .white
             case .custom(hudColor: let hudColor, textColor: let textColor):
                 hudView.backgroundColor = hudColor
                 textLabel?.textColor = textColor

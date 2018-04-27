@@ -45,7 +45,7 @@ class ViewController: UIViewController {
     
     @IBAction func didTapHudButton(_ sender: Any) {
         
-        let hud = MRHud(theme: .custom(hudColor: UIColor(netHex: 0x333333), textColor: UIColor(netHex: 0xeeeeee)), style: .linearProgress)
+        let hud = MRHud(theme: .light, style: .linearProgress)
         hud.textLabel?.text = "Ciao sono una label"
         hud.enableShadow(enable: true)
         //hud.setProgressColors(emptyColor: UIColor(netHex: 0xdddddd), filledColor: UIColor(netHex: 0x00ba0e))
