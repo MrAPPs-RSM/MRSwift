@@ -428,7 +428,7 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
                 if tblButtons.superview == nil {
                     
                     hudView.addSubview(tblButtons)
-                    tblButtons.autoSetDimension(.width, toSize: 150, relation: .greaterThanOrEqual)
+                    tblButtons.autoSetDimension(.width, toSize: 200, relation: .greaterThanOrEqual)
                     tblButtons.autoPinEdge(toSuperviewEdge: .bottom)
                     tblButtons.autoPinEdge(toSuperviewEdge: .left)
                     tblButtons.autoPinEdge(toSuperviewEdge: .right)
