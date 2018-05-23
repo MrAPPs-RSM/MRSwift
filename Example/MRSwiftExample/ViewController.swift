@@ -76,6 +76,39 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func didTapFormButton(_ sender: Any) {
+        
+        let viewController = MRFormViewController()
+        
+        viewController.data = [
+            MRFormSection(id: nil, title: "Standard", subtitle: nil, value: nil, rows: [
+                MRFormRow(id: nil, key: nil, title: "Title 1-1", subtitle: nil, value: "Value 1-1", placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowDefault),
+                MRFormRow(id: nil, key: nil, title: "Title 1-2", subtitle: nil, value: "Value 1-2", placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowDefault)
+                ]),
+            MRFormSection(id: nil, title: "TextField", subtitle: nil, value: nil, rows: [
+                MRFormRow(id: nil, key: nil, title: "Title 2-1", subtitle: nil, value: "Value 2-1", placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowTextField),
+                MRFormRow(id: nil, key: nil, title: "Title 2-2", subtitle: nil, value: "Value 2-2", placeholder: "Placeholder", image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowTextField)
+                ]),
+            MRFormSection(id: nil, title: "Subtitle", subtitle: nil, value: nil, rows: [
+                MRFormRow(id: nil, key: nil, title: "Title 3-1", subtitle: "Subtitle 3-1", value: nil, placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowSubtitle),
+                MRFormRow(id: nil, key: nil, title: "Title 3-2", subtitle: "Subtitle 3-2", value: nil, placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowSubtitle)
+                ]),
+            MRFormSection(id: nil, title: "Switch", subtitle: nil, value: nil, rows: [
+                MRFormRow(id: nil, key: nil, title: "Title 4-1", subtitle: nil, value: true, placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowSwitch),
+                MRFormRow(id: nil, key: nil, title: "Title 4-2", subtitle: nil, value: false, placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowSwitch)
+                ]),
+            MRFormSection(id: nil, title: "Date", subtitle: nil, value: nil, rows: [
+                MRFormRow(id: nil, key: nil, title: "Title 5-1", subtitle: nil, value: nil, placeholder: nil, image: nil, extraData: nil, dateFormat: "dd/MM/yyyy", accessoryType: .none, mandatory: false, type: .rowDate),
+                MRFormRow(id: nil, key: nil, title: "Title 5-2", subtitle: nil, value: nil, placeholder: nil, image: nil, extraData: nil, dateFormat: "HH:mm:ss", accessoryType: .none, mandatory: false, type: .rowDate)
+                ]),
+            MRFormSection(id: nil, title: "List", subtitle: nil, value: nil, rows: [
+                MRFormRow(id: nil, key: nil, title: "Title 6-1", subtitle: nil, value: nil, placeholder: nil, image: nil, extraData: ["A", "B", "C"], dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowList),
+                MRFormRow(id: nil, key: nil, title: "Title 6-2", subtitle: nil, value: "1", placeholder: nil, image: nil, extraData: ["1", "2", "3"], dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowList)
+                ])
+        ]
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
