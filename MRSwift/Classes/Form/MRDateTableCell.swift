@@ -36,7 +36,6 @@ public class MRDateTableCell: UITableViewCell {
         lblTitle = UILabel()
         lblTitle.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         lblTitle.numberOfLines = 0
-        lblTitle.textColor = .black
         addSubview(lblTitle)
         
         txfValue = UITextField()

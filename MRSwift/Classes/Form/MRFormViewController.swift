@@ -103,6 +103,9 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     
     open var tintColor: UIColor?
     open var switchColor: UIColor?
+    open var titleColor = UIColor(netHex: 0x444444)
+    open var valueColor = UIColor.black
+    open var editingEnabled: Bool = false
     
     private var currentIndexPath = IndexPath(row: 0, section: 0)
     
@@ -178,7 +181,9 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         if row.type == .rowDefault || row.type == .rowList {
             
             let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+            cell.textLabel?.textColor = titleColor
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            cell.detailTextLabel?.textColor = valueColor
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
@@ -187,7 +192,9 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowSubtitle {
             
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: subtitleIdentifier)
+            cell.textLabel?.textColor = titleColor
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            cell.detailTextLabel?.textColor = valueColor
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 13, weight: .regular)
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
@@ -199,6 +206,9 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.delegate = self
             cell.accessoryType = .none
             cell.configure(with: row)
+            cell.lblTitle.textColor = titleColor
+            cell.txfValue.isEnabled = editingEnabled
+            cell.txfValue.textColor = valueColor
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
             
@@ -208,6 +218,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.delegate = self
             cell.accessoryType = .none
             cell.configure(with: row)
+            cell.swSwitch.isEnabled = editingEnabled
+            cell.lblTitle.textColor = titleColor
             if switchColor != nil { cell.swSwitch.onTintColor = switchColor }
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
@@ -218,6 +230,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.delegate = self
             cell.accessoryType = .none
             cell.configure(with: row)
+            cell.lblTitle.textColor = titleColor
+            cell.txfValue.textColor = valueColor
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
         }
@@ -231,10 +245,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         let section = data[indexPath.section]
         let row = section.rows[indexPath.row]
         
-        if row.type == .rowList {
+        if row.type == .rowList && editingEnabled {
             if let extraData = row.extraData as? [String] {
                 currentIndexPath = indexPath
-                let list = MRDataListViewController(data: extraData, selectedValue: row.value as? String)
+                let list = MRDataListViewController(data: extraData, selectedValue: row.value as? String, valueColor: valueColor)
                 list.delegate = self
                 navigationController?.pushViewController(list, animated: true)
             }

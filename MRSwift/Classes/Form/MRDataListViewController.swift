@@ -25,6 +25,7 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     private var allData = [String]()
     private var data = [String]()
     private var selectedValue: String?
+    private var valueColor = UIColor.black
     private let cellIdentifier = "cellIdentifier"
     public weak var delegate: MRDataListViewControllerDelegate?
     
@@ -33,12 +34,13 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     // MARK: - Initialization
     
-    convenience init(data: [String], selectedValue: String?) {
+    convenience init(data: [String], selectedValue: String?, valueColor: UIColor) {
         self.init()
         
         self.allData = data
         self.data = data
         self.selectedValue = selectedValue
+        self.valueColor = valueColor
     }
     
     deinit {
@@ -136,6 +138,7 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         
         cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         cell.textLabel?.text = value
+        cell.textLabel?.textColor = valueColor
         cell.accessoryType = selectedValue != nil ? selectedValue! == value ? .checkmark : .none : .none
         
         return cell
