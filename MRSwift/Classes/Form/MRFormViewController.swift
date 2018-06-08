@@ -14,7 +14,7 @@ public extension UITableViewCell {
     @objc public func configure(with row: MRFormRow) {
         
         accessoryType = row.type == .rowList ? .disclosureIndicator : row.accessoryType
-        textLabel?.text = row.title
+        textLabel?.text = row.mandatory ? "\(row.title ?? "")*" : row.title
         detailTextLabel?.text = row.type == .rowSubtitle ? row.subtitle : row.value as? String
         imageView?.image = row.image
     }
@@ -105,17 +105,17 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open var switchColor: UIColor?
     open var titleColor = UIColor(netHex: 0x444444)
     open var valueColor = UIColor.black
-    open var editingEnabled: Bool = false
+    open var editingEnabled: Bool = true
     
-    private var currentIndexPath = IndexPath(row: 0, section: 0)
+    open var currentIndexPath = IndexPath(row: 0, section: 0)
     
     // MARK: - UIViewController Methods
-
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
         
         switchColor = .red
-
+        
         form = UITableView(frame: view.frame, style: .grouped)
         form.dataSource = self
         form.delegate = self
@@ -142,7 +142,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     // MARK: - Keyboard Handlers
-
+    
     override open func keyboardDidShow(keyboardInfo: KeyboardInfo) {
         form.contentInset.bottom = keyboardInfo.endFrame.height
         form.scrollIndicatorInsets.bottom = keyboardInfo.endFrame.height
@@ -293,10 +293,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     // MARK: - Other Methods
     
     // MARK: - Battery Warning
-
+    
     override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }

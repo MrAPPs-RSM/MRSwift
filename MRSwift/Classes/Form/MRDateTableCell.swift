@@ -13,7 +13,7 @@ public protocol MRDateTableCellDelegate : class {
 }
 
 public class MRDateTableCell: UITableViewCell {
-
+    
     public var lblTitle: UILabel!
     public var txfValue: UITextField!
     public var datePicker: UIDatePicker!
@@ -75,7 +75,7 @@ public class MRDateTableCell: UITableViewCell {
     public override func configure(with row: MRFormRow) {
         
         dateFormatter.dateFormat = row.dateFormat
-        lblTitle.text = row.title
+        lblTitle.text = row.mandatory ? "\(row.title ?? "")*" : row.title
         txfValue.placeholder = row.placeholder
         setDate(date: row.value as? Date)
     }
@@ -94,5 +94,5 @@ public class MRDateTableCell: UITableViewCell {
         
         // Configure the view for the selected state
     }
-
+    
 }

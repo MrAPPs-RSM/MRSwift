@@ -65,7 +65,7 @@ public class MRTextFieldTableCell: UITableViewCell {
     
     public override func configure(with row: MRFormRow) {
         
-        lblTitle.text = row.title
+        lblTitle.text = row.mandatory ? "\(row.title ?? "")*" : row.title
         txfValue.text = row.value as? String
         txfValue.placeholder = row.placeholder
     }
@@ -73,11 +73,11 @@ public class MRTextFieldTableCell: UITableViewCell {
     @objc func textFieldDidChange(textField: UITextField) {
         delegate?.mrTextFieldTableCellDidChangeText(cell: self)
     }
-
+    
     override public func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
-
+    
 }

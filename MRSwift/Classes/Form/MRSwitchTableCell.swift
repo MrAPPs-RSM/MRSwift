@@ -53,24 +53,24 @@ public class MRSwitchTableCell: UITableViewCell {
         swSwitch.autoPinEdge(toSuperviewEdge: .trailing, withInset: 16)
         swSwitch.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
     }
-
+    
     override public func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override public func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
     public override func configure(with row: MRFormRow) {
         
-        lblTitle.text = row.title
+        lblTitle.text = row.mandatory ? "\(row.title ?? "")*" : row.title
         swSwitch.isOn = (row.value as? Bool) ?? false
     }
-
+    
     @objc func switchDidChangeValue(sender: UISwitch) {
         delegate?.mrSwitchTableCellDidChangeSelection(cell: self)
     }
