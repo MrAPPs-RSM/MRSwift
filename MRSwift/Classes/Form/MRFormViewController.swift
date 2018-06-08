@@ -29,7 +29,7 @@ public enum MRFormRowType {
     case rowList
 }
 
-public class MRFormRow : NSObject {
+open class MRFormRow : NSObject {
     
     public var id: Any?
     public var key: String = ""
@@ -62,7 +62,7 @@ public class MRFormRow : NSObject {
     }
 }
 
-public class MRFormSection : NSObject {
+open class MRFormSection : NSObject {
     
     public var id: Any?
     public var key: String = ""
@@ -86,29 +86,29 @@ public class MRFormSection : NSObject {
     }
 }
 
-public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, MRTextFieldTableCellDelegate, MRSwitchTableCellDelegate, MRDateTableCellDelegate, MRDataListViewControllerDelegate {
+open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, MRTextFieldTableCellDelegate, MRSwitchTableCellDelegate, MRDateTableCellDelegate, MRDataListViewControllerDelegate {
     
     // MARK: - Layout
     
-    public var form: UITableView!
+    open var form: UITableView!
     
     // MARK: - Constants & Variables
     
-    public var data = [MRFormSection]()
+    open var data = [MRFormSection]()
     private let cellIdentifier = "cellIdentifier"
     private let subtitleIdentifier = "subtitleIdentifier"
     private let textfieldIdentifier = "textfieldIdentifier"
     private let switchIdentifier = "switchIdentifier"
     private let dateIdentifier = "dateIdentifier"
     
-    public var tintColor: UIColor?
-    public var switchColor: UIColor?
+    open var tintColor: UIColor?
+    open var switchColor: UIColor?
     
     private var currentIndexPath = IndexPath(row: 0, section: 0)
     
     // MARK: - UIViewController Methods
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         switchColor = .red
@@ -126,13 +126,13 @@ public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSou
         form.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: UIView.safeArea.bottom, right: 0)
     }
     
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         registerForKeyboardNotifications()
     }
     
-    override public func viewWillDisappear(_ animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         unregisterForKeyboardNotifications()
@@ -140,37 +140,37 @@ public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSou
     
     // MARK: - Keyboard Handlers
 
-    override public func keyboardDidShow(keyboardInfo: KeyboardInfo) {
+    override open func keyboardDidShow(keyboardInfo: KeyboardInfo) {
         form.contentInset.bottom = keyboardInfo.endFrame.height
         form.scrollIndicatorInsets.bottom = keyboardInfo.endFrame.height
     }
     
-    override public func keyboardDidHide(keyboardInfo: KeyboardInfo) {
+    override open func keyboardDidHide(keyboardInfo: KeyboardInfo) {
         form.contentInset.bottom = 0
         form.scrollIndicatorInsets.bottom = 0
     }
     
     // MARK: - UITableView DataSource & Delegate
     
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    open func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
     }
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let dataSection = data[section]
         return (dataSection.stackable && !dataSection.stacked) || !dataSection.stackable ? dataSection.rows.count : 0
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
-    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let dataSection = data[section]
         return dataSection.title
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let section = data[indexPath.section]
         let row = section.rows[indexPath.row]
@@ -225,7 +225,7 @@ public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSou
         return UITableViewCell()
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         
         let section = data[indexPath.section]
@@ -243,7 +243,7 @@ public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSou
     
     // MARK: - MRTextFieldTableCell Delegate
     
-    public func mrTextFieldTableCellDidChangeText(cell: MRTextFieldTableCell) {
+    open func mrTextFieldTableCellDidChangeText(cell: MRTextFieldTableCell) {
         
         if let indexPath = form.indexPath(for: cell) {
             data[indexPath.section].rows[indexPath.row].value = cell.txfValue.text
@@ -252,7 +252,7 @@ public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSou
     
     // MARK: - MRSwitchTableCell Delegate
     
-    public func mrSwitchTableCellDidChangeSelection(cell: MRSwitchTableCell) {
+    open func mrSwitchTableCellDidChangeSelection(cell: MRSwitchTableCell) {
         
         if let indexPath = form.indexPath(for: cell) {
             data[indexPath.section].rows[indexPath.row].value = cell.swSwitch.isOn
@@ -261,7 +261,7 @@ public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSou
     
     // MARK: - MRDateTableCell Delegate
     
-    public func mrDateTableCellDidChangeDate(cell: MRDateTableCell) {
+    open func mrDateTableCellDidChangeDate(cell: MRDateTableCell) {
         
         if let indexPath = form.indexPath(for: cell) {
             data[indexPath.section].rows[indexPath.row].value = cell.datePicker.date
@@ -270,7 +270,7 @@ public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSou
     
     // MARK: - MRDataListViewController Delegate
     
-    public func mrDataListViewControllerDidSelectValue(value: String, at: Int) {
+    open func mrDataListViewControllerDidSelectValue(value: String, at: Int) {
         
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
@@ -280,7 +280,7 @@ public class MRFormViewController: MRPrimitiveViewController, UITableViewDataSou
     
     // MARK: - Battery Warning
 
-    override public func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }

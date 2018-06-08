@@ -14,7 +14,7 @@ public protocol MRDataListViewControllerDelegate : class {
     func mrDataListViewControllerDidSelectValue(value: String, at index: Int)
 }
 
-public class MRDataListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
+public class MRDataListViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
 
     // MARK: - Layout
     
@@ -69,6 +69,16 @@ public class MRDataListViewController: UIViewController, UITableViewDataSource, 
         list.tableHeaderView = searchController.searchBar
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        registerForKeyboardNotifications()
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unregisterForKeyboardNotifications()
+    }
+    
     // MARK: - Search Handlers
     
     public func updateSearchResults(for searchController: UISearchController) {
@@ -85,6 +95,19 @@ public class MRDataListViewController: UIViewController, UITableViewDataSource, 
             data = allData
         }
         list.reloadData()
+    }
+    
+    // MARK: - Keyboard Handlers
+    
+    public override func keyboardDidShow(keyboardInfo: KeyboardInfo) {
+        let inset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardInfo.endFrame.size.height, right: 0)
+        list.contentInset = inset
+        list.scrollIndicatorInsets = inset
+    }
+    
+    public override func keyboardDidHide(keyboardInfo: KeyboardInfo) {
+        list.contentInset = .zero
+        list.scrollIndicatorInsets = .zero
     }
     
     // MARK: - UITableView DataSource & Delegate
