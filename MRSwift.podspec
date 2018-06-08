@@ -138,5 +138,7 @@ Pod::Spec.new do |s|
   s.dependency 'SDWebImage'
   s.dependency 'Cache'
   s.dependency 'PureLayout'
+  s.dependency 'RxSwift'
+  s.dependency 'RxCocoa'
 
 end

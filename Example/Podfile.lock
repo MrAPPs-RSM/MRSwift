@@ -5,8 +5,13 @@ PODS:
     - Alamofire
     - Cache
     - PureLayout
+    - RxCocoa
+    - RxSwift
     - SDWebImage
   - PureLayout (3.0.2)
+  - RxCocoa (4.1.2):
+    - RxSwift (~> 4.0)
+  - RxSwift (4.1.2)
   - SDWebImage (4.3.3):
     - SDWebImage/Core (= 4.3.3)
   - SDWebImage/Core (4.3.3)
@@ -19,6 +24,8 @@ SPEC REPOS:
     - Alamofire
     - Cache
     - PureLayout
+    - RxCocoa
+    - RxSwift
     - SDWebImage
 
 EXTERNAL SOURCES:
@@ -28,8 +35,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   Cache: f28f8dd64b632155aabf9b3906b036a659048251
-  MRSwift: b8aedea3a8b40deb760c9fed2664b41ca6cde035
+  MRSwift: 7371281d845dfff9074930f2c6f470e443be368f
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
+  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
+  RxSwift: e49536837d9901277638493ea537394d4b55f570
   SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
 
 PODFILE CHECKSUM: 9045741e71eb897aee58493ed31889f03e0654db

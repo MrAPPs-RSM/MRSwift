@@ -8,12 +8,13 @@
 
 import UIKit
 import PureLayout
+import RxSwift
 
 public protocol MRDataListViewControllerDelegate : class {
     func mrDataListViewControllerDidSelectValue(value: String, at index: Int)
 }
 
-public class MRDataListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+public class MRDataListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
 
     // MARK: - Layout
     
@@ -21,18 +22,27 @@ public class MRDataListViewController: UIViewController, UITableViewDataSource, 
     
     // MARK: - Constants & Variables
     
+    private var allData = [String]()
     private var data = [String]()
     private var selectedValue: String?
     private let cellIdentifier = "cellIdentifier"
     public weak var delegate: MRDataListViewControllerDelegate?
+    
+    private let searchController = UISearchController(searchResultsController: nil)
+    private var searchDispose: Disposable?
     
     // MARK: - Initialization
     
     convenience init(data: [String], selectedValue: String?) {
         self.init()
         
+        self.allData = data
         self.data = data
         self.selectedValue = selectedValue
+    }
+    
+    deinit {
+        list.tableHeaderView = nil
     }
     
     // MARK: - UIViewController Methods
@@ -41,7 +51,6 @@ public class MRDataListViewController: UIViewController, UITableViewDataSource, 
         super.viewDidLoad()
 
         list = UITableView(frame: view.frame, style: .grouped)
-        list.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
         list.dataSource = self
         list.delegate = self
         list.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
@@ -51,6 +60,31 @@ public class MRDataListViewController: UIViewController, UITableViewDataSource, 
         let footer = UIView()
         footer.backgroundColor = .clear
         list.tableFooterView = footer
+        
+        searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.showsCancelButton = false
+        searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.dimsBackgroundDuringPresentation = false
+        list.tableHeaderView = searchController.searchBar
+    }
+    
+    // MARK: - Search Handlers
+    
+    public func updateSearchResults(for searchController: UISearchController) {
+        search(query: searchController.searchBar.text)
+    }
+    
+    func search(query: String?) {
+        
+        if let query = query, !query.isEmpty {
+            data = allData.filter { value in
+                return value.lowercased().contains(query.lowercased())
+            }
+        } else {
+            data = allData
+        }
+        list.reloadData()
     }
     
     // MARK: - UITableView DataSource & Delegate
@@ -90,8 +124,17 @@ public class MRDataListViewController: UIViewController, UITableViewDataSource, 
         let value = data[indexPath.row]
         selectedValue = value
         tableView.reloadData()
-        delegate?.mrDataListViewControllerDidSelectValue(value: value, at: indexPath.row)
+        
+        let index = allData.index { (value) -> Bool in
+            return value == data[indexPath.row]
+        }
+        
+        delegate?.mrDataListViewControllerDidSelectValue(value: value, at: index!)
     }
+    
+    // MARK: - Other Methods
+    
+    
 
     // MARK: - Battery Warning
     
