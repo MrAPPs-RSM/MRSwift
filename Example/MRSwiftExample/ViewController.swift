@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .white
+        
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Left", style: .plain, target: self, action: #selector(self.didTapLeftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Right", style: .plain, target: self, action: #selector(self.didTapRightButton))
     }
@@ -45,7 +47,7 @@ class ViewController: UIViewController {
     
     @IBAction func didTapHudButton(_ sender: Any) {
         
-        let hud = MRHud(theme: .light, style: .linearProgress)
+        let hud = MRHud(theme: .dark, style: .linearProgress)
         hud.textLabel?.text = "Ciao sono una label"
         hud.enableShadow(enable: true)
         //hud.setProgressColors(emptyColor: UIColor(netHex: 0xdddddd), filledColor: UIColor(netHex: 0x00ba0e))

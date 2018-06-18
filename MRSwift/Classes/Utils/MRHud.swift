@@ -116,6 +116,7 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
     private let cellIdentifier = "cellIdentifier"
     private var buttons = [MRHudButton]()
     private let buttonRowHeight: CGFloat = 50
+    private var blurView: UIVisualEffectView!
     
     // MARK: - Initialization
 
@@ -218,7 +219,13 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
                 
                 progressView.removeSubviews()
                 let spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-                spinner.color = .lightGray
+                switch theme {
+                    case .dark:
+                        spinner.color = .white
+                    case .custom(hudColor: _, textColor: let textColor):
+                        spinner.color = textColor
+                    default: spinner.color = .lightGray
+                }
                 
                 progressView.addSubview(spinner)
                 spinner.autoPinEdgesToSuperviewEdges()
@@ -302,7 +309,7 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
         hudView.layer.borderColor = UIColor.lightGray.cgColor
         hudView.autoSetDimension(.width, toSize: 30, relation: .greaterThanOrEqual)
         hudView.autoSetDimension(.height, toSize: 30, relation: .greaterThanOrEqual)
-        
+
         progressView = UIView()
         
         textLabel = MRLabel()
@@ -313,11 +320,11 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
         
         switch theme {
             case .light:
-                hudView.backgroundColor = UIColor(netHex: 0xffffff)
-                textLabel?.textColor = .black
+                hudView.backgroundColor = .white
+                textLabel?.textColor = UIColor.black
             case .dark:
-                hudView.backgroundColor = UIColor(netHex: 0x555555)
-                textLabel?.textColor = .white
+                hudView.backgroundColor = UIColor(netHex: 0x444444)
+                textLabel?.textColor = UIColor.white
             case .custom(hudColor: let hudColor, textColor: let textColor):
                 hudView.backgroundColor = hudColor
                 textLabel?.textColor = textColor
@@ -423,6 +430,12 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
                     let footer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.00001))
                     footer.backgroundColor = .clear
                     tblButtons.tableFooterView = footer
+                }
+                
+                switch theme {
+                    case .custom(hudColor: _, textColor: let textColor):
+                        tblButtons.separatorColor = textColor
+                    default: break
                 }
                 
                 if tblButtons.superview == nil {
