@@ -111,6 +111,12 @@ class ViewController: UIViewController {
         navigationController?.pushViewController(viewController, animated: true)
     }
     
+    @IBAction func didTapChatButton(_ sender: Any) {
+        
+        let chat = MRChatViewController()
+        navigationController?.pushViewController(chat, animated: true)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

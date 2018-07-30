@@ -12,6 +12,8 @@
 		253A8DF314180BF54671BA7F /* Pods_MRSwiftExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C9D8F4B35BB260A2ABB8EF /* Pods_MRSwiftExampleTests.framework */; };
 		53D875577303170A3BF5C19D /* Pods_MRSwiftExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DDB3275C52663DF9395F972 /* Pods_MRSwiftExampleUITests.framework */; };
 		5EE51EF0762D177B8FD79556 /* Pods_SCSwiftExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CD306AF0C70A169AD3FDE88 /* Pods_SCSwiftExampleTests.framework */; };
+		EB0B67C720D806D100E9A4C9 /* MRChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0B67C620D806D100E9A4C9 /* MRChatViewController.swift */; };
+		EB0B67C920D806F400E9A4C9 /* MRChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0B67C820D806F400E9A4C9 /* MRChatMessageCell.swift */; };
 		EB1460ED1EEFDBD3003AC3E5 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB7478331EB5E34000EACEB8 /* Info.plist */; };
 		EB1460EF1EF01E0F003AC3E5 /* MRWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */; };
 		EB1B536D1EDB631E000621AC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1B536B1EDB631E000621AC /* ViewController.swift */; };
@@ -53,6 +55,8 @@
 		9872FF0CF5A3A5B4B1032214 /* Pods-MRSwiftExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRSwiftExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MRSwiftExampleUITests/Pods-MRSwiftExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		D0EB0EF23DBD0388F68FB752 /* Pods-MRSwiftExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRSwiftExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MRSwiftExampleTests/Pods-MRSwiftExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E1C6A00B12AD719FF800B974 /* Pods-MRSwiftExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRSwiftExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-MRSwiftExample/Pods-MRSwiftExample.release.xcconfig"; sourceTree = "<group>"; };
+		EB0B67C620D806D100E9A4C9 /* MRChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRChatViewController.swift; sourceTree = "<group>"; };
+		EB0B67C820D806F400E9A4C9 /* MRChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MRChatMessageCell.swift; sourceTree = "<group>"; };
 		EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MRWeb.swift; sourceTree = "<group>"; };
 		EB1B536B1EDB631E000621AC /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		EB1B536C1EDB631E000621AC /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
@@ -163,6 +167,8 @@
 				EB1460EE1EF01E0F003AC3E5 /* MRWeb.swift */,
 				EB7AB41A202C3FCE005957A3 /* solo_video.mp4 */,
 				EB4462DC2091C2120004A3CE /* empire_logo.png */,
+				EB0B67C620D806D100E9A4C9 /* MRChatViewController.swift */,
+				EB0B67C820D806F400E9A4C9 /* MRChatMessageCell.swift */,
 			);
 			path = MRSwiftExample;
 			sourceTree = "<group>";
@@ -339,6 +345,7 @@
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/TTTAttributedLabel/TTTAttributedLabel.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -349,6 +356,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TTTAttributedLabel.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -416,9 +424,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB0B67C920D806F400E9A4C9 /* MRChatMessageCell.swift in Sources */,
 				EB1460EF1EF01E0F003AC3E5 /* MRWeb.swift in Sources */,
 				EB1B536D1EDB631E000621AC /* ViewController.swift in Sources */,
 				EB7478281EB5E34000EACEB8 /* AppDelegate.swift in Sources */,
+				EB0B67C720D806D100E9A4C9 /* MRChatViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

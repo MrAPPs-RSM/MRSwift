@@ -48,7 +48,7 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
         imgImage.clipsToBounds = true
         imgImage.contentMode = .scaleAspectFit
         
-        spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         spinner.hidesWhenStopped = true
         view.addSubview(spinner)
         spinner.startAnimating()
@@ -69,16 +69,21 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
     
     func showImage() {
         
+        spinner.isHidden = false
+        spinner.startAnimating()
         if let image = media.image {
             spinner.stopAnimating()
             imgImage.image = image
         } else if let url = media.url {
-            spinner.stopAnimating()
             imgImage.setImage(with: url, placeholder: nil, completion: { (image) in
+                self.spinner.stopAnimating()
                 if image == nil {
                     self.delegate?.mediaDidFailLoad(media: self.media)
                 }
             })
+        } else if let url = media.localUrl {
+            spinner.stopAnimating()
+            imgImage.image = UIImage(contentsOfFile: url.path)
         }
     }
     

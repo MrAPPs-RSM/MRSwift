@@ -150,6 +150,16 @@ public extension UIView {
         }
     }
     
+    public func removeConstraints() {
+        
+        for view in subviews {
+            view.removeConstraints()
+        }
+        for constraint in constraints {
+            removeConstraint(constraint)
+        }
+    }
+    
     public func setBorders(borderWidth: CGFloat, borderColor: UIColor?, cornerRadius: CGFloat) {
         
         self.layer.borderWidth = borderWidth

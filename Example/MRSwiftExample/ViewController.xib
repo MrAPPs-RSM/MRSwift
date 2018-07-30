@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -51,6 +51,13 @@
                         <action selector="didTapFormButton:" destination="-1" eventType="touchUpInside" id="0b0-Lp-PGK"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CVF-9K-ntU">
+                    <rect key="frame" x="109" y="234" width="156" height="30"/>
+                    <state key="normal" title="MRChatViewController"/>
+                    <connections>
+                        <action selector="didTapChatButton:" destination="-1" eventType="touchUpInside" id="ujP-BE-mYX"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -60,6 +67,7 @@
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cWo-a5-Oou" secondAttribute="trailing" constant="16" id="740-nX-F4P"/>
                 <constraint firstItem="cWo-a5-Oou" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8PN-FD-BFh"/>
                 <constraint firstItem="6Le-MH-cVC" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8VA-k9-WOZ"/>
+                <constraint firstItem="CVF-9K-ntU" firstAttribute="top" secondItem="245-2x-Mf4" secondAttribute="bottom" constant="16" id="Cja-u7-UPV"/>
                 <constraint firstItem="cWo-a5-Oou" firstAttribute="top" secondItem="cm2-n8-lsE" secondAttribute="bottom" constant="16" id="KHm-Qe-adr"/>
                 <constraint firstItem="245-2x-Mf4" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="RDK-qs-n4T"/>
                 <constraint firstItem="245-2x-Mf4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="YnI-Mi-g8z" secondAttribute="leading" constant="16" id="UCn-Uj-l0Q"/>
@@ -67,6 +75,7 @@
                 <constraint firstItem="245-2x-Mf4" firstAttribute="top" secondItem="cWo-a5-Oou" secondAttribute="bottom" constant="16" id="grY-0L-d6e"/>
                 <constraint firstItem="cm2-n8-lsE" firstAttribute="top" secondItem="6Le-MH-cVC" secondAttribute="bottom" constant="16" id="ip2-Bs-jjV"/>
                 <constraint firstItem="6Le-MH-cVC" firstAttribute="top" secondItem="YnI-Mi-g8z" secondAttribute="top" constant="30" id="kdO-HS-eh9"/>
+                <constraint firstItem="CVF-9K-ntU" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="udd-py-feu"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cm2-n8-lsE" secondAttribute="trailing" constant="16" id="yfB-Nv-Mev"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="YnI-Mi-g8z"/>

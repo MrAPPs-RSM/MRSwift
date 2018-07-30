@@ -8,6 +8,7 @@ PODS:
     - RxCocoa
     - RxSwift
     - SDWebImage
+    - TTTAttributedLabel
   - PureLayout (3.0.2)
   - RxCocoa (4.1.2):
     - RxSwift (~> 4.0)
@@ -15,6 +16,7 @@ PODS:
   - SDWebImage (4.3.3):
     - SDWebImage/Core (= 4.3.3)
   - SDWebImage/Core (4.3.3)
+  - TTTAttributedLabel (2.0.0)
 
 DEPENDENCIES:
   - MRSwift (from `../`)
@@ -27,6 +29,7 @@ SPEC REPOS:
     - RxCocoa
     - RxSwift
     - SDWebImage
+    - TTTAttributedLabel
 
 EXTERNAL SOURCES:
   MRSwift:
@@ -35,11 +38,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   Cache: f28f8dd64b632155aabf9b3906b036a659048251
-  MRSwift: 7371281d845dfff9074930f2c6f470e443be368f
+  MRSwift: e8705aeabf6adb874dfe0831a0df9b89b4651d55
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
+  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
 PODFILE CHECKSUM: 9045741e71eb897aee58493ed31889f03e0654db
 
