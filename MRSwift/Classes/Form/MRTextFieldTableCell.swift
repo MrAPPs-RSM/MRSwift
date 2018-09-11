@@ -24,6 +24,7 @@ public class MRTextFieldTableCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
+        clipsToBounds = true
         setupInterface()
     }
     

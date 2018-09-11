@@ -23,6 +23,7 @@ public class MRSwitchTableCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
+        clipsToBounds = true
         setupInterface()
     }
     
