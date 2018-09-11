@@ -50,7 +50,7 @@ public class MRButton : UIButton {
         }
     }
     
-    public func setColors(mainBg: UIColor?, highlightedBg: UIColor?, standardTxt: UIColor?, highlightedTxt: UIColor?) {
+    @objc public func setColors(mainBg: UIColor?, highlightedBg: UIColor?, standardTxt: UIColor?, highlightedTxt: UIColor?) {
         
         if mainBg != nil {
             self.standardBackgroundColor = mainBg!
