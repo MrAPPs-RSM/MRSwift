@@ -181,6 +181,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         if row.type == .rowDefault || row.type == .rowList {
             
             let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+            cell.clipsToBounds = true
             cell.textLabel?.textColor = titleColor
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
             cell.detailTextLabel?.textColor = valueColor
@@ -192,6 +193,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowSubtitle {
             
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: subtitleIdentifier)
+            cell.clipsToBounds = true
             cell.textLabel?.textColor = titleColor
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
             cell.detailTextLabel?.textColor = valueColor

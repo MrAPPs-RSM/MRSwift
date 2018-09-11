@@ -25,6 +25,7 @@ public class MRDateTableCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
+        clipsToBounds = true
         setupInterface()
     }
     
