@@ -85,6 +85,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         //Creating container for all layout components
         
         bubbleContainerView = UIView()
+        bubbleContainerView.isUserInteractionEnabled = true
         
         addSubview(bubbleContainerView)
         cntBubbleContainerTop = bubbleContainerView.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
@@ -97,6 +98,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         bubbleView = UIImageView()
         bubbleView?.clipsToBounds = true
         bubbleView?.contentMode = .scaleToFill
+        bubbleView?.isUserInteractionEnabled = true
         
         bubbleContainerView.addSubview(bubbleView!)
         bubbleView?.autoPinEdgesToSuperviewEdges()
@@ -146,7 +148,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         
         lblMessage?.setText(realText) { (attributedString) -> NSMutableAttributedString? in
             attributedString?.addAttribute(
-                .foregroundColor,
+                kCTForegroundColorAttributeName as NSAttributedStringKey,
                 value: UIColor.clear,
                 range: NSRange(location: attributedString!.length-endSpace.count, length: endSpace.count)
             )
@@ -167,11 +169,11 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             //Creating message UILabel with link support
             
             lblMessage = TTTAttributedLabel(frame: .zero)
-            lblMessage?.delegate = self
             lblMessage?.enabledTextCheckingTypes = NSTextCheckingAllTypes
+            lblMessage?.delegate = self
             lblMessage?.activeLinkAttributes = [
                 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16),
-                NSAttributedStringKey.foregroundColor: UIColor.white,
+                NSAttributedStringKey.foregroundColor: UIColor.white.darker,
                 NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue
             ]
             lblMessage?.linkAttributes = [

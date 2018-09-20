@@ -15,7 +15,7 @@ public protocol MRDataListViewControllerDelegate : class {
 }
 
 public class MRDataListViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
-
+    
     // MARK: - Layout
     
     var list: UITableView!
@@ -24,8 +24,11 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     private var allData = [String]()
     private var data = [String]()
+    private var navTitle: String?
+    private var navBackIcon: UIImage?
     private var selectedValue: String?
     private var valueColor = UIColor.black
+    private var searchTintColor: UIColor?
     private let cellIdentifier = "cellIdentifier"
     public weak var delegate: MRDataListViewControllerDelegate?
     
@@ -34,13 +37,16 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     // MARK: - Initialization
     
-    convenience init(data: [String], selectedValue: String?, valueColor: UIColor) {
+    convenience init(data: [String], navTitle: String?, navBackIcon: UIImage?, selectedValue: String?, valueColor: UIColor, searchTintColor: UIColor?) {
         self.init()
         
         self.allData = data
         self.data = data
+        self.navTitle = navTitle
+        self.navBackIcon = navBackIcon
         self.selectedValue = selectedValue
         self.valueColor = valueColor
+        self.searchTintColor = searchTintColor
     }
     
     deinit {
@@ -51,10 +57,16 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        navigationItem.title = navTitle
+        if let navBackIcon = navBackIcon {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: navBackIcon, style: .plain, target: self, action: #selector(goBack))
+        }
+        
         list = UITableView(frame: view.frame, style: .grouped)
         list.dataSource = self
         list.delegate = self
+        list.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
         list.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         view.addSubview(list)
         list.autoPinEdgesToSuperviewEdges()
@@ -68,7 +80,16 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.dimsBackgroundDuringPresentation = false
-        list.tableHeaderView = searchController.searchBar
+        
+        if let searchTintColor = searchTintColor {
+            searchController.searchBar.tintColor = searchTintColor
+        }
+        
+        if #available(iOS 11.0, *) {
+            navigationItem.searchController = searchController
+        } else {
+            list.tableHeaderView = searchController.searchBar
+        }
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -160,13 +181,15 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     // MARK: - Other Methods
     
+    @objc func goBack() {
+        navigationController?.popViewController(animated: true)
+    }
     
-
     // MARK: - Battery Warning
     
     override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }

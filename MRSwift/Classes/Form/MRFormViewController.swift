@@ -106,6 +106,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open var titleColor = UIColor(netHex: 0x444444)
     open var valueColor = UIColor.black
     open var editingEnabled: Bool = true
+    open var searchTintColor: UIColor?
+    open var navBackIcon: UIImage?
     
     open var currentIndexPath = IndexPath(row: 0, section: 0)
     
@@ -250,7 +252,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         if row.type == .rowList && editingEnabled {
             if let extraData = row.extraData as? [String] {
                 currentIndexPath = indexPath
-                let list = MRDataListViewController(data: extraData, selectedValue: row.value as? String, valueColor: valueColor)
+                let list = MRDataListViewController(data: extraData, navTitle: row.title, navBackIcon: navBackIcon, selectedValue: row.value as? String, valueColor: valueColor, searchTintColor: searchTintColor)
                 list.delegate = self
                 navigationController?.pushViewController(list, animated: true)
             }
