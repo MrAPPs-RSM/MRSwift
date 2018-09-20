@@ -43,8 +43,9 @@ open class MRFormRow : NSObject {
     public var accessoryType: UITableViewCellAccessoryType = .none
     public var type: MRFormRowType = .rowDefault
     public var dateFormat: String = ""
+    public var visible: Bool = true
     
-    public convenience init(id: Any?, key: String?, title: String?, subtitle: String?, value: Any?, placeholder: String?, image: UIImage?, extraData: Any?, dateFormat: String?, accessoryType: UITableViewCellAccessoryType, mandatory: Bool, type: MRFormRowType) {
+    public convenience init(id: Any?, key: String?, title: String?, subtitle: String?, value: Any?, placeholder: String?, image: UIImage?, extraData: Any?, dateFormat: String?, accessoryType: UITableViewCellAccessoryType, mandatory: Bool, type: MRFormRowType, visible: Bool = true) {
         self.init()
         
         self.id = id
@@ -59,6 +60,7 @@ open class MRFormRow : NSObject {
         self.accessoryType = accessoryType
         self.mandatory = mandatory
         self.type = type
+        self.visible = visible
     }
 }
 
