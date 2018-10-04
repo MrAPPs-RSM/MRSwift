@@ -56,6 +56,10 @@ public extension String {
         return NSLocalizedString(self, comment: "")
     }
     
+    public var image : UIImage? {
+        return UIImage(named: self)
+    }
+    
     public var containsOnlyDecimals : Bool {
         
         let set = NSCharacterSet.decimalDigits.inverted
