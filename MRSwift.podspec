@@ -136,7 +136,7 @@ Pod::Spec.new do |s|
 
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
-  s.dependency 'Cache', '4.2.0'
+  s.dependency 'Cache'
   s.dependency 'PureLayout'
   s.dependency 'RxSwift'
   s.dependency 'RxCocoa'
