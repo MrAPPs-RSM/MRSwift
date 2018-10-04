@@ -232,7 +232,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
                     self.delegate?.mediaDidFailLoad(media: self.media)
                     return
                 }
-                Cache.shared.setObject(object: data, forKey: url.absoluteString)
+                Cache.shared.setObject(data, forKey: url.absoluteString)
                 self.loadPdf(fromData: data)
             }).downloadProgress { (progress) in
                 self.pdfDelegate?.pdfDidUpdateDownload(progress: Float(progress.fractionCompleted))
@@ -416,7 +416,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         if thumbnail == true {
             if let data = backgroundImage.jpegData(compressionQuality: 1.0) {
-                Cache.shared.setObject(object: data, forKey: imageId)
+                Cache.shared.setObject(data, forKey: imageId)
             }
         }
         
