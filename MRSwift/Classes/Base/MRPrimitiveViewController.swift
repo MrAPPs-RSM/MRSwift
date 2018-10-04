@@ -46,20 +46,20 @@ open class MRPrimitiveViewController: UIViewController {
     
     open func registerForKeyboardNotifications() {
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardWillChangeFrame(notification:)), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardWillShow(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardDidShow(notification:)), name: Notification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardWillHide(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardDidHide(notification:)), name: Notification.Name.UIKeyboardDidHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardWillChangeFrame(notification:)), name: UIWindow.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardWillShow(notification:)), name: UIWindow.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardDidShow(notification:)), name: UIWindow.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardWillHide(notification:)), name: UIWindow.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.internalKeyboardDidHide(notification:)), name: UIWindow.keyboardDidHideNotification, object: nil)
     }
     
     open func unregisterForKeyboardNotifications() {
         
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillHide, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardDidHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIWindow.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIWindow.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIWindow.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIWindow.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIWindow.keyboardDidHideNotification, object: nil)
     }
     
     @objc private func internalKeyboardWillChangeFrame(notification: Notification) {
@@ -105,10 +105,10 @@ open class MRPrimitiveViewController: UIViewController {
     private func getKeyboardInfo(fromNotification: Notification) -> KeyboardInfo {
         
         let userInfo: NSDictionary = fromNotification.userInfo! as NSDictionary
-        let beginFrame = (userInfo.value(forKey: UIKeyboardFrameBeginUserInfoKey) as! NSValue).cgRectValue
-        let endFrame = (userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue).cgRectValue
-        let animationDuration: Double = userInfo.value(forKey: UIKeyboardAnimationDurationUserInfoKey) as! Double
-        let animationCurve: UInt = userInfo.value(forKey: UIKeyboardAnimationCurveUserInfoKey) as! UInt
+        let beginFrame = (userInfo.value(forKey: UIResponder.keyboardFrameBeginUserInfoKey) as! NSValue).cgRectValue
+        let endFrame = (userInfo.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue).cgRectValue
+        let animationDuration: Double = userInfo.value(forKey: UIResponder.keyboardAnimationDurationUserInfoKey) as! Double
+        let animationCurve: UInt = userInfo.value(forKey: UIResponder.keyboardAnimationCurveUserInfoKey) as! UInt
         
         let keyboardInfo = KeyboardInfo()
         keyboardInfo.beginFrame = beginFrame

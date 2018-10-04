@@ -30,7 +30,7 @@ public class MRTableRow : NSObject {
     public var subtitle: String?
     public var value: String?
     public var image: UIImage?
-    public var accessoryType: UITableViewCellAccessoryType = .none
+    public var accessoryType: UITableViewCell.AccessoryType = .none
     
     public convenience init(key: String, title: String?, subtitle: String?, value: String) {
         self.init()
@@ -41,7 +41,7 @@ public class MRTableRow : NSObject {
         self.value = value
     }
     
-    public convenience init(key: String, title: String?, value: String?, image: UIImage?, accessoryType: UITableViewCellAccessoryType) {
+    public convenience init(key: String, title: String?, value: String?, image: UIImage?, accessoryType: UITableViewCell.AccessoryType) {
         self.init()
         
         self.key = key
@@ -51,7 +51,7 @@ public class MRTableRow : NSObject {
         self.accessoryType = accessoryType
     }
     
-    public convenience init(key: String, title: String?, value: String?, accessoryType: UITableViewCellAccessoryType) {
+    public convenience init(key: String, title: String?, value: String?, accessoryType: UITableViewCell.AccessoryType) {
         self.init()
         
         self.key = key

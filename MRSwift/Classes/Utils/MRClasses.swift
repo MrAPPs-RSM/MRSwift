@@ -12,7 +12,7 @@ import Cache
 open class Cache : NSObject {
     
     static let shared = Cache()
-    private var storage: Storage!
+    private var storage: Storage<Data>!
     
     override init() {
         
@@ -30,10 +30,10 @@ open class Cache : NSObject {
             totalCostLimit: 0
         )
         
-        storage = try! Storage(diskConfig: diskConfig, memoryConfig: memoryConfig)
+        storage = try! Storage(diskConfig: diskConfig, memoryConfig: memoryConfig, transformer: TransformerFactory.forData())
     }
     
-    public func setObject<T: Codable>(_ object: T, forKey key: String) {
+    public func setObject(_ object: Data, forKey key: String) {
         
         do {
             try storage.setObject(object, forKey: key)
@@ -42,10 +42,10 @@ open class Cache : NSObject {
         }
     }
     
-    public func object<T: Codable>(ofType type: T.Type, forKey key: String) -> T? {
+    public func object(forKey key: String) -> Data? {
         
         do {
-            let object = try storage.object(ofType: type, forKey: key)
+            let object = try storage.object(forKey: key)
             return object
         } catch {
             print("[Cache] Error: \(error.localizedDescription)")

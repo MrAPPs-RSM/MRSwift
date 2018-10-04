@@ -124,7 +124,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         }
         
         pageContainer.addSubview(pageController.view)
-        self.addChildViewController(pageController)
+        self.addChild(pageController)
         
         if dragAnimation {
             dragGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDrag(pan:)))

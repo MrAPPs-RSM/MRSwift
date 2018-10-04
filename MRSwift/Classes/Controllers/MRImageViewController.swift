@@ -48,7 +48,7 @@ open class MRImageViewController: MRMediaViewController, UIScrollViewDelegate {
         imgImage.clipsToBounds = true
         imgImage.contentMode = .scaleAspectFit
         
-        spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        spinner = UIActivityIndicatorView(style: .whiteLarge)
         spinner.hidesWhenStopped = true
         view.addSubview(spinner)
         spinner.startAnimating()

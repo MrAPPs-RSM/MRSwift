@@ -41,7 +41,7 @@ public enum DrawerType : Int {
 }
 
 public class MRDrawerController: UIViewController {
-
+    
     // MARK: - Constants & Variables
     
     public var leftViewController : UIViewController?
@@ -52,7 +52,7 @@ public class MRDrawerController: UIViewController {
     private var isLeftViewVisible : Bool = false
     private var isRightViewVisible : Bool = false
     private var drawerType : DrawerType = .overlay
-
+    
     public var leftViewWidth : CGFloat = 275.0
     public var rightViewWidth : CGFloat = 275.0
     public var animationDuration : TimeInterval = 0.3
@@ -96,10 +96,10 @@ public class MRDrawerController: UIViewController {
         super.viewDidLoad()
         
         //Center View
-
+        
         if self.centerViewController != nil {
             self.centerViewController?.view.frame = CGRect(x: 0.0, y: 0.0, width: self.viewWidth, height: self.viewHeight)
-            self.addChildViewController(self.centerViewController!)
+            self.addChild(self.centerViewController!)
             self.view.addSubview(self.centerViewController!.view)
         }
         
@@ -118,15 +118,15 @@ public class MRDrawerController: UIViewController {
         
         if self.leftViewController != nil {
             self.leftViewController?.view.frame = CGRect(x: -self.leftViewWidth, y: 0.0, width: self.leftViewWidth, height: self.viewHeight)
-            self.addChildViewController(self.leftViewController!)
+            self.addChild(self.leftViewController!)
             self.view.addSubview(self.leftViewController!.view)
         }
-
+        
         //Right View
         
         if self.rightViewController != nil {
             self.rightViewController?.view.frame = CGRect(x: self.viewWidth, y: 0.0, width: self.rightViewWidth, height: self.viewHeight)
-            self.addChildViewController(self.rightViewController!)
+            self.addChild(self.rightViewController!)
             self.view.addSubview(self.rightViewController!.view)
         }
     }
@@ -148,7 +148,7 @@ public class MRDrawerController: UIViewController {
     }
     
     // MARK: - Drawer Methods
-
+    
     public func openLeftDrawer() {
         
         if self.isLeftViewVisible == true {
@@ -241,7 +241,7 @@ public class MRDrawerController: UIViewController {
     }
     
     // MARK: - Other Methods
-
+    
     @objc func didTapDarkBackground() {
         
         if self.isLeftViewVisible == true {
@@ -255,5 +255,5 @@ public class MRDrawerController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }

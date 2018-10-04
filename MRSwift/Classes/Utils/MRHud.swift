@@ -11,7 +11,7 @@ import PureLayout
 
 class MRHudButtonCell : UITableViewCell {
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         clipsToBounds = true
@@ -42,7 +42,7 @@ class MRHudButtonCell : UITableViewCell {
 }
 
 open class MRHudButton : NSObject {
-
+    
     var title: String?
     var highlighted: Bool = false
     var action: (() -> Void)?
@@ -119,7 +119,7 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
     private var blurView: UIVisualEffectView!
     
     // MARK: - Initialization
-
+    
     public convenience init(theme: MRHudTheme, style: MRHudStyle) {
         self.init()
         
@@ -137,11 +137,11 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
     public func labelDidChangeText(text: String?) {
         
         fixLabelPosition()/*
-        if superview != nil {
-            UIView.animate(withDuration: 0.1) {
-                self.textLabel?.layoutIfNeeded()
-            }
-        }*/
+         if superview != nil {
+         UIView.animate(withDuration: 0.1) {
+         self.textLabel?.layoutIfNeeded()
+         }
+         }*/
     }
     
     private func fixLabelPosition() {
@@ -213,82 +213,82 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
         
         switch style {
             
-            case .indeterminate:
+        case .indeterminate:
             
-                setupHudView()
+            setupHudView()
+            
+            progressView.removeSubviews()
+            let spinner = UIActivityIndicatorView(style: .whiteLarge)
+            switch theme {
+            case .dark:
+                spinner.color = .white
+            case .custom(hudColor: _, textColor: let textColor):
+                spinner.color = textColor
+            default: spinner.color = .lightGray
+            }
+            
+            progressView.addSubview(spinner)
+            spinner.autoPinEdgesToSuperviewEdges()
+            spinner.startAnimating()
+            
+        case .linearProgress:
+            
+            setupHudView()
+            
+            progressBar = UIProgressView(progressViewStyle: .default)
+            progressBar.autoSetDimensions(to: CGSize(width: 200, height: 6))
+            progressBar.clipsToBounds = true
+            progressBar.layer.cornerRadius = 3
+            
+            progressView.addSubview(progressBar)
+            progressBar.trackTintColor = UIColor(netHex: 0x999999)
+            progressBar.progressTintColor = .green
+            progressBar.progress = 0.5
+            progressBar.autoAlignAxis(toSuperviewAxis: .vertical)
+            progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
+            
+        case .rotationInside(image: let image, duration: let duration):
+            
+            setupHudView()
+            
+            imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+            imageView.image = image
+            imageView.clipsToBounds = true
+            imageView.contentMode = .scaleAspectFit
+            imageView.autoSetDimensions(to: CGSize(width: 60, height: 60))
+            
+            progressView.addSubview(imageView)
+            imageView.autoAlignAxis(toSuperviewAxis: .vertical)
+            imageView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
+            
+            imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
+            
+            UIView.animateKeyframes(withDuration: duration, delay: 0, options:[.repeat, .autoreverse], animations: {
+                self.imageView.layer.transform = CATransform3DMakeScale(-1.0, 1.0, 1.0)
+            }) { (completed) in
                 
-                progressView.removeSubviews()
-                let spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-                switch theme {
-                    case .dark:
-                        spinner.color = .white
-                    case .custom(hudColor: _, textColor: let textColor):
-                        spinner.color = textColor
-                    default: spinner.color = .lightGray
-                }
+            }
+            
+        case .rotationOnly(image: let image, duration: let duration):
+            
+            removeHudView()
+            
+            imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+            imageView.image = image
+            imageView.clipsToBounds = true
+            imageView.contentMode = .scaleAspectFit
+            imageView.autoSetDimensions(to: CGSize(width: 80, height: 80))
+            
+            addSubview(imageView)
+            imageView.autoCenterInSuperview()
+            
+            imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
+            
+            UIView.animateKeyframes(withDuration: duration, delay: 0, options:[.repeat, .autoreverse], animations: {
+                self.imageView.layer.transform = CATransform3DMakeScale(-1.0, 1.0, 1.0)
+            }) { (completed) in
                 
-                progressView.addSubview(spinner)
-                spinner.autoPinEdgesToSuperviewEdges()
-                spinner.startAnimating()
-            
-            case .linearProgress:
-            
-                setupHudView()
-                
-                progressBar = UIProgressView(progressViewStyle: .default)
-                progressBar.autoSetDimensions(to: CGSize(width: 200, height: 6))
-                progressBar.clipsToBounds = true
-                progressBar.layer.cornerRadius = 3
-                
-                progressView.addSubview(progressBar)
-                progressBar.trackTintColor = UIColor(netHex: 0x999999)
-                progressBar.progressTintColor = .green
-                progressBar.progress = 0.5
-                progressBar.autoAlignAxis(toSuperviewAxis: .vertical)
-                progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
-            
-            case .rotationInside(image: let image, duration: let duration):
-            
-                setupHudView()
-                
-                imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-                imageView.image = image
-                imageView.clipsToBounds = true
-                imageView.contentMode = .scaleAspectFit
-                imageView.autoSetDimensions(to: CGSize(width: 60, height: 60))
-                
-                progressView.addSubview(imageView)
-                imageView.autoAlignAxis(toSuperviewAxis: .vertical)
-                imageView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
-            
-                imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
-                
-                UIView.animateKeyframes(withDuration: duration, delay: 0, options:[.repeat, .autoreverse], animations: {
-                        self.imageView.layer.transform = CATransform3DMakeScale(-1.0, 1.0, 1.0)
-                }) { (completed) in
-                    
-                }
-            
-            case .rotationOnly(image: let image, duration: let duration):
-                
-                removeHudView()
-            
-                imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
-                imageView.image = image
-                imageView.clipsToBounds = true
-                imageView.contentMode = .scaleAspectFit
-                imageView.autoSetDimensions(to: CGSize(width: 80, height: 80))
-            
-                addSubview(imageView)
-                imageView.autoCenterInSuperview()
-            
-                imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
-                
-                UIView.animateKeyframes(withDuration: duration, delay: 0, options:[.repeat, .autoreverse], animations: {
-                    self.imageView.layer.transform = CATransform3DMakeScale(-1.0, 1.0, 1.0)
-                }) { (completed) in
-                    
-                }
+            }
         }
     }
     
@@ -309,7 +309,7 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
         hudView.layer.borderColor = UIColor.lightGray.cgColor
         hudView.autoSetDimension(.width, toSize: 30, relation: .greaterThanOrEqual)
         hudView.autoSetDimension(.height, toSize: 30, relation: .greaterThanOrEqual)
-
+        
         progressView = UIView()
         
         textLabel = MRLabel()
@@ -319,15 +319,15 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
         textLabel?.numberOfLines = 0
         
         switch theme {
-            case .light:
-                hudView.backgroundColor = .white
-                textLabel?.textColor = UIColor.black
-            case .dark:
-                hudView.backgroundColor = UIColor(netHex: 0x444444)
-                textLabel?.textColor = UIColor.white
-            case .custom(hudColor: let hudColor, textColor: let textColor):
-                hudView.backgroundColor = hudColor
-                textLabel?.textColor = textColor
+        case .light:
+            hudView.backgroundColor = .white
+            textLabel?.textColor = UIColor.black
+        case .dark:
+            hudView.backgroundColor = UIColor(netHex: 0x444444)
+            textLabel?.textColor = UIColor.white
+        case .custom(hudColor: let hudColor, textColor: let textColor):
+            hudView.backgroundColor = hudColor
+            textLabel?.textColor = textColor
         }
         
         hudView.addSubview(progressView)
@@ -345,7 +345,7 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
         }
         textLabel?.autoPinEdge(toSuperviewEdge: .left, withInset: contentOffset)
         textLabel?.autoPinEdge(toSuperviewEdge: .right, withInset: contentOffset)
-
+        
         addSubview(hudView)
         hudView.autoCenterInSuperview()
         hudView.autoPinEdge(toSuperviewEdge: .top, withInset: 32, relation: .greaterThanOrEqual)
@@ -408,56 +408,56 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
     open func set(buttons newButtons: [MRHudButton]) {
         
         switch style {
-            case .rotationOnly(image: _, duration: _):
-                removeButtons()
-                break
-            default:
+        case .rotationOnly(image: _, duration: _):
+            removeButtons()
+            break
+        default:
+            
+            self.buttons = newButtons
+            
+            if tblButtons == nil {
                 
-                self.buttons = newButtons
+                tblButtons = UITableView(frame: .zero, style: .grouped)
+                tblButtons.dataSource = self
+                tblButtons.delegate = self
+                tblButtons.backgroundColor = .clear
+                tblButtons.separatorInset = .zero
+                tblButtons.tableFooterView = nil
+                tblButtons.contentInset = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
+                tblButtons.register(MRHudButtonCell.self, forCellReuseIdentifier: cellIdentifier)
+                tblButtons.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
                 
-                if tblButtons == nil {
-                    
-                    tblButtons = UITableView(frame: .zero, style: .grouped)
-                    tblButtons.dataSource = self
-                    tblButtons.delegate = self
-                    tblButtons.backgroundColor = .clear
-                    tblButtons.separatorInset = .zero
-                    tblButtons.tableFooterView = nil
-                    tblButtons.contentInset = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
-                    tblButtons.register(MRHudButtonCell.self, forCellReuseIdentifier: cellIdentifier)
-                    tblButtons.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
-                    
-                    let footer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.00001))
-                    footer.backgroundColor = .clear
-                    tblButtons.tableFooterView = footer
+                let footer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.00001))
+                footer.backgroundColor = .clear
+                tblButtons.tableFooterView = footer
+            }
+            
+            switch theme {
+            case .custom(hudColor: _, textColor: let textColor):
+                tblButtons.separatorColor = textColor
+            default: break
+            }
+            
+            if tblButtons.superview == nil {
+                
+                hudView.addSubview(tblButtons)
+                tblButtons.autoSetDimension(.width, toSize: 200, relation: .greaterThanOrEqual)
+                tblButtons.autoPinEdge(toSuperviewEdge: .bottom)
+                tblButtons.autoPinEdge(toSuperviewEdge: .left)
+                tblButtons.autoPinEdge(toSuperviewEdge: .right)
+                
+                if cntTextLabelBottomSuperview != nil {
+                    NSLayoutConstraint.deactivate([cntTextLabelBottomSuperview])
                 }
                 
-                switch theme {
-                    case .custom(hudColor: _, textColor: let textColor):
-                        tblButtons.separatorColor = textColor
-                    default: break
+                if cntTextLabelBottomButtons == nil {
+                    cntTextLabelBottomButtons = textLabel?.autoPinEdge(.bottom, to: .top, of: tblButtons, withOffset: -contentOffset)
+                } else {
+                    textLabel?.addConstraint(cntTextLabelBottomButtons)
                 }
-                
-                if tblButtons.superview == nil {
-                    
-                    hudView.addSubview(tblButtons)
-                    tblButtons.autoSetDimension(.width, toSize: 200, relation: .greaterThanOrEqual)
-                    tblButtons.autoPinEdge(toSuperviewEdge: .bottom)
-                    tblButtons.autoPinEdge(toSuperviewEdge: .left)
-                    tblButtons.autoPinEdge(toSuperviewEdge: .right)
-                    
-                    if cntTextLabelBottomSuperview != nil {
-                        NSLayoutConstraint.deactivate([cntTextLabelBottomSuperview])
-                    }
-                    
-                    if cntTextLabelBottomButtons == nil {
-                        cntTextLabelBottomButtons = textLabel?.autoPinEdge(.bottom, to: .top, of: tblButtons, withOffset: -contentOffset)
-                    } else {
-                        textLabel?.addConstraint(cntTextLabelBottomButtons)
-                    }
-                }
-
-                tblButtons.reloadData()
+            }
+            
+            tblButtons.reloadData()
         }
     }
     

@@ -20,7 +20,7 @@ public class MRTextFieldTableCell: UITableViewCell {
     
     public weak var delegate: MRTextFieldTableCellDelegate?
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none

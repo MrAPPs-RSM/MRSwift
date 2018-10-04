@@ -26,12 +26,12 @@ public class MRButton : UIButton {
     override public func awakeFromNib() {
         
         self.backgroundColor = self.standardBackgroundColor
-        self.setTitleColor(self.standardTextColor, for: UIControlState())
+        self.setTitleColor(self.standardTextColor, for: UIControl.State())
         self.layer.cornerRadius = self.cornerRadius
         self.layer.borderWidth = self.borderWidth
         self.layer.borderColor = self.borderColor.cgColor
         
-        self.titleEdgeInsets = UIEdgeInsetsMake(1.0, 0.0, 0.0, 0.0)
+        self.titleEdgeInsets = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 0.0)
     }
     
     override public var isHighlighted: Bool {
@@ -66,7 +66,7 @@ public class MRButton : UIButton {
         }
         
         self.backgroundColor = self.standardBackgroundColor
-        self.setTitleColor(self.standardTextColor, for: UIControlState())
+        self.setTitleColor(self.standardTextColor, for: UIControl.State())
         self.setTitleColor(self.highlightedTextColor, for: .highlighted)
     }
     

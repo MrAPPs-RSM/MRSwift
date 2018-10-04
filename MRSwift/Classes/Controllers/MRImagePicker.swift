@@ -115,7 +115,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         let isPhoto = type == .photoLibrary || type == .photoCamera || type == .photoAndVideoLibrary || type == .photoAndVideoCamera
         let isVideo = type == .videoLibrary || type == .videoCamera || type == .photoAndVideoLibrary || type == .photoAndVideoCamera
         
-        let sourceType: UIImagePickerControllerSourceType = isLibrary ? .photoLibrary : .camera
+        let sourceType: UIImagePickerController.SourceType = isLibrary ? .photoLibrary : .camera
         guard let mediaTypes = self.mediaTypesFor(sourceType: sourceType, photo: isPhoto, video: isVideo) else {
             if self.errorBlock != nil {
                 self.errorBlock!("No picker media type available")
@@ -134,7 +134,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         viewController.present(picker, animated: true, completion: nil)
     }
     
-    private func mediaTypesFor(sourceType: UIImagePickerControllerSourceType, photo: Bool, video: Bool) -> [String]? {
+    private func mediaTypesFor(sourceType: UIImagePickerController.SourceType, photo: Bool, video: Bool) -> [String]? {
         
         guard let availableMediaTypes = UIImagePickerController.availableMediaTypes(for: sourceType) else {
             return nil
@@ -157,25 +157,25 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
     
     // MARK: - UIImagePickerController Delegate
     
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         var image: UIImage?
         var videoUrl: URL?
         var fileUrl: URL?
         var fileName: String = ""
         
-        if (info[UIImagePickerControllerMediaType] as! String) == (kUTTypeImage as String) {
+        if (info[.mediaType] as! String) == (kUTTypeImage as String) {
             
-            if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-                if let imageUrl = info[UIImagePickerControllerReferenceURL] as? URL {
+            if let pickedImage = info[.originalImage] as? UIImage {
+                if let imageUrl = info[.referenceURL] as? URL {
                     fileUrl = imageUrl
                 }
                 image = pickedImage
             }
             
-        } else if (info[UIImagePickerControllerMediaType] as! String) == (kUTTypeMovie as String) {
+        } else if (info[.mediaType] as! String) == (kUTTypeMovie as String) {
             
-            if let pickedVideoUrl = info[UIImagePickerControllerMediaURL] as? URL {
+            if let pickedVideoUrl = info[.mediaURL] as? URL {
                 fileUrl = pickedVideoUrl
                 videoUrl = pickedVideoUrl
             }
@@ -205,6 +205,11 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             self.completionBlock(image, videoUrl, fileName)
             picker.dismiss(animated: true, completion: nil)
         }
+    }
+    
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

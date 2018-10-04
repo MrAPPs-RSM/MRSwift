@@ -270,7 +270,7 @@ public extension UIScreen {
 public typealias UIAlertActionBlock = (_ action: UIAlertAction) -> Void
 public extension UIAlertController {
     
-    public class func new(title: String?, message: String?, tintColor: UIColor?, preferredStyle: UIAlertControllerStyle) -> UIAlertController {
+    public class func new(title: String?, message: String?, tintColor: UIColor?, preferredStyle: UIAlertController.Style) -> UIAlertController {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
         if let tint = tintColor {
@@ -358,7 +358,7 @@ public extension UICollectionViewCell {
         
         self.setNeedsLayout()
         self.layoutIfNeeded()
-        let size = self.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+        let size = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         return CGSize(width: width, height: size.height)
     }
 }
@@ -437,9 +437,9 @@ public extension UIImageView {
                 
                 if cacheType == .none {
                     let transition = CATransition()
-                    transition.type = kCATransitionFade
+                    transition.type = CATransitionType.fade
                     transition.duration = 0.3
-                    transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+                    transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
                     self.layer.add(transition, forKey: nil)
                 }
             }

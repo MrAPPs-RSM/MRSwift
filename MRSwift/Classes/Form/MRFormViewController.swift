@@ -40,12 +40,12 @@ open class MRFormRow : NSObject {
     public var mandatory: Bool = false
     public var image: UIImage?
     public var extraData: Any?
-    public var accessoryType: UITableViewCellAccessoryType = .none
+    public var accessoryType: UITableViewCell.AccessoryType = .none
     public var type: MRFormRowType = .rowDefault
     public var dateFormat: String = ""
     public var visible: Bool = true
     
-    public convenience init(id: Any?, key: String?, title: String?, subtitle: String?, value: Any?, placeholder: String?, image: UIImage?, extraData: Any?, dateFormat: String?, accessoryType: UITableViewCellAccessoryType, mandatory: Bool, type: MRFormRowType, visible: Bool = true) {
+    public convenience init(id: Any?, key: String?, title: String?, subtitle: String?, value: Any?, placeholder: String?, image: UIImage?, extraData: Any?, dateFormat: String?, accessoryType: UITableViewCell.AccessoryType, mandatory: Bool, type: MRFormRowType, visible: Bool = true) {
         self.init()
         
         self.id = id
@@ -169,7 +169,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

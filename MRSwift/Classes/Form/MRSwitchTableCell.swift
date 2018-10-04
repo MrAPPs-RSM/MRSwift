@@ -19,7 +19,7 @@ public class MRSwitchTableCell: UITableViewCell {
     
     public weak var delegate: MRSwitchTableCellDelegate?
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none

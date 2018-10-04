@@ -143,9 +143,9 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         pageController.setViewControllers([blankController], direction: .forward, animated: true, completion: nil)
         
         pageContainer.addSubview(pageController.view)
-        addChildViewController(pageController)
+        addChild(pageController)
         
-        spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        spinner = UIActivityIndicatorView(style: .gray)
         spinner.color = .lightGray
         spinner.center = view.center
         spinner.hidesWhenStopped = true
@@ -222,7 +222,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
     
     private func initializePDF(with url: URL) {
         
-        if let data = Cache.shared.object(ofType: Data.self, forKey: url.absoluteString) {
+        if let data = Cache.shared.object(forKey: url.absoluteString) {
             self.loadPdf(fromData: data)
         } else {
             pdfDelegate?.pdfDidStartDownload()
@@ -232,7 +232,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
                     self.delegate?.mediaDidFailLoad(media: self.media)
                     return
                 }
-                Cache.shared.setObject(data, forKey: url.absoluteString)
+                Cache.shared.setObject(object: data, forKey: url.absoluteString)
                 self.loadPdf(fromData: data)
             }).downloadProgress { (progress) in
                 self.pdfDelegate?.pdfDidUpdateDownload(progress: Float(progress.fractionCompleted))
@@ -338,7 +338,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         
         let contentId = media.id ?? ""
         let imageId = "\(contentId)_\(index)"
-        if let data = Cache.shared.object(ofType: Data.self, forKey: imageId), thumbnail == true {
+        if let data = Cache.shared.object(forKey: imageId), thumbnail == true {
             let image = UIImage(data: data)
             completion(image)
             return
@@ -415,7 +415,9 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         }
         
         if thumbnail == true {
-            Cache.shared.setObject(UIImageJPEGRepresentation(backgroundImage, 1.0), forKey: imageId)
+            if let data = backgroundImage.jpegData(compressionQuality: 1.0) {
+                Cache.shared.setObject(object: data, forKey: imageId)
+            }
         }
         
         completion(backgroundImage)
@@ -505,7 +507,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         gridPreview.autoPinEdge(toSuperviewEdge: .top)
         gridPreview.autoSetDimension(.height, toSize: 95)
         
-        gridSpinner = UIActivityIndicatorView(activityIndicatorStyle: .white)
+        gridSpinner = UIActivityIndicatorView(style: .white)
         gridSpinner.hidesWhenStopped = true
         gridSpinner.startAnimating()
         

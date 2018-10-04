@@ -73,7 +73,7 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
         imgPlaceholder = UIImageView(frame: videoView.frame)
         videoView.addSubview(imgPlaceholder)
         
-        spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        spinner = UIActivityIndicatorView(style: .whiteLarge)
         spinner.color = .lightGray
         spinner.center = videoView.center
         spinner.startAnimating()
@@ -118,9 +118,9 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
         videoAspect = .resizeAspect
         
         switch(videoAspect){
-		case .resizeAspectFill: playerLayer?.videoGravity = .resizeAspectFill
-		case .resizeAspect: playerLayer?.videoGravity = .resizeAspect
-		case .resize: playerLayer?.videoGravity = .resize
+        case .resizeAspectFill: playerLayer?.videoGravity = .resizeAspectFill
+        case .resizeAspect: playerLayer?.videoGravity = .resizeAspect
+        case .resize: playerLayer?.videoGravity = .resize
         }
     }
     
@@ -200,7 +200,7 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
             
             let assetImgGenerate = AVAssetImageGenerator(asset: asset)
             assetImgGenerate.appliesPreferredTrackTransform = true
-            let time = CMTimeMakeWithSeconds(Float64(self.media.videoThumbnailSecond), 100)
+            let time = CMTimeMakeWithSeconds(Float64(self.media.videoThumbnailSecond), preferredTimescale: 100)
             var thumbnail: UIImage?
             
             do {
@@ -222,7 +222,7 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
     }
     
     public func play(from seconds: TimeInterval) {
-        player?.seek(to: CMTime(seconds: seconds, preferredTimescale: 1000), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
+        player?.seek(to: CMTime(seconds: seconds, preferredTimescale: 1000), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
         self.play()
         videoDelegate?.videoDidPlay()
     }
@@ -234,7 +234,7 @@ open class MRVideoViewController: MRMediaViewController, MRMediaPlayerViewContro
     
     public func stop() {
         player?.pause()
-        player?.seek(to: kCMTimeZero)
+        player?.seek(to: CMTime.zero)
         videoDelegate?.videoDidStop()
     }
     

@@ -39,7 +39,7 @@ public extension UIImage {
     
     public func fixOrientation() -> UIImage {
         
-        if self.imageOrientation == UIImageOrientation.up {
+        if self.imageOrientation == UIImage.Orientation.up {
             return self
         }
         
@@ -113,7 +113,7 @@ public extension UIImage {
     }
     
     public func flipped() -> UIImage {
-        var imageOrientation: UIImageOrientation?
+        var imageOrientation: UIImage.Orientation?
         switch(self.imageOrientation){
         case .down: imageOrientation = .downMirrored; break
         case .downMirrored: imageOrientation = .down; break
