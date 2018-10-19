@@ -28,6 +28,10 @@ extension UITableViewCell {
             button.setBackgroundImage(image, for: .normal)
         }
     }
+    
+    public class var identifier : String {
+        return NSStringFromClass(UITableViewCell.self)
+    }
 }
 
 public extension URL {
