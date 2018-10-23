@@ -66,6 +66,7 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         list = UITableView(frame: view.frame, style: .grouped)
         list.dataSource = self
         list.delegate = self
+        list.backgroundColor = .clear
         list.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
         list.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         view.addSubview(list)
