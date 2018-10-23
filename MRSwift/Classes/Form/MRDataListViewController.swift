@@ -83,6 +83,18 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         
         if let searchTintColor = searchTintColor {
             searchController.searchBar.tintColor = searchTintColor
+        } else {
+            searchController.searchBar.tintColor = .black
+        }
+        
+        if let textfield = searchController.searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.textColor = UIColor.black
+            textfield.tintColor = .lightGray
+            if let backgroundview = textfield.subviews.first {
+                backgroundview.backgroundColor = .white
+                backgroundview.layer.cornerRadius = 10;
+                backgroundview.clipsToBounds = true;
+            }
         }
         
         if #available(iOS 11.0, *) {
