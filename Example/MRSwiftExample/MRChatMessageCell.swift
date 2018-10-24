@@ -14,6 +14,7 @@ import TTTAttributedLabel
 public protocol MRChatMessageCellDelegate : class {
     func mrChatMessageCellDidSelectUrl(cell: MRChatMessageCell, url: URL)
     func mrChatMessageCellDidSelectImage(cell: MRChatMessageCell, image: UIImage?)
+    func mrChatMessageCellDidSelectVideo(cell: MRChatMessageCell)
 }
 
 public enum MRChatMessageCellStyle {
@@ -33,6 +34,8 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
     open var lblMessage: TTTAttributedLabel?
     open var imgImage: UIImageView?
     open var lblMessageDate: UILabel!
+    private var videoLayer: UIView?
+    private var playIcon: UIImageView?
     
     // MARK: - Constraints
     
@@ -114,7 +117,6 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         if isSender {
             cntBubbleContainerLeading = bubbleContainerView.autoPinEdge(toSuperviewEdge: .leading, withInset: 40, relation: .greaterThanOrEqual)
             cntBubbleContainerTrailing = bubbleContainerView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 8)
-            
         } else {
             cntBubbleContainerLeading = bubbleContainerView.autoPinEdge(toSuperviewEdge: .leading, withInset: 8)
             cntBubbleContainerTrailing = bubbleContainerView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 40, relation: .greaterThanOrEqual)
@@ -123,9 +125,10 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         
         if style == .text {
             createMessageLabel()
-
         } else if style == .image {
             createImage()
+        } else if style == .video {
+            createVideo()
         }
         
         if isSenderNameActive {
@@ -160,9 +163,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         
         //Removing media layout components
         
-        imgImage?.removeConstraints()
-        imgImage?.removeFromSuperview()
-        imgImage = nil
+        removeUnusedViews()
         
         if lblMessage == nil {
             
@@ -198,9 +199,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         
         //Removing not needed components
         
-        lblMessage?.removeConstraints()
-        lblMessage?.removeFromSuperview()
-        lblMessage = nil
+        removeUnusedViews()
         
         if imgImage == nil {
             
@@ -211,12 +210,33 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             imgImage?.contentMode = .scaleAspectFill
             imgImage?.isUserInteractionEnabled = true
             bubbleView?.insertSubview(imgImage!, at: 0)
-            imgImage?.autoPinEdgesToSuperviewEdges()
+            imgImage?.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+            imgImage?.layer.cornerRadius = 12
             imgImage?.autoSetDimension(.width, toSize: 280)
             
             let tap = UITapGestureRecognizer(target: self, action: #selector(didTapImage))
             tap.numberOfTapsRequired = 1
             imgImage?.addGestureRecognizer(tap)
+        }
+    }
+    
+    private func createVideo() {
+        
+        createImage()
+        imgImage?.removeSubviews()
+        
+        if videoLayer == nil {
+            videoLayer = UIView()
+            videoLayer?.clipsToBounds = true
+            videoLayer?.backgroundColor = .black
+            videoLayer?.alpha = 0.3
+            videoLayer?.isUserInteractionEnabled = true
+            imgImage?.addSubview(videoLayer!)
+            videoLayer?.autoPinEdgesToSuperviewEdges()
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(didTapVideo))
+            tap.numberOfTapsRequired = 1
+            videoLayer?.addGestureRecognizer(tap)
         }
     }
     
@@ -231,17 +251,19 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             
             //Can be shown inside the bubble or outside
             
+            let lateralPadding: CGFloat = style == .text ? 8 : 14
+            
             if senderPosition == .inside {
                 
                 lblSenderName?.textColor = .white
                 bubbleView?.addSubview(lblSenderName!)
-                lblSenderName!.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8), excludingEdge: .bottom)
+                lblSenderName!.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: lateralPadding, left: lateralPadding, bottom: lateralPadding, right: lateralPadding), excludingEdge: .bottom)
                 
             } else {
                 
                 lblSenderName?.textColor = .gray
                 addSubview(lblSenderName!)
-                lblSenderName?.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8), excludingEdge: .bottom)
+                lblSenderName?.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: lateralPadding, left: lateralPadding, bottom: lateralPadding, right: lateralPadding), excludingEdge: .bottom)
                 NSLayoutConstraint.deactivate([cntBubbleContainerTop])
                 cntBubbleContainerTop = bubbleContainerView.autoPinEdge(.top, to: .bottom, of: lblSenderName!, withOffset: 8)
                 NSLayoutConstraint.activate([cntBubbleContainerTop])
@@ -285,7 +307,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
                 addSubview(lblMessageDate!)
                 lblMessageDate.autoPinEdge(.top, to: .bottom, of: bubbleContainerView, withOffset: 8)
             }
-            lblMessageDate?.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8), excludingEdge: .top)
+            lblMessageDate?.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12), excludingEdge: .top)
         }
         
         if style == .text || messageDatePosition == .outside {
@@ -325,9 +347,37 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         delegate?.mrChatMessageCellDidSelectImage(cell: self, image: imgImage?.image)
     }
     
+    @objc func didTapVideo() {
+        delegate?.mrChatMessageCellDidSelectVideo(cell: self)
+    }
+    
     // MARK: - TTTAttributedLabel Delegate
     
     public func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
         delegate?.mrChatMessageCellDidSelectUrl(cell: self, url: url)
+    }
+    
+    // MARK: - Other Methods
+    
+    private func removeUnusedViews() {
+        
+        if style == .text {
+            videoLayer?.removeConstraints()
+            videoLayer?.removeFromSuperview()
+            videoLayer = nil
+            imgImage?.removeConstraints()
+            imgImage?.removeFromSuperview()
+            imgImage = nil
+            bubbleView?.mask = nil
+        } else {
+            if style == .image {
+                videoLayer?.removeConstraints()
+                videoLayer?.removeFromSuperview()
+                videoLayer = nil
+            }
+            lblMessage?.removeConstraints()
+            lblMessage?.removeFromSuperview()
+            lblMessage = nil
+        }
     }
 }

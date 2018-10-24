@@ -50,9 +50,9 @@ class ViewController: UIViewController {
         let hud = MRHud(theme: .dark, style: .linearProgress)
         hud.textLabel?.text = "Ciao sono una label"
         hud.enableShadow(enable: true)
-        //hud.setProgressColors(emptyColor: UIColor(netHex: 0xdddddd), filledColor: UIColor(netHex: 0x00ba0e))
+        hud.setProgressColors(emptyColor: UIColor(netHex: 0xdddddd), filledColor: UIColor(netHex: 0x00ba0e))
         //hud.setShadow(color: .red, offset: .zero, radius: 10, opacity: 0.5)
-        hud.show(in: view, animated: true)
+        hud.show(in: navigationController!.view, animated: true)
         
         DispatchQueue.main.asyncAfter(deadline: .now()+2) {
             hud.set(style: .indeterminate)
@@ -75,6 +75,10 @@ class ViewController: UIViewController {
                     print("Tapped Button 4")
                 })
             ])
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+6) {
+            hud.hide(animated: true)
         }
     }
     

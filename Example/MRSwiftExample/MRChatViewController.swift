@@ -60,7 +60,7 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return indexPath.row % 2 == 0 ? UITableView.automaticDimension : 200
+        return 200
     }
     
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -79,14 +79,15 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
         cell.bubbleView?.image = isSender ? bubbleSender : bubbleReceiver
         
         if isSender {
-            cell.configure(style: .text)
-            cell.lblMessage?.font = fontMessage
+            cell.configure(style: .video)
+            cell.imgImage?.image = "landscape.jpg".image
+            /*cell.lblMessage?.font = fontMessage
             cell.lblMessage?.textColor = isSender ? textColorSender : textColorReceiver
             cell.lblMessage?.textAlignment = isSender ? .right : .left
-            cell.setText(text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua" + "\n\nhttps://www.google.it")
+            cell.setText(text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua" + "\n\nhttps://www.google.it")*/
         } else {
             cell.configure(style: .image)
-            cell.imgImage?.image = #imageLiteral(resourceName: "empire_logo.png")
+            cell.imgImage?.image = "landscape.jpg".image
         }
 
         cell.lblSenderName?.font = fontSenderName
@@ -110,6 +111,11 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
     public func mrChatMessageCellDidSelectImage(cell: MRChatMessageCell, image: UIImage?) {
         
         print("DID TAP IMAGE")
+    }
+    
+    public func mrChatMessageCellDidSelectVideo(cell: MRChatMessageCell) {
+        
+        print("DID TAP VIDEO")
     }
     
     // MARK: - Other Methods
