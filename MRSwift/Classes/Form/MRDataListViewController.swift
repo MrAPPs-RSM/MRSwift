@@ -66,6 +66,7 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         list = UITableView(frame: view.frame, style: .grouped)
         list.dataSource = self
         list.delegate = self
+        list.backgroundColor = .clear
         list.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
         list.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         view.addSubview(list)
@@ -75,7 +76,6 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         footer.backgroundColor = .clear
         list.tableFooterView = footer
         
-        searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.showsCancelButton = false
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = false
@@ -83,9 +83,22 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         
         if let searchTintColor = searchTintColor {
             searchController.searchBar.tintColor = searchTintColor
+        } else {
+            searchController.searchBar.tintColor = .black
+        }
+        
+        if let textfield = searchController.searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.textColor = UIColor.black
+            textfield.tintColor = .lightGray
+            if let backgroundview = textfield.subviews.first {
+                backgroundview.backgroundColor = .white
+                backgroundview.layer.cornerRadius = 10;
+                backgroundview.clipsToBounds = true;
+            }
         }
         
         if #available(iOS 11.0, *) {
+            searchController.searchBar.barStyle = navigationController?.navigationBar.barTintColor?.isDark == true ? .black : .default
             navigationItem.searchController = searchController
         } else {
             list.tableHeaderView = searchController.searchBar
@@ -123,14 +136,15 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     // MARK: - Keyboard Handlers
     
     public override func keyboardDidShow(keyboardInfo: KeyboardInfo) {
-        let inset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardInfo.endFrame.size.height, right: 0)
+        let inset = UIEdgeInsets(top: -36, left: 0, bottom: keyboardInfo.endFrame.size.height, right: 0)
         list.contentInset = inset
         list.scrollIndicatorInsets = inset
     }
     
     public override func keyboardDidHide(keyboardInfo: KeyboardInfo) {
-        list.contentInset = .zero
-        list.scrollIndicatorInsets = .zero
+        let inset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
+        list.contentInset = inset
+        list.scrollIndicatorInsets = inset
     }
     
     // MARK: - UITableView DataSource & Delegate
@@ -143,12 +157,8 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         return data.count
     }
     
-    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44.0
-    }
-    
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        return 50.0
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

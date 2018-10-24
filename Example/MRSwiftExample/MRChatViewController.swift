@@ -49,8 +49,8 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
         view.addSubview(tblChat)
         tblChat.autoPinEdgesToSuperviewEdges()
         
-        bubbleSender = #imageLiteral(resourceName: "bubble_sender").resizableImage(withCapInsets: UIEdgeInsetsMake(19.5, 19.5, 19.5, 19.5), resizingMode: .stretch)
-        bubbleReceiver = #imageLiteral(resourceName: "bubble_receiver").resizableImage(withCapInsets: UIEdgeInsetsMake(19.5, 19.5, 19.5, 19.5), resizingMode: .stretch)
+        bubbleSender = #imageLiteral(resourceName: "bubble_sender").resizableImage(withCapInsets: UIEdgeInsets(top: 19.5, left: 19.5, bottom: 19.5, right: 19.5), resizingMode: .stretch)
+        bubbleReceiver = #imageLiteral(resourceName: "bubble_receiver").resizableImage(withCapInsets: UIEdgeInsets(top: 19.5, left: 19.5, bottom: 19.5, right: 19.5), resizingMode: .stretch)
     }
     
     // MARK: - UITableView DataSource & Delegate
@@ -60,7 +60,7 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return indexPath.row % 2 == 0 ? UITableViewAutomaticDimension : 200
+        return indexPath.row % 2 == 0 ? UITableView.automaticDimension : 200
     }
     
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {

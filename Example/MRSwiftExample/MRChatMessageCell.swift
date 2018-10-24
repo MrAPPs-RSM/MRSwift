@@ -51,7 +51,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     // MARK: - Initialization
     
-    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupUI()
@@ -148,7 +148,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         
         lblMessage?.setText(realText) { (attributedString) -> NSMutableAttributedString? in
             attributedString?.addAttribute(
-                kCTForegroundColorAttributeName as NSAttributedStringKey,
+                kCTForegroundColorAttributeName as NSAttributedString.Key,
                 value: UIColor.clear,
                 range: NSRange(location: attributedString!.length-endSpace.count, length: endSpace.count)
             )
@@ -172,19 +172,19 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             lblMessage?.enabledTextCheckingTypes = NSTextCheckingAllTypes
             lblMessage?.delegate = self
             lblMessage?.activeLinkAttributes = [
-                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16),
-                NSAttributedStringKey.foregroundColor: UIColor.white.darker,
-                NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue
+                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),
+                NSAttributedString.Key.foregroundColor: UIColor.white.darker,
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
             ]
             lblMessage?.linkAttributes = [
-                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16),
-                NSAttributedStringKey.foregroundColor: UIColor.white,
-                NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue
+                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
             ]
             lblMessage?.inactiveLinkAttributes = [
-                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16),
-                NSAttributedStringKey.foregroundColor: UIColor.white,
-                NSAttributedStringKey.underlineStyle: NSUnderlineStyle.styleSingle.rawValue
+                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
             ]
             lblMessage?.numberOfLines = 0
             lblMessage?.textColor = .white

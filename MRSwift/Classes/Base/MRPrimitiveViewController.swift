@@ -17,6 +17,21 @@ open class KeyboardInfo : NSObject {
 
 open class MRPrimitiveViewController: UIViewController {
     
+    open class var rawBackgroundColor : Int {
+        get {
+            let colorInt = UserDefaults.standard.integer(forKey: "MRPrimiviteViewControllerBackgroundColor")
+            if colorInt > 0 {
+                return colorInt
+            } else {
+                return 0xf7f7f7
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "MRPrimiviteViewControllerBackgroundColor")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
     // MARK: - Initialization
     
     deinit {
@@ -28,6 +43,7 @@ open class MRPrimitiveViewController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = UIColor(netHex: MRPrimitiveViewController.rawBackgroundColor)
     }
     
     override open func viewWillAppear(_ animated: Bool) {
