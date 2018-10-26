@@ -22,7 +22,7 @@ DEPENDENCIES:
   - MRSwift (from `../`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - Alamofire
     - Cache
     - PureLayout
@@ -47,4 +47,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 1bcda142b7e8e3b9c1cd4077b55b1a201e3c3783
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3

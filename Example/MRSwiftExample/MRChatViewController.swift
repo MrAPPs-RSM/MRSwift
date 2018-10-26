@@ -33,6 +33,7 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
     open var textColorReceiver: UIColor = .black
     open var bubbleSender: UIImage?
     open var bubbleReceiver: UIImage?
+    open var playButtonImage: UIImage?
     
     // MARK: - UIViewController Methods
     
@@ -81,6 +82,7 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
         if isSender {
             cell.configure(style: .video)
             cell.imgImage?.image = "landscape.jpg".image
+            cell.playIcon?.image = playButtonImage
             /*cell.lblMessage?.font = fontMessage
             cell.lblMessage?.textColor = isSender ? textColorSender : textColorReceiver
             cell.lblMessage?.textAlignment = isSender ? .right : .left

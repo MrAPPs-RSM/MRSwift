@@ -35,7 +35,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
     open var imgImage: UIImageView?
     open var lblMessageDate: UILabel!
     private var videoLayer: UIView?
-    private var playIcon: UIImageView?
+    open var playIcon: UIImageView?
     
     // MARK: - Constraints
     
@@ -229,7 +229,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             videoLayer = UIView()
             videoLayer?.clipsToBounds = true
             videoLayer?.backgroundColor = .black
-            videoLayer?.alpha = 0.3
+            videoLayer?.alpha = 0.4
             videoLayer?.isUserInteractionEnabled = true
             imgImage?.addSubview(videoLayer!)
             videoLayer?.autoPinEdgesToSuperviewEdges()
@@ -237,6 +237,13 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             let tap = UITapGestureRecognizer(target: self, action: #selector(didTapVideo))
             tap.numberOfTapsRequired = 1
             videoLayer?.addGestureRecognizer(tap)
+        }
+        
+        if playIcon == nil {
+            playIcon = UIImageView()
+            playIcon?.contentMode = .center
+            imgImage?.addSubview(playIcon!)
+            playIcon?.autoPinEdgesToSuperviewEdges()
         }
     }
     
@@ -378,6 +385,12 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             lblMessage?.removeConstraints()
             lblMessage?.removeFromSuperview()
             lblMessage = nil
+        }
+        
+        if style != .video {
+            playIcon?.removeConstraints()
+            playIcon?.removeFromSuperview()
+            playIcon = nil
         }
     }
 }

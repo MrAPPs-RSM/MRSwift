@@ -118,6 +118,7 @@ class ViewController: UIViewController {
     @IBAction func didTapChatButton(_ sender: Any) {
         
         let chat = MRChatViewController()
+        chat.playButtonImage = "ico_play.png".image
         navigationController?.pushViewController(chat, animated: true)
     }
     
