@@ -29,8 +29,12 @@ extension UITableViewCell {
         }
     }
     
+    public class func nib() -> UINib {
+        return UINib(nibName: String(describing: self), bundle: nil)
+    }
+    
     public class var identifier : String {
-        return NSStringFromClass(UITableViewCell.self)
+        return String(describing: self)
     }
 }
 
