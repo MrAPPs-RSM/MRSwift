@@ -28,14 +28,6 @@ extension UITableViewCell {
             button.setBackgroundImage(image, for: .normal)
         }
     }
-    
-    public class func nib() -> UINib {
-        return UINib(nibName: String(describing: self), bundle: nil)
-    }
-    
-    public class var identifier : String {
-        return String(describing: self)
-    }
 }
 
 public extension URL {
@@ -198,15 +190,23 @@ public extension UIView {
         layer.shadowRadius = offset.height
     }
     
-    class var separatorHeight : CGFloat {
+    public class var separatorHeight : CGFloat {
         return 1.0/UIScreen.main.scale
     }
     
-    class var safeArea : UIEdgeInsets {
+    public class var safeArea : UIEdgeInsets {
         if #available(iOS 11, *) {
             return UIApplication.shared.keyWindow!.safeAreaInsets
         }
         return .zero
+    }
+    
+    public class func nib() -> UINib {
+        return UINib(nibName: String(describing: self), bundle: nil)
+    }
+    
+    public class var identifier : String {
+        return String(describing: self)
     }
 }
 
