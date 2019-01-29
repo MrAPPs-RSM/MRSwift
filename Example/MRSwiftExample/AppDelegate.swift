@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().isTranslucent = false
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = UINavigationController(rootViewController: ViewController())
+        self.window?.rootViewController = UINavigationController(rootViewController: MRCreditsViewController(appName: "Ciao", color: .red))
         self.window?.makeKeyAndVisible()
         
         return true

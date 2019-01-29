@@ -24,8 +24,8 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
     
     // MARK: - Xibs
     
-    @IBOutlet private var lblAppName : UILabel!
-    @IBOutlet private var lblIntroMrApps : UILabel!
+    @IBOutlet open var lblAppName : UILabel!
+    @IBOutlet open var lblIntroMrApps : UILabel!
     @IBOutlet private var imgHeaderBackground : UIImageView!
     @IBOutlet private var headerView : UIView!
     @IBOutlet private var tableView : UITableView!
@@ -117,31 +117,31 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
         tableView.contentInset = UIEdgeInsets(top: -UIView.safeArea.top, left: 0, bottom: 0, right: 0)
         
         elements = [
-            CreditsElement(title: NSLocalizedString("Scopri Mr. APPs", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("credits_1", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_mrapps.png",
                            link: "http://www.mr-apps.com"),
-            CreditsElement(title: NSLocalizedString("Sviluppo App", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("credits_2", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_appdesign.png",
                            link: "http://www.mr-apps.com/it/servizi/sviluppo-app"),
-            CreditsElement(title: NSLocalizedString("Realizzazione Siti Web", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("credits_3", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_webdesign.png",
                            link: "http://www.mr-apps.com/it/servizi/realizzazione-siti-web"),
-            CreditsElement(title: NSLocalizedString("Progettazione E-Commerce", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("credits_4", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_standard.png",
                            link: "http://www.mr-apps.com/it/servizi/realizzazione-ecommerce"),
-            CreditsElement(title: NSLocalizedString("Le nostre App", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("credits_5", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_portfolio.png",
                            link: "itms://itunes.apple.com/it/artist/mr.-apps-s.r.l./id493882589"),
-            CreditsElement(title: NSLocalizedString("Contattaci ora", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("credits_6", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_mail.png",
                            link: "http://www.mr-apps.com/it/contatti"),
-            CreditsElement(title: NSLocalizedString("Richiedi un preventivo", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
+            CreditsElement(title: NSLocalizedString("credits_7", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_file.png",
                            link: "http://www.mr-apps.com/it/il-tuo-progetto")
             
         ]
         
-        lblIntroMrApps.text = NSLocalizedString("è un'applicazione realizzata da Mr. APPs", tableName: nil, bundle: localizationBundle, value: "", comment: "")
+        lblIntroMrApps.text = NSLocalizedString("credits_subtitle", tableName: nil, bundle: localizationBundle, value: "", comment: "")
         lblIntroMrApps.font = regularFont
         lblAppName.font = boldFont
     }
