@@ -65,7 +65,7 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
         if let appName = appName {
             self.appName = appName
         } else {
-            self.appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
+            self.appName = Bundle.main.appName
         }
         
         if let color = color {
@@ -111,8 +111,9 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
         lblAppName.text = self.appName
         
         tableView.tableHeaderView = self.headerView
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.register(MRBaseTableCell.self, forCellReuseIdentifier: MRBaseTableCell.identifier)
         tableView.alwaysBounceVertical = false
+        tableView.separatorInset = .zero
         tableView.contentInset = UIEdgeInsets(top: -UIView.safeArea.top, left: 0, bottom: 0, right: 0)
         
         elements = [
@@ -147,16 +148,13 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
     
     //UITableView DataSource & Delegate
     
-    open func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return elements.count
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)!
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: MRBaseTableCell.identifier, for: indexPath) as! MRBaseTableCell
         let element = elements[indexPath.row]
         cell.textLabel?.font = regularFont
         cell.textLabel?.text = element.title
@@ -167,9 +165,16 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        isPresenting = true
-        UIApplication.shared.openURL(URL(string: elements[indexPath.row].link)!)
+        
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let stringUrl = elements[indexPath.row].link
+        if let url = URL(string: stringUrl) {
+            if UIApplication.shared.canOpenURL(url) {
+                isPresenting = true
+                UIApplication.shared.openUrl(stringUrl: stringUrl, on: self)
+            }
+        }
     }
     
     // MARK: - Other Methods
