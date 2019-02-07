@@ -264,7 +264,7 @@ public extension Bundle {
     }
     
     public var appVersion : String {
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+        if let version = Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String {
             return version
         }
         return ""
