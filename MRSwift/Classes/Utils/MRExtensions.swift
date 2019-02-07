@@ -262,6 +262,13 @@ public extension Bundle {
     public var appName : String {
         return Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
     }
+    
+    public var appVersion : String {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            return version
+        }
+        return ""
+    }
 }
 
 public extension UIScreen {
