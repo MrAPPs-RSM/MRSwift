@@ -40,23 +40,23 @@ public enum DrawerType : Int {
     case side = 2
 }
 
-public class MRDrawerController: UIViewController {
+open class MRDrawerController: UIViewController {
     
     // MARK: - Constants & Variables
     
-    public var leftViewController : UIViewController?
-    public var centerViewController : UIViewController?
-    public var rightViewController : UIViewController?
+    open var leftViewController : UIViewController?
+    open var centerViewController : UIViewController?
+    open var rightViewController : UIViewController?
     private var darkBackground : UIView!
     
     private var isLeftViewVisible : Bool = false
     private var isRightViewVisible : Bool = false
     private var drawerType : DrawerType = .overlay
     
-    public var leftViewWidth : CGFloat = 275.0
-    public var rightViewWidth : CGFloat = 275.0
-    public var animationDuration : TimeInterval = 0.3
-    public var backgroundOpacity : CGFloat = 0.5
+    open var leftViewWidth : CGFloat = 275.0
+    open var rightViewWidth : CGFloat = 275.0
+    open var animationDuration : TimeInterval = 0.3
+    open var backgroundOpacity : CGFloat = 0.5
     
     private var viewWidth : CGFloat {
         return self.view.frame.size.width
@@ -92,7 +92,7 @@ public class MRDrawerController: UIViewController {
     
     // MARK: - UIViewController Methods
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         //Center View
@@ -131,7 +131,7 @@ public class MRDrawerController: UIViewController {
         }
     }
     
-    public override func viewDidLayoutSubviews() {
+    open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         if self.centerViewController != nil {
@@ -251,7 +251,7 @@ public class MRDrawerController: UIViewController {
         }
     }
     
-    override public func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
