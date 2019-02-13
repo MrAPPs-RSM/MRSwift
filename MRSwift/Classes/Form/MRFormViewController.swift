@@ -123,6 +123,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         form = UITableView(frame: view.frame, style: .grouped)
         form.dataSource = self
         form.delegate = self
+        form.keyboardDismissMode = .interactive
         form.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         form.register(MRTextFieldTableCell.self, forCellReuseIdentifier: textfieldIdentifier)
         form.register(MRSwitchTableCell.self, forCellReuseIdentifier: switchIdentifier)
