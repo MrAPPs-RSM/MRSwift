@@ -131,7 +131,7 @@ open class MRCreditsViewController: UIViewController, UITableViewDelegate, UITab
                            link: "http://www.mr-apps.com/it/servizi/realizzazione-ecommerce"),
             CreditsElement(title: NSLocalizedString("credits_5", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_portfolio.png",
-                           link: "itms://itunes.apple.com/it/artist/mr.-apps-s.r.l./id493882589"),
+                           link: "https://itunes.apple.com/it/developer/mr-apps-s-r-l/id493882589"),
             CreditsElement(title: NSLocalizedString("credits_6", tableName: nil, bundle: localizationBundle, value: "", comment: ""),
                            image: "icona_cella_mail.png",
                            link: "http://www.mr-apps.com/it/contatti"),
