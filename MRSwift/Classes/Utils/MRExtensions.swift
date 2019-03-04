@@ -260,7 +260,7 @@ public extension UIDevice {
 public extension Bundle {
     
     public var appName : String {
-        return Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
     }
     
     public var appVersion : String {
