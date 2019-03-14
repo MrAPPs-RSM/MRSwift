@@ -126,12 +126,34 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         picker.allowsEditing = editing
         picker.sourceType = sourceType
         picker.mediaTypes = mediaTypes
-        
         if isLibrary == false {
             picker.cameraCaptureMode = isPhoto ? .photo : .video
         }
         
-        viewController.present(picker, animated: true, completion: nil)
+        if isLibrary {
+            let photos = PHPhotoLibrary.authorizationStatus()
+            if photos == .notDetermined {
+                PHPhotoLibrary.requestAuthorization({status in
+                    if status == .authorized {
+                        viewController.present(self.picker, animated: true, completion: nil)
+                    } else {
+                        if self.errorBlock != nil {
+                            self.errorBlock!("Photo library permissions are disabled")
+                        }
+                    }
+                })
+            }
+        } else {
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    viewController.present(self.picker, animated: true, completion: nil)
+                } else {
+                    if self.errorBlock != nil {
+                        self.errorBlock!("Camera permissions are disabled")
+                    }
+                }
+            }
+        }
     }
     
     private func mediaTypesFor(sourceType: UIImagePickerController.SourceType, photo: Bool, video: Bool) -> [String]? {
