@@ -34,6 +34,8 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     private let searchController = UISearchController(searchResultsController: nil)
     private var searchDispose: Disposable?
+    private let rowHeight = MRDataListViewController.defaultRowHeight
+    private let rowFontSize = MRDataListViewController.defaultRowFontSize
     
     // MARK: - Initialization
     
@@ -51,6 +53,36 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     deinit {
         list.tableHeaderView = nil
+    }
+    
+    open class var defaultRowHeight : CGFloat {
+        get {
+            let rowHeight = CGFloat(UserDefaults.standard.float(forKey: "MRDataListViewControllerDefaultRowHeight"))
+            if rowHeight > 0 {
+                return rowHeight
+            } else {
+                return 50
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "MRDataListViewControllerDefaultRowHeight")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
+    open class var defaultRowFontSize : CGFloat {
+        get {
+            let fontSize = CGFloat(UserDefaults.standard.float(forKey: "MRDataListViewControllerRowFontSize"))
+            if fontSize > 0 {
+                return fontSize
+            } else {
+                return 16
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "MRDataListViewControllerRowFontSize")
+            UserDefaults.standard.synchronize()
+        }
     }
     
     // MARK: - UIViewController Methods
@@ -158,7 +190,7 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50.0
+        return rowHeight
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -167,7 +199,7 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         
         let value = data[indexPath.row]
         
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        cell.textLabel?.font = UIFont.systemFont(ofSize: rowFontSize, weight: .regular)
         cell.textLabel?.text = value
         cell.textLabel?.textColor = valueColor
         cell.accessoryType = selectedValue != nil ? selectedValue! == value ? .checkmark : .none : .none

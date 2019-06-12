@@ -11,7 +11,7 @@ import PureLayout
 
 public extension UITableViewCell {
     
-    @objc public func configure(with row: MRFormRow) {
+    @objc func configure(with row: MRFormRow) {
         
         accessoryType = row.type == .rowList ? .disclosureIndicator : row.accessoryType
         textLabel?.text = row.mandatory ? "\(row.title ?? "")*" : row.title

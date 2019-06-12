@@ -146,7 +146,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
     open func setText(text: String?) {
         
         var realText = text ?? ""
-        let endSpace = " aaaa"
+        let endSpace = "  aaaa"
         realText += endSpace
         
         lblMessage?.setText(realText) { (attributedString) -> NSMutableAttributedString? in
@@ -341,7 +341,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     private func applyConstraints() {
         
-        if senderPosition == .inside {
+        if senderPosition == .inside && lblSenderName != nil {
             lblMessage?.autoPinEdge(toSuperviewEdge: .leading, withInset: 8)
             lblMessage?.autoPinEdge(toSuperviewEdge: .trailing, withInset: 8)
             lblMessage?.autoPinEdge(.top, to: .bottom, of: lblSenderName!, withOffset: 8)

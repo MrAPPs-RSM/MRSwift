@@ -61,7 +61,7 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        return indexPath.row % 2 == 0 ? UITableView.automaticDimension : 200
     }
     
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -72,7 +72,7 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! MRChatMessageCell
         cell.delegate = self
-        cell.isSenderNameActive = true
+        //cell.isSenderNameActive = true
         cell.senderPosition = .inside
         
         let isSender = indexPath.row % 2 == 0
@@ -80,21 +80,21 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
         cell.bubbleView?.image = isSender ? bubbleSender : bubbleReceiver
         
         if isSender {
-            cell.configure(style: .video)
-            cell.imgImage?.image = "landscape.jpg".image
-            cell.playIcon?.image = playButtonImage
-            /*cell.lblMessage?.font = fontMessage
+            cell.configure(style: .text)
+            //cell.imgImage?.image = "landscape.jpg".image
+            //cell.playIcon?.image = playButtonImage
+            cell.lblMessage?.font = fontMessage
             cell.lblMessage?.textColor = isSender ? textColorSender : textColorReceiver
             cell.lblMessage?.textAlignment = isSender ? .right : .left
-            cell.setText(text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua" + "\n\nhttps://www.google.it")*/
+            cell.setText(text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua" + "\n\nhttps://www.google.it")
         } else {
             cell.configure(style: .image)
             cell.imgImage?.image = "landscape.jpg".image
         }
 
-        cell.lblSenderName?.font = fontSenderName
-        cell.lblSenderName?.text = isSender ? "Sender" : "Receiver"
-        cell.lblSenderName?.textAlignment = isSender ? .right : .left
+        //cell.lblSenderName?.font = fontSenderName
+        //cell.lblSenderName?.text = isSender ? "Sender" : "Receiver"
+        //cell.lblSenderName?.textAlignment = isSender ? .right : .left
         
         cell.lblMessageDate.font = fontMessageDate
         cell.lblMessageDate.textAlignment = isSender ? .right : .left
