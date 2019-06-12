@@ -14,7 +14,7 @@ public protocol MRDataListViewControllerDelegate : class {
     func mrDataListViewControllerDidSelectValue(value: String, at index: Int)
 }
 
-public class MRDataListViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
+open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
     
     // MARK: - Layout
     
@@ -87,7 +87,7 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     // MARK: - UIViewController Methods
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.title = navTitle
@@ -137,12 +137,12 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
         }
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         registerForKeyboardNotifications()
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         unregisterForKeyboardNotifications()
     }
@@ -167,13 +167,13 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     // MARK: - Keyboard Handlers
     
-    public override func keyboardDidShow(keyboardInfo: KeyboardInfo) {
+    open override func keyboardDidShow(keyboardInfo: KeyboardInfo) {
         let inset = UIEdgeInsets(top: -36, left: 0, bottom: keyboardInfo.endFrame.size.height, right: 0)
         list.contentInset = inset
         list.scrollIndicatorInsets = inset
     }
     
-    public override func keyboardDidHide(keyboardInfo: KeyboardInfo) {
+    open override func keyboardDidHide(keyboardInfo: KeyboardInfo) {
         let inset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
         list.contentInset = inset
         list.scrollIndicatorInsets = inset
@@ -229,7 +229,7 @@ public class MRDataListViewController: MRPrimitiveViewController, UITableViewDat
     
     // MARK: - Battery Warning
     
-    override public func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
