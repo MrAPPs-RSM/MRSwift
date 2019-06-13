@@ -339,7 +339,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MRSwiftExample/Pods-MRSwiftExample-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-MRSwiftExample/Pods-MRSwiftExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Cache/Cache.framework",
 				"${BUILT_PRODUCTS_DIR}/MRSwift/MRSwift.framework",
@@ -362,7 +362,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MRSwiftExample/Pods-MRSwiftExample-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MRSwiftExample/Pods-MRSwiftExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A89FEFA82E1FEBE599BD5EB5 /* [CP] Check Pods Manifest.lock */ = {

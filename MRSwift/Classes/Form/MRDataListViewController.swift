@@ -14,10 +14,11 @@ public protocol MRDataListViewControllerDelegate : class {
     func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: String, at index: Int)
 }
 
-open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
+open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     // MARK: - Layout
     
+    var searchBar: UISearchBar!
     var list: UITableView!
     
     // MARK: - Constants & Variables
@@ -39,7 +40,7 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     
     // MARK: - Initialization
     
-    convenience init(data: [String], navTitle: String?, navBackIcon: UIImage?, selectedValue: String?, valueColor: UIColor, searchTintColor: UIColor?) {
+    public convenience init(data: [String], navTitle: String?, navBackIcon: UIImage?, selectedValue: String?, valueColor: UIColor, searchTintColor: UIColor?) {
         self.init()
         
         self.allData = data
@@ -95,6 +96,16 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: navBackIcon, style: .plain, target: self, action: #selector(goBack))
         }
         
+        searchBar = UISearchBar()
+        searchBar.delegate = self
+        searchBar.searchBarStyle = .minimal
+        searchBar.backgroundColor = .white
+        searchBar.tintColor = searchTintColor
+        view.addSubview(searchBar)
+        searchBar.autoPinEdge(toSuperviewEdge: .top)
+        searchBar.autoPinEdge(toSuperviewEdge: .leading)
+        searchBar.autoPinEdge(toSuperviewEdge: .trailing)
+        
         list = UITableView(frame: view.frame, style: .grouped)
         list.dataSource = self
         list.delegate = self
@@ -102,38 +113,19 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
         list.contentInset = UIEdgeInsets(top: -36, left: 0, bottom: 0, right: 0)
         list.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         view.addSubview(list)
-        list.autoPinEdgesToSuperviewEdges()
-        
-        let footer = UIView()
-        footer.backgroundColor = .clear
-        list.tableFooterView = footer
-        
-        searchController.searchBar.showsCancelButton = false
-        searchController.searchResultsUpdater = self
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.dimsBackgroundDuringPresentation = false
-        
-        if let searchTintColor = searchTintColor {
-            searchController.searchBar.tintColor = searchTintColor
-        } else {
-            searchController.searchBar.tintColor = .black
-        }
-        
-        if let textfield = searchController.searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.textColor = UIColor.black
-            textfield.tintColor = .lightGray
+        list.autoPinEdge(.top, to: .bottom, of: searchBar)
+        list.autoPinEdge(toSuperviewEdge: .bottom)
+        list.autoPinEdge(toSuperviewEdge: .leading)
+        list.autoPinEdge(toSuperviewEdge: .trailing)
+
+        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.textColor = .black
+            textfield.tintColor = .black
             if let backgroundview = textfield.subviews.first {
                 backgroundview.backgroundColor = .white
-                backgroundview.layer.cornerRadius = 10;
+                backgroundview.layer.cornerRadius = 10
                 backgroundview.clipsToBounds = true;
             }
-        }
-        
-        if #available(iOS 11.0, *) {
-            searchController.searchBar.barStyle = navigationController?.navigationBar.barTintColor?.isDark == true ? .black : .default
-            navigationItem.searchController = searchController
-        } else {
-            list.tableHeaderView = searchController.searchBar
         }
     }
     
@@ -149,8 +141,20 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     
     // MARK: - Search Handlers
     
-    public func updateSearchResults(for searchController: UISearchController) {
-        search(query: searchController.searchBar.text)
+    public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    
+    public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+    }
+    
+    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        search(query: searchBar.text)
     }
     
     func search(query: String?) {
