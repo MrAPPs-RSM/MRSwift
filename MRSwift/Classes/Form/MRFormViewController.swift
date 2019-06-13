@@ -291,7 +291,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     
     // MARK: - MRDataListViewController Delegate
     
-    open func mrDataListViewControllerDidSelectValue(value: String, at: Int) {
+    open func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: String, at: Int) {
         
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)

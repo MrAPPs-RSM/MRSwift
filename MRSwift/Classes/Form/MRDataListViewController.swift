@@ -11,7 +11,7 @@ import PureLayout
 import RxSwift
 
 public protocol MRDataListViewControllerDelegate : class {
-    func mrDataListViewControllerDidSelectValue(value: String, at index: Int)
+    func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: String, at index: Int)
 }
 
 open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
@@ -218,7 +218,7 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
             return value == data[indexPath.row]
         }
         
-        delegate?.mrDataListViewControllerDidSelectValue(value: value, at: index!)
+        delegate?.mrDataListViewControllerDidSelectValue(viewController: self, value: value, at: index!)
     }
     
     // MARK: - Other Methods
