@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().isTranslucent = false
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = UINavigationController(rootViewController: MRChatViewController())
+        window?.rootViewController = UINavigationController(rootViewController: ViewController())
         window?.makeKeyAndVisible()
         
         return true

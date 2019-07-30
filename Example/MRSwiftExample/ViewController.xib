@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController" customModule="MRSwiftExample" customModuleProvider="target">
             <connections>
+                <outlet property="btnImagePicker" destination="6Le-MH-cVC" id="cHf-dJ-kPN"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,17 +22,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Le-MH-cVC">
-                    <rect key="frame" x="133.5" y="50" width="107" height="30"/>
+                    <rect key="frame" x="134" y="50" width="107" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="xJU-Nq-BrW"/>
                     </constraints>
                     <state key="normal" title="MRImagePicker"/>
-                    <connections>
-                        <action selector="didTapPickerButton:" destination="-1" eventType="touchUpInside" id="O3F-4S-RGk"/>
-                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cm2-n8-lsE">
-                    <rect key="frame" x="133.5" y="96" width="107" height="30"/>
+                    <rect key="frame" x="134" y="96" width="107" height="30"/>
                     <state key="normal" title="MRMediaPlayer"/>
                     <connections>
                         <action selector="didTapMediaPlayerButton:" destination="-1" eventType="touchUpInside" id="Pbe-bx-YWf"/>
@@ -52,10 +50,17 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CVF-9K-ntU">
-                    <rect key="frame" x="109" y="234" width="156" height="30"/>
+                    <rect key="frame" x="109.5" y="234" width="156" height="30"/>
                     <state key="normal" title="MRChatViewController"/>
                     <connections>
                         <action selector="didTapChatButton:" destination="-1" eventType="touchUpInside" id="ujP-BE-mYX"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tJK-W9-7Vj">
+                    <rect key="frame" x="132" y="280" width="111" height="30"/>
+                    <state key="normal" title="MRBottomMenu"/>
+                    <connections>
+                        <action selector="didTapBottomMenu:" destination="-1" eventType="touchUpInside" id="4F7-An-atY"/>
                     </connections>
                 </button>
             </subviews>
@@ -71,11 +76,13 @@
                 <constraint firstItem="cWo-a5-Oou" firstAttribute="top" secondItem="cm2-n8-lsE" secondAttribute="bottom" constant="16" id="KHm-Qe-adr"/>
                 <constraint firstItem="245-2x-Mf4" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="RDK-qs-n4T"/>
                 <constraint firstItem="245-2x-Mf4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="YnI-Mi-g8z" secondAttribute="leading" constant="16" id="UCn-Uj-l0Q"/>
+                <constraint firstItem="tJK-W9-7Vj" firstAttribute="top" secondItem="CVF-9K-ntU" secondAttribute="bottom" constant="16" id="WbA-zx-g5O"/>
                 <constraint firstItem="YnI-Mi-g8z" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="245-2x-Mf4" secondAttribute="trailing" constant="16" id="Znf-W6-TZh"/>
                 <constraint firstItem="245-2x-Mf4" firstAttribute="top" secondItem="cWo-a5-Oou" secondAttribute="bottom" constant="16" id="grY-0L-d6e"/>
                 <constraint firstItem="cm2-n8-lsE" firstAttribute="top" secondItem="6Le-MH-cVC" secondAttribute="bottom" constant="16" id="ip2-Bs-jjV"/>
                 <constraint firstItem="6Le-MH-cVC" firstAttribute="top" secondItem="YnI-Mi-g8z" secondAttribute="top" constant="30" id="kdO-HS-eh9"/>
                 <constraint firstItem="CVF-9K-ntU" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="udd-py-feu"/>
+                <constraint firstItem="tJK-W9-7Vj" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="v6R-i9-hcg"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cm2-n8-lsE" secondAttribute="trailing" constant="16" id="yfB-Nv-Mev"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="YnI-Mi-g8z"/>

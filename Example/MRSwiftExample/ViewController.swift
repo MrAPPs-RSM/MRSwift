@@ -11,13 +11,21 @@ import MRSwift
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var btnImagePicker: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        view.backgroundColor = .darkGray
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Left", style: .plain, target: self, action: #selector(self.didTapLeftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Right", style: .plain, target: self, action: #selector(self.didTapRightButton))
+        
+        btnImagePicker.observe(event: .touchUpInside) {
+            MRImagePicker.shared.pickWithActionSheet(in: self, mediaType: .photo, editing: false, iPadStartFrame: nil, completionBlock: { (image, videoUrl, fileName) in
+                print("Image: \(image != nil)\nVideo: \(videoUrl != nil)")
+            }, errorBlock: nil)
+        }
     }
 
 	@objc func didTapLeftButton() {
@@ -26,13 +34,6 @@ class ViewController: UIViewController {
     
    @objc func didTapRightButton() {
         self.openRightDrawerView()
-    }
-
-    @IBAction func didTapPickerButton(_ sender: Any) {
-        
-        MRImagePicker.shared.pickWithActionSheet(in: self, mediaType: .photo, editing: false, iPadStartFrame: nil, completionBlock: { (image, videoUrl, fileName) in
-            print("Image: \(image != nil)\nVideo: \(videoUrl != nil)")
-        }, errorBlock: nil)
     }
     
     @IBAction func didTapMediaPlayerButton(_ sender: Any) {
@@ -120,6 +121,33 @@ class ViewController: UIViewController {
         let chat = MRChatViewController()
         chat.playButtonImage = "ico_play.png".image
         navigationController?.pushViewController(chat, animated: true)
+    }
+    
+    @IBAction func didTapBottomMenu(_ sender: Any) {
+        
+        let menu = MRBottomMenu(data: [
+            MRBottomMenuSection(key: "section1", title: "Section 1", items: [
+                MRBottomMenuItem(key: "item1", title: "Item 1", image: nil, action: {
+                    print("Pressed Item 1")
+                }),
+                MRBottomMenuItem(key: "item2", title: "Item 2", image: nil, action: {
+                    print("Pressed Item 2")
+                }),
+                MRBottomMenuItem(key: "item3", title: "Item 3", image: nil, action: {
+                    print("Pressed Item 3")
+                })
+            ]),
+            MRBottomMenuSection(key: "section2", title: "Section 2", items: [
+                MRBottomMenuItem(key: "item4", title: "Item 4", image: nil, action: {
+                    print("Pressed Item 4")
+                }),
+                MRBottomMenuItem(key: "item5", title: "Item 5", image: nil, action: {
+                    print("Pressed Item 5")
+                })
+            ])
+        ])
+        menu.transitioningDelegate = self
+        present(menu, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

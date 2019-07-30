@@ -10,16 +10,56 @@ import Foundation
 import SafariServices
 import SDWebImage
 
-extension UIScrollView {
+public extension UITextField {
+    
+    private func actionHandler(action:(() -> Void)? = nil) {
+        
+        struct __ { static var action :(() -> Void)? }
+        if action != nil { __.action = action }
+        else { __.action?() }
+    }
+    
+    @objc private func triggerActionHandler() {
+        actionHandler()
+    }
+    
+    func observe(event: UIControl.Event, action: @escaping () -> Void) {
+        
+        actionHandler(action: action)
+        addTarget(self, action: #selector(triggerActionHandler), for: event)
+    }
+}
+
+public extension UIButton {
+    
+    private func actionHandler(action:(() -> Void)? = nil) {
+        
+        struct __ { static var action :(() -> Void)? }
+        if action != nil { __.action = action }
+        else { __.action?() }
+    }
+    
+    @objc private func triggerActionHandler() {
+        actionHandler()
+    }
+    
+    func observe(event: UIControl.Event, action: @escaping () -> Void) {
+        
+        actionHandler(action: action)
+        addTarget(self, action: #selector(triggerActionHandler), for: event)
+    }
+}
+
+public extension UIScrollView {
     
     func scrollTop() {
         self.setContentOffset(CGPoint(x: 0.0, y: 0.0), animated: true)
     }
 }
 
-extension UITableViewCell {
+public extension UITableViewCell {
     
-    public func prepareDisclosureIndicator() {
+    func prepareDisclosureIndicator() {
         
         for case let button as UIButton in subviews {
             let image = button.backgroundImage(for: .normal)?.withRenderingMode(.
@@ -32,11 +72,11 @@ extension UITableViewCell {
 
 public extension URL {
     
-    public var fileExists : Bool {
+    var fileExists : Bool {
         return FileManager.default.fileExists(atPath: self.path)
     }
     
-    public func ignoreCloudBackup() {
+    func ignoreCloudBackup() {
         
         var urlCopy = self
         var values = URLResourceValues()
@@ -52,22 +92,22 @@ public extension URL {
 
 public extension String {
     
-    public var localized : String {
+    var localized : String {
         return NSLocalizedString(self, comment: "")
     }
     
-    public var image : UIImage? {
+    var image : UIImage? {
         return UIImage(named: self)
     }
     
-    public var containsOnlyDecimals : Bool {
+    var containsOnlyDecimals : Bool {
         
         let set = NSCharacterSet.decimalDigits.inverted
         let range = self.rangeOfCharacter(from: set)
         return range == nil
     }
     
-    public var isValidEmail : Bool {
+    var isValidEmail : Bool {
         do {
             let regex = try NSRegularExpression(pattern: "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", options: .caseInsensitive)
             return regex.firstMatch(in: self, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count)) != nil
@@ -76,14 +116,14 @@ public extension String {
         }
     }
     
-    public var isValidPhoneNumber : Bool {
+    var isValidPhoneNumber : Bool {
         
         let containsNumbers = self.rangeOfCharacter(from: .decimalDigits) != nil
         let isLongEnough = self.count > 5
         return containsNumbers && isLongEnough
     }
     
-    public var isValidRemoteUrl : Bool {
+    var isValidRemoteUrl : Bool {
         
         if let _ = URL(string: self) {
             return true
@@ -95,7 +135,7 @@ public extension String {
 
 public extension UIColor {
     
-    public convenience init(red: Int, green: Int, blue: Int) {
+    convenience init(red: Int, green: Int, blue: Int) {
         
         assert(red >= 0 && red <= 255, "Invalid red component")
         assert(green >= 0 && green <= 255, "Invalid green component")
@@ -104,11 +144,11 @@ public extension UIColor {
         self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
     }
     
-    public convenience init(netHex:Int) {
+    convenience init(netHex:Int) {
         self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff)
     }
     
-    public var darker : UIColor {
+    var darker : UIColor {
         
         var r:CGFloat = 0, g:CGFloat = 0, b:CGFloat = 0, a:CGFloat = 0
         if self.getRed(&r, green: &g, blue: &b, alpha: &a){
@@ -117,7 +157,7 @@ public extension UIColor {
         return UIColor()
     }
     
-    public var lighter : UIColor {
+    var lighter : UIColor {
         
         var r:CGFloat = 0, g:CGFloat = 0, b:CGFloat = 0, a:CGFloat = 0
         if self.getRed(&r, green: &g, blue: &b, alpha: &a){
@@ -126,7 +166,7 @@ public extension UIColor {
         return UIColor()
     }
     
-    public func getRGB() -> (red:Int, green:Int, blue:Int, alpha:Int)? {
+    func getRGB() -> (red:Int, green:Int, blue:Int, alpha:Int)? {
         
         var fRed : CGFloat = 0
         var fGreen : CGFloat = 0
@@ -145,7 +185,7 @@ public extension UIColor {
         }
     }
     
-    public var isDark: Bool {
+    var isDark: Bool {
         
         var r, g, b, a: CGFloat
         (r, g, b, a) = (0, 0, 0, 0)
@@ -157,13 +197,13 @@ public extension UIColor {
 
 public extension UIView {
     
-    public func removeSubviews() {
+    func removeSubviews() {
         for view in self.subviews {
             view.removeFromSuperview()
         }
     }
     
-    public func removeConstraints() {
+    func removeConstraints() {
         
         for view in subviews {
             view.removeConstraints()
@@ -173,7 +213,7 @@ public extension UIView {
         }
     }
     
-    public func setBorders(borderWidth: CGFloat, borderColor: UIColor?, cornerRadius: CGFloat) {
+    func setBorders(borderWidth: CGFloat, borderColor: UIColor?, cornerRadius: CGFloat) {
         
         self.layer.borderWidth = borderWidth
         if borderColor != nil {
@@ -182,7 +222,7 @@ public extension UIView {
         self.layer.cornerRadius = cornerRadius
     }
     
-    public func addShadow(color: UIColor, offset: CGSize, opacity: Float) {
+    func addShadow(color: UIColor, offset: CGSize, opacity: Float) {
         
         layer.shadowColor = color.cgColor
         layer.shadowOpacity = opacity
@@ -190,33 +230,33 @@ public extension UIView {
         layer.shadowRadius = offset.height
     }
     
-    public class var separatorHeight : CGFloat {
+    class var separatorHeight : CGFloat {
         return 1.0/UIScreen.main.scale
     }
     
-    public class var safeArea : UIEdgeInsets {
+    class var safeArea : UIEdgeInsets {
         if #available(iOS 11, *) {
             return UIApplication.shared.keyWindow!.safeAreaInsets
         }
         return .zero
     }
     
-    public class func nib() -> UINib {
+    class func nib() -> UINib {
         return UINib(nibName: String(describing: self), bundle: nil)
     }
     
-    public class var identifier : String {
+    class var identifier : String {
         return String(describing: self)
     }
 }
 
 public extension UIDevice {
     
-    public class var isIpad : Bool {
+    class var isIpad : Bool {
         return UIDevice.current.userInterfaceIdiom == .pad
     }
     
-    public var diskTotalSpace : Int64? {
+    var diskTotalSpace : Int64? {
         
         var value: Int64?
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -234,7 +274,7 @@ public extension UIDevice {
         return value
     }
     
-    public var diskFreeSpace : Int64? {
+    var diskFreeSpace : Int64? {
         
         var value: Int64?
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -252,18 +292,18 @@ public extension UIDevice {
         return value
     }
     
-    public class var isPortrait : Bool {
+    class var isPortrait : Bool {
         return UIApplication.shared.statusBarOrientation == .portrait || UIApplication.shared.statusBarOrientation == .portraitUpsideDown
     }
 }
 
 public extension Bundle {
     
-    public var appName : String {
+    var appName : String {
         return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
     }
     
-    public var appVersion : String {
+    var appVersion : String {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             return version
         }
@@ -273,15 +313,15 @@ public extension Bundle {
 
 public extension UIScreen {
     
-    public class var width : CGFloat {
+    class var width : CGFloat {
         return UIDevice.isPortrait ? UIScreen.main.bounds.size.width : UIScreen.main.bounds.size.height
     }
     
-    public class var height : CGFloat {
+    class var height : CGFloat {
         return UIDevice.isPortrait ? UIScreen.main.bounds.size.height : UIScreen.main.bounds.size.width
     }
     
-    public class var separatorHeight : CGFloat {
+    class var separatorHeight : CGFloat {
         return 1/UIScreen.main.scale
     }
 }
@@ -289,7 +329,7 @@ public extension UIScreen {
 public typealias UIAlertActionBlock = (_ action: UIAlertAction) -> Void
 public extension UIAlertController {
     
-    public class func new(title: String?, message: String?, tintColor: UIColor?, preferredStyle: UIAlertController.Style) -> UIAlertController {
+    class func new(title: String?, message: String?, tintColor: UIColor?, preferredStyle: UIAlertController.Style) -> UIAlertController {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
         if let tint = tintColor {
@@ -298,19 +338,19 @@ public extension UIAlertController {
         return alert
     }
     
-    public func addCancelAction(title: String?, handler: UIAlertActionBlock?) {
+    func addCancelAction(title: String?, handler: UIAlertActionBlock?) {
         
         let action = UIAlertAction(title: title, style: .cancel, handler: handler)
         self.addAction(action)
     }
     
-    public func addDefaultAction(title: String?, handler: UIAlertActionBlock?) {
+    func addDefaultAction(title: String?, handler: UIAlertActionBlock?) {
         
         let action = UIAlertAction(title: title, style: .default, handler: handler)
         self.addAction(action)
     }
     
-    public func addDestructiveAction(title: String?, handler: UIAlertActionBlock?) {
+    func addDestructiveAction(title: String?, handler: UIAlertActionBlock?) {
         
         let action = UIAlertAction(title: title, style: .destructive, handler: handler)
         if #available(iOS 9, *) {
@@ -373,7 +413,7 @@ extension DateFormatter {
 
 public extension UICollectionViewCell {
     
-    public func fixedContentSize(width: CGFloat) -> CGSize {
+    func fixedContentSize(width: CGFloat) -> CGSize {
         
         self.setNeedsLayout()
         self.layoutIfNeeded()
@@ -384,13 +424,13 @@ public extension UICollectionViewCell {
 
 public extension UINavigationController {
     
-    public func addFirst(viewController: UIViewController?) {
+    func addFirst(viewController: UIViewController?) {
         
         guard let viewController = viewController else { return }
         viewControllers.insert(viewController, at: 0)
     }
     
-    public func addLast(viewController: UIViewController?) {
+    func addLast(viewController: UIViewController?) {
         
         guard let viewController = viewController else { return }
         viewControllers.append(viewController)
@@ -399,7 +439,7 @@ public extension UINavigationController {
 
 public extension UIImageView {
     
-    public func setImage(with url: URL?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
+    func setImage(with url: URL?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
         
         self.sd_setImage(with: url, placeholderImage: placeholder, options: .continueInBackground) { (image, error, cacheType, url) in
             
@@ -413,7 +453,7 @@ public extension UIImageView {
         }
     }
     
-    public func setImage(url: String?, placeholder: UIImage?) {
+    func setImage(url: String?, placeholder: UIImage?) {
         
         guard let url = url else {
             self.image = nil
@@ -423,7 +463,7 @@ public extension UIImageView {
         self.setImage(stringUrl: url, placeholder: placeholder, completion: nil)
     }
     
-    public func setImage(stringUrl: String?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
+    func setImage(stringUrl: String?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
         
         guard let stringUrl = stringUrl else {
             self.image = nil
@@ -469,11 +509,11 @@ public extension UIImageView {
         }
     }
     
-    public func rotate(by degrees: CGFloat) {
+    func rotate(by degrees: CGFloat) {
         transform = CGAffineTransform(rotationAngle: degrees)
     }
     
-    public func cancelTransform() {
+    func cancelTransform() {
         transform = .identity
     }
 }
