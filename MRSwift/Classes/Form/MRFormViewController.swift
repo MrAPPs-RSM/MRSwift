@@ -68,6 +68,7 @@ open class MRFormRow : NSObject {
         self.title = title
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visible = visibilityBindKey == nil
         self.type = .rowDefault
     }
     
@@ -78,6 +79,7 @@ open class MRFormRow : NSObject {
         self.title = title
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visible = visibilityBindKey == nil
         self.type = .rowSwitch
     }
     
@@ -89,6 +91,7 @@ open class MRFormRow : NSObject {
         self.dateFormat = dateFormat
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visible = visibilityBindKey == nil
         self.type = .rowDate
     }
     
@@ -99,6 +102,7 @@ open class MRFormRow : NSObject {
         self.title = title
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visible = visibilityBindKey == nil
         self.type = .rowTextField
     }
     
@@ -109,6 +113,7 @@ open class MRFormRow : NSObject {
         self.title = title
         self.subtitle = title
         self.visibilityBindKey = visibilityBindKey
+        self.visible = visibilityBindKey == nil
         self.type = .rowSubtitle
     }
     
@@ -120,6 +125,7 @@ open class MRFormRow : NSObject {
         self.value = value
         self.extraData = extraData
         self.visibilityBindKey = visibilityBindKey
+        self.visible = visibilityBindKey == nil
         self.type = .rowList
     }
     
@@ -131,6 +137,7 @@ open class MRFormRow : NSObject {
         self.value = value
         self.extraData = extraData
         self.visibilityBindKey = visibilityBindKey
+        self.visible = visibilityBindKey == nil
         self.type = .rowListMulti
     }
     
@@ -267,7 +274,9 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        let dataSection = data[indexPath.section]
+        let dataRow = dataSection.rows[indexPath.row]
+        return dataRow.visible ? UITableView.automaticDimension : 0
     }
     
     open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -376,7 +385,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open func mrTextFieldTableCellDidChangeText(cell: MRTextFieldTableCell) {
         
         if let indexPath = form.indexPath(for: cell) {
+            
             data[indexPath.section].rows[indexPath.row].value = cell.txfValue.text
+            let item = data[indexPath.section].rows[indexPath.row]
+            showLinkedItems(key: item.key, show: cell.txfValue.text?.isEmpty == false)
         }
     }
     
@@ -385,7 +397,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open func mrSwitchTableCellDidChangeSelection(cell: MRSwitchTableCell) {
         
         if let indexPath = form.indexPath(for: cell) {
+            
             data[indexPath.section].rows[indexPath.row].value = cell.swSwitch.isOn
+            let item = data[indexPath.section].rows[indexPath.row]
+            showLinkedItems(key: item.key, show: cell.swSwitch.isOn)
         }
     }
     
@@ -394,7 +409,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open func mrDateTableCellDidChangeDate(cell: MRDateTableCell) {
         
         if let indexPath = form.indexPath(for: cell) {
+            
             data[indexPath.section].rows[indexPath.row].value = cell.datePicker.date
+            let item = data[indexPath.section].rows[indexPath.row]
+            showLinkedItems(key: item.key, show: true)
         }
     }
     
@@ -404,15 +422,41 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
+        
+        let item = data[currentIndexPath.section].rows[currentIndexPath.row]
+        showLinkedItems(key: item.key, show: true)
     }
     
     public func mrDataListViewControllerDidSelectValues(viewController: UIViewController, value: [MRDataListItem]) {
         
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
+        
+        let item = data[currentIndexPath.section].rows[currentIndexPath.row]
+        showLinkedItems(key: item.key, show: value.count > 0)
     }
     
     // MARK: - Other Methods
+    
+    private func showLinkedItems(key: String, show: Bool) {
+        
+        var indexPathsToUpdate = [IndexPath]()
+        
+        for i in 0..<data.count {
+            let section = data[i]
+            for j in 0..<section.rows.count {
+                let row = section.rows[j]
+                if row.visibilityBindKey == key {
+                    if data[i].rows[j].visible != show {
+                        data[i].rows[j].visible = show
+                        indexPathsToUpdate.append(IndexPath(row: j, section: i))
+                    }
+                }
+            }
+        }
+        
+        form.reloadRows(at: indexPathsToUpdate, with: .automatic)
+    }
     
     // MARK: - Battery Warning
     
