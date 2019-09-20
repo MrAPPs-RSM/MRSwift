@@ -10,8 +10,27 @@ import UIKit
 import PureLayout
 import RxSwift
 
+open class MRDataListItem : NSObject {
+    
+    public var key: String?
+    public var title: String?
+    public var subtitle: String?
+    public var selected: Bool = false
+    public var index: Int = 0
+    
+    public convenience init(key: String?, title: String?, subtitle: String?, selected: Bool) {
+        self.init()
+        
+        self.key = key
+        self.title = title
+        self.subtitle = subtitle
+        self.selected = selected
+    }
+}
+
 public protocol MRDataListViewControllerDelegate : class {
-    func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: String, at index: Int)
+    func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: MRDataListItem)
+    func mrDataListViewControllerDidSelectValues(viewController: UIViewController, value: [MRDataListItem])
 }
 
 open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
@@ -23,13 +42,18 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     
     // MARK: - Constants & Variables
     
-    private var allData = [String]()
-    private var data = [String]()
-    private var navTitle: String?
-    private var navBackIcon: UIImage?
-    private var selectedValue: String?
-    private var valueColor = UIColor.black
-    private var searchTintColor: UIColor?
+    private var allData = [MRDataListItem]()
+    private var data = [MRDataListItem]()
+    open var navTitle: String?
+    open var navBackIcon: UIImage?
+    open var selectedValue: String?
+    open var searchTintColor: UIColor?
+    open var backgroundColor = UIColor(netHex: 0xf5f5f5)
+    open var titleColor = UIColor(netHex: 0x444444)
+    open var valueColor = UIColor.black
+    open var cellBackgroundColor = UIColor.white
+    open var multiSelect: Bool = false
+    private var selectedCount: Int = 0
     private let cellIdentifier = "cellIdentifier"
     public weak var delegate: MRDataListViewControllerDelegate?
     
@@ -40,7 +64,7 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     
     // MARK: - Initialization
     
-    public convenience init(data: [String], navTitle: String?, navBackIcon: UIImage?, selectedValue: String?, valueColor: UIColor, searchTintColor: UIColor?) {
+    public convenience init(data: [MRDataListItem], navTitle: String?, navBackIcon: UIImage?, selectedValue: String?) {
         self.init()
         
         self.allData = data
@@ -48,8 +72,6 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
         self.navTitle = navTitle
         self.navBackIcon = navBackIcon
         self.selectedValue = selectedValue
-        self.valueColor = valueColor
-        self.searchTintColor = searchTintColor
     }
     
     deinit {
@@ -96,10 +118,11 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: navBackIcon, style: .plain, target: self, action: #selector(goBack))
         }
         
+        view.backgroundColor = backgroundColor
+        
         searchBar = UISearchBar()
         searchBar.delegate = self
         searchBar.searchBarStyle = .minimal
-        searchBar.backgroundColor = .white
         searchBar.tintColor = searchTintColor
         view.addSubview(searchBar)
         searchBar.autoPinEdge(toSuperviewEdge: .top)
@@ -160,8 +183,11 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     func search(query: String?) {
         
         if let query = query, !query.isEmpty {
-            data = allData.filter { value in
-                return value.lowercased().contains(query.lowercased())
+            data = allData.filter { item in
+                if let title = item.title {
+                    return title.lowercased().contains(query.lowercased())
+                }
+                return false
             }
         } else {
             data = allData
@@ -201,12 +227,13 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
-        let value = data[indexPath.row]
+        let item = data[indexPath.row]
         
+        cell.backgroundColor = cellBackgroundColor
         cell.textLabel?.font = UIFont.systemFont(ofSize: rowFontSize, weight: .regular)
-        cell.textLabel?.text = value
+        cell.textLabel?.text = item.title
         cell.textLabel?.textColor = valueColor
-        cell.accessoryType = selectedValue != nil ? selectedValue! == value ? .checkmark : .none : .none
+        cell.accessoryType = item.selected ? .checkmark : .none
         
         return cell
     }
@@ -214,18 +241,73 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         
-        let value = data[indexPath.row]
-        selectedValue = value
-        tableView.reloadData()
-        
-        let index = allData.index { (value) -> Bool in
-            return value == data[indexPath.row]
+        if !multiSelect {
+            resetSelection()
         }
         
-        delegate?.mrDataListViewControllerDidSelectValue(viewController: self, value: value, at: index!)
+        let item = data[indexPath.row]
+        item.selected = !item.selected
+        
+        if item.selected {
+            selectedCount += 1
+        } else {
+            selectedCount -= 1
+        }
+ 
+        if let index = allData.index(where: { (allDataItem) -> Bool in
+            return allDataItem.key == item.key || allDataItem.title == item.title
+        }) {
+            
+            allData.remove(at: index)
+            allData.insert(item, at: index)
+            
+            data.remove(at: indexPath.row)
+            data.insert(item, at: indexPath.row)
+            
+            tableView.reloadData()
+            
+            if multiSelect {
+                
+                var selectedItems = [MRDataListItem]()
+                for i in 0..<allData.count {
+                    let allDataItem = allData[i]
+                    if allDataItem.selected {
+                        allDataItem.index = i
+                        selectedItems.append(allDataItem)
+                    }
+                }
+                delegate?.mrDataListViewControllerDidSelectValues(viewController: self, value: selectedItems)
+                
+            } else {
+                
+                item.index = index
+                delegate?.mrDataListViewControllerDidSelectValue(viewController: self, value: item)
+            }
+
+        } else {
+            tableView.reloadData()
+        }
     }
     
     // MARK: - Other Methods
+    
+    func resetSelection() {
+        
+        var updatedAllData = [MRDataListItem]()
+        for item in allData {
+            item.selected = false
+            updatedAllData.append(item)
+        }
+        
+        var updatedData = [MRDataListItem]()
+        for item in data {
+            item.selected = false
+            updatedData.append(item)
+        }
+        
+        allData = updatedAllData
+        data = updatedData
+    }
     
     @objc func goBack() {
         navigationController?.popViewController(animated: true)

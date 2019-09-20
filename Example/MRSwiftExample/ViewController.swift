@@ -89,29 +89,37 @@ class ViewController: UIViewController {
         
         viewController.data = [
             MRFormSection(id: nil, title: "Standard", subtitle: nil, value: nil, rows: [
-                MRFormRow(id: nil, key: nil, title: "Title 1-1", subtitle: nil, value: "Value 1-1", placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowDefault),
-                MRFormRow(id: nil, key: nil, title: "Title 1-2", subtitle: nil, value: "Value 1-2", placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowDefault)
-                ]),
+                MRFormRow(default: nil, title: "Title 1-1", value: "Value 1-1", visibilityBindKey: nil),
+                MRFormRow(default: nil, title: "Title 1-2", value: "Value 1-2", visibilityBindKey: nil)
+            ]),
             MRFormSection(id: nil, title: "TextField", subtitle: nil, value: nil, rows: [
-                MRFormRow(id: nil, key: nil, title: "Title 2-1", subtitle: nil, value: "Value 2-1", placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowTextField),
-                MRFormRow(id: nil, key: nil, title: "Title 2-2", subtitle: nil, value: "Value 2-2", placeholder: "Placeholder", image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowTextField)
-                ]),
+                MRFormRow(textField: nil, title: "Title 2-1", placeholder: nil, value: "Value 2-1", visibilityBindKey: nil),
+                MRFormRow(textField: nil, title: "Title 2-2", placeholder: nil, value: "Value 2-2", visibilityBindKey: nil)
+            ]),
             MRFormSection(id: nil, title: "Subtitle", subtitle: nil, value: nil, rows: [
-                MRFormRow(id: nil, key: nil, title: "Title 3-1", subtitle: "Subtitle 3-1", value: nil, placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowSubtitle),
-                MRFormRow(id: nil, key: nil, title: "Title 3-2", subtitle: "Subtitle 3-2", value: nil, placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowSubtitle)
-                ]),
+                MRFormRow(subtitle: nil, title: "Title 3-1", subtitle: "Subtitle 3-1", visibilityBindKey: nil),
+                MRFormRow(subtitle: nil, title: "Title 3-2", subtitle: "Subtitle 3-2", visibilityBindKey: nil)
+            ]),
             MRFormSection(id: nil, title: "Switch", subtitle: nil, value: nil, rows: [
-                MRFormRow(id: nil, key: nil, title: "Title 4-1", subtitle: nil, value: true, placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowSwitch),
-                MRFormRow(id: nil, key: nil, title: "Title 4-2", subtitle: nil, value: false, placeholder: nil, image: nil, extraData: nil, dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowSwitch)
-                ]),
+                MRFormRow(switch: nil, title: "Title 4-1", value: true, visibilityBindKey: nil),
+                MRFormRow(switch: nil, title: "Title 4-2", value: false, visibilityBindKey: nil)
+            ]),
             MRFormSection(id: nil, title: "Date", subtitle: nil, value: nil, rows: [
-                MRFormRow(id: nil, key: nil, title: "Title 5-1", subtitle: nil, value: nil, placeholder: nil, image: nil, extraData: nil, dateFormat: "dd/MM/yyyy", accessoryType: .none, mandatory: false, type: .rowDate),
-                MRFormRow(id: nil, key: nil, title: "Title 5-2", subtitle: nil, value: nil, placeholder: nil, image: nil, extraData: nil, dateFormat: "HH:mm:ss", accessoryType: .none, mandatory: false, type: .rowDate)
-                ]),
+                MRFormRow(date: nil, title: "Title 5-1", placeholder: nil, dateFormat: "dd/MM/YYYY", value: Date(), visibilityBindKey: nil),
+                MRFormRow(date: nil, title: "Title 5-2", placeholder: nil, dateFormat: "HH:mm", value: Date(), visibilityBindKey: nil)
+            ]),
             MRFormSection(id: nil, title: "List", subtitle: nil, value: nil, rows: [
-                MRFormRow(id: nil, key: nil, title: "Title 6-1", subtitle: nil, value: nil, placeholder: nil, image: nil, extraData: ["A", "B", "C"], dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowList),
-                MRFormRow(id: nil, key: nil, title: "Title 6-2", subtitle: nil, value: "1", placeholder: nil, image: nil, extraData: ["1", "2", "3"], dateFormat: nil, accessoryType: .none, mandatory: false, type: .rowList)
-                ])
+                MRFormRow(list: nil, title: "Title 6-1", value: nil, extraData: [
+                    MRDataListItem(key: nil, title: "A", subtitle: nil, selected: false),
+                    MRDataListItem(key: nil, title: "B", subtitle: nil, selected: false),
+                    MRDataListItem(key: nil, title: "C", subtitle: nil, selected: false)
+                ], visibilityBindKey: nil),
+                MRFormRow(listMulti: nil, title: "Title 6-2", value: nil, extraData: [
+                    MRDataListItem(key: nil, title: "1", subtitle: nil, selected: true),
+                    MRDataListItem(key: nil, title: "2", subtitle: nil, selected: true),
+                    MRDataListItem(key: nil, title: "3", subtitle: nil, selected: false)
+                ], visibilityBindKey: nil)
+            ])
         ]
         navigationController?.pushViewController(viewController, animated: true)
     }

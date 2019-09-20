@@ -13,9 +13,23 @@ public extension UITableViewCell {
     
     @objc func configure(with row: MRFormRow) {
         
-        accessoryType = row.type == .rowList ? .disclosureIndicator : row.accessoryType
+        accessoryType = row.type == .rowList || row.type == .rowListMulti ? .disclosureIndicator : row.accessoryType
         textLabel?.text = row.mandatory ? "\(row.title ?? "")*" : row.title
-        detailTextLabel?.text = row.type == .rowSubtitle ? row.subtitle : row.value as? String
+        if row.type == .rowList {
+            if let item = row.value as? MRDataListItem {
+                detailTextLabel?.text = item.title
+            } else {
+                detailTextLabel?.text = ""
+            }
+        } else if row.type == .rowListMulti {
+            if let items = row.value as? [MRDataListItem] {
+                detailTextLabel?.text = "\(items.count) sel."
+            } else {
+                detailTextLabel?.text = ""
+            }
+        } else {
+            detailTextLabel?.text = row.type == .rowSubtitle ? row.subtitle : row.value as? String
+        }
         imageView?.image = row.image
     }
 }
@@ -27,6 +41,7 @@ public enum MRFormRowType {
     case rowSwitch
     case rowDate
     case rowList
+    case rowListMulti
 }
 
 open class MRFormRow : NSObject {
@@ -44,6 +59,80 @@ open class MRFormRow : NSObject {
     public var type: MRFormRowType = .rowDefault
     public var dateFormat: String = ""
     public var visible: Bool = true
+    public var visibilityBindKey: String?
+    
+    public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.visibilityBindKey = visibilityBindKey
+        self.type = .rowDefault
+    }
+    
+    public convenience init(switch key: String?, title: String?, value: Bool, visibilityBindKey: String?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.visibilityBindKey = visibilityBindKey
+        self.type = .rowSwitch
+    }
+    
+    public convenience init(date key: String?, title: String?, placeholder: String?, dateFormat: String, value: Date, visibilityBindKey: String?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.dateFormat = dateFormat
+        self.value = value
+        self.visibilityBindKey = visibilityBindKey
+        self.type = .rowDate
+    }
+    
+    public convenience init(textField key: String?, title: String?, placeholder: String?, value: String?, visibilityBindKey: String?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.visibilityBindKey = visibilityBindKey
+        self.type = .rowTextField
+    }
+    
+    public convenience init(subtitle key: String?, title: String?, subtitle: String?, visibilityBindKey: String?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.subtitle = title
+        self.visibilityBindKey = visibilityBindKey
+        self.type = .rowSubtitle
+    }
+    
+    public convenience init(list key: String?, title: String?, value: String?, extraData: Any?, visibilityBindKey: String?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.extraData = extraData
+        self.visibilityBindKey = visibilityBindKey
+        self.type = .rowList
+    }
+    
+    public convenience init(listMulti key: String?, title: String?, value: String?, extraData: Any?, visibilityBindKey: String?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.extraData = extraData
+        self.visibilityBindKey = visibilityBindKey
+        self.type = .rowListMulti
+    }
     
     public convenience init(id: Any?, key: String?, title: String?, subtitle: String?, value: Any?, placeholder: String?, image: UIImage?, extraData: Any?, dateFormat: String?, accessoryType: UITableViewCell.AccessoryType, mandatory: Bool, type: MRFormRowType, visible: Bool = true) {
         self.init()
@@ -105,8 +194,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     
     open var tintColor: UIColor?
     open var switchColor: UIColor?
+    open var backgroundColor = UIColor(netHex: 0xf5f5f5)
     open var titleColor = UIColor(netHex: 0x444444)
     open var valueColor = UIColor.black
+    open var cellBackgroundColor = UIColor.white
     open var editingEnabled: Bool = true
     open var searchTintColor: UIColor?
     open var navBackIcon: UIImage?
@@ -118,7 +209,13 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        switchColor = .red
+        if #available(iOS 13, *) {
+            titleColor = .lightGray
+            valueColor = .secondaryLabel
+            backgroundColor = .groupTableViewBackground
+            cellBackgroundColor = .secondarySystemGroupedBackground
+            searchTintColor = .label
+        }
         
         form = UITableView(frame: view.frame, style: .grouped)
         form.dataSource = self
@@ -183,9 +280,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         let section = data[indexPath.section]
         let row = section.rows[indexPath.row]
         
-        if row.type == .rowDefault || row.type == .rowList {
+        if row.type == .rowDefault || row.type == .rowList || row.type == .rowListMulti {
             
             let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+            cell.backgroundColor = cellBackgroundColor
             cell.clipsToBounds = true
             cell.textLabel?.textColor = titleColor
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
@@ -198,6 +296,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowSubtitle {
             
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: subtitleIdentifier)
+            cell.backgroundColor = cellBackgroundColor
             cell.clipsToBounds = true
             cell.textLabel?.textColor = titleColor
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
@@ -211,6 +310,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
             let cell = tableView.dequeueReusableCell(withIdentifier: textfieldIdentifier, for: indexPath) as! MRTextFieldTableCell
             cell.delegate = self
+            cell.backgroundColor = cellBackgroundColor
             cell.accessoryType = .none
             cell.configure(with: row)
             cell.lblTitle.textColor = titleColor
@@ -223,6 +323,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
             let cell = tableView.dequeueReusableCell(withIdentifier: switchIdentifier, for: indexPath) as! MRSwitchTableCell
             cell.delegate = self
+            cell.backgroundColor = cellBackgroundColor
             cell.accessoryType = .none
             cell.configure(with: row)
             cell.swSwitch.isEnabled = editingEnabled
@@ -235,6 +336,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
             let cell = tableView.dequeueReusableCell(withIdentifier: dateIdentifier, for: indexPath) as! MRDateTableCell
             cell.delegate = self
+            cell.backgroundColor = cellBackgroundColor
             cell.accessoryType = .none
             cell.configure(with: row)
             cell.lblTitle.textColor = titleColor
@@ -252,10 +354,17 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         let section = data[indexPath.section]
         let row = section.rows[indexPath.row]
         
-        if row.type == .rowList && editingEnabled {
-            if let extraData = row.extraData as? [String] {
+        if (row.type == .rowList || row.type == .rowListMulti) && editingEnabled {
+            if let extraData = row.extraData as? [MRDataListItem] {
+                
                 currentIndexPath = indexPath
-                let list = MRDataListViewController(data: extraData, navTitle: row.title, navBackIcon: navBackIcon, selectedValue: row.value as? String, valueColor: valueColor, searchTintColor: searchTintColor)
+                let list = MRDataListViewController(data: extraData, navTitle: row.title, navBackIcon: navBackIcon, selectedValue: row.value as? String)
+                list.searchTintColor = searchTintColor
+                list.backgroundColor = backgroundColor
+                list.titleColor = titleColor
+                list.valueColor = valueColor
+                list.cellBackgroundColor = cellBackgroundColor
+                list.multiSelect = row.type == .rowListMulti
                 list.delegate = self
                 navigationController?.pushViewController(list, animated: true)
             }
@@ -291,7 +400,13 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     
     // MARK: - MRDataListViewController Delegate
     
-    open func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: String, at: Int) {
+    public func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: MRDataListItem) {
+        
+        data[currentIndexPath.section].rows[currentIndexPath.row].value = value
+        form.reloadRows(at: [currentIndexPath], with: .none)
+    }
+    
+    public func mrDataListViewControllerDidSelectValues(viewController: UIViewController, value: [MRDataListItem]) {
         
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
