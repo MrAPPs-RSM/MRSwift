@@ -52,6 +52,7 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     open var titleColor = UIColor(netHex: 0x444444)
     open var valueColor = UIColor.black
     open var cellBackgroundColor = UIColor.white
+    open var autoDismissOnSelect: Bool = false
     open var multiSelect: Bool = false
     private var selectedCount: Int = 0
     private let cellIdentifier = "cellIdentifier"
@@ -286,6 +287,10 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
 
         } else {
             tableView.reloadData()
+        }
+        
+        if !multiSelect && autoDismissOnSelect {
+            navigationController?.popViewController(animated: true)
         }
     }
     

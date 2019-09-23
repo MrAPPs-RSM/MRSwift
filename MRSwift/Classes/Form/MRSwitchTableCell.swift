@@ -34,7 +34,6 @@ public class MRSwitchTableCell: UITableViewCell {
     private func setupInterface() {
         
         lblTitle = UILabel()
-        lblTitle.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         lblTitle.numberOfLines = 0
         addSubview(lblTitle)
         
@@ -45,13 +44,13 @@ public class MRSwitchTableCell: UITableViewCell {
         
         lblTitle.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
         lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
-        lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
+        lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
         lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
-        lblTitle.autoPinEdge(.trailing, to: .leading, of: swSwitch, withOffset: -16)
+        lblTitle.autoPinEdge(.trailing, to: .leading, of: swSwitch, withOffset: -20)
         
         swSwitch.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
         swSwitch.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
-        swSwitch.autoPinEdge(toSuperviewEdge: .trailing, withInset: 16)
+        swSwitch.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
         swSwitch.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
     }
     

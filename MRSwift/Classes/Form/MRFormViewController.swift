@@ -23,7 +23,7 @@ public extension UITableViewCell {
             }
         } else if row.type == .rowListMulti {
             if let items = row.value as? [MRDataListItem] {
-                detailTextLabel?.text = "\(items.count) sel."
+                detailTextLabel?.text = items.count > 0 ? "\(items.count) sel." : nil
             } else {
                 detailTextLabel?.text = ""
             }
@@ -83,7 +83,7 @@ open class MRFormRow : NSObject {
         self.type = .rowSwitch
     }
     
-    public convenience init(date key: String?, title: String?, placeholder: String?, dateFormat: String, value: Date, visibilityBindKey: String?) {
+    public convenience init(date key: String?, title: String?, placeholder: String?, dateFormat: String, value: Date?, visibilityBindKey: String?) {
         self.init()
         
         self.key = key ?? ""
@@ -111,7 +111,7 @@ open class MRFormRow : NSObject {
         
         self.key = key ?? ""
         self.title = title
-        self.subtitle = title
+        self.subtitle = subtitle
         self.visibilityBindKey = visibilityBindKey
         self.visible = visibilityBindKey == nil
         self.type = .rowSubtitle
@@ -202,12 +202,17 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open var tintColor: UIColor?
     open var switchColor: UIColor?
     open var backgroundColor = UIColor(netHex: 0xf5f5f5)
-    open var titleColor = UIColor(netHex: 0x444444)
-    open var valueColor = UIColor.black
+    open var sectionTitleColor = UIColor.lightGray
+    open var titleColor = UIColor.black
+    open var valueColor = UIColor.lightGray
     open var cellBackgroundColor = UIColor.white
     open var editingEnabled: Bool = true
     open var searchTintColor: UIColor?
     open var navBackIcon: UIImage?
+    open var sectionTitleFont = UIFont.systemFont(ofSize: 13, weight: .regular)
+    open var cellTitleFont = UIFont.systemFont(ofSize: 16, weight: .regular)
+    open var cellValueFont = UIFont.systemFont(ofSize: 16, weight: .regular)
+    open var autoDismissListsOnSelection: Bool = true
     
     open var currentIndexPath = IndexPath(row: 0, section: 0)
     
@@ -217,17 +222,22 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         super.viewDidLoad()
         
         if #available(iOS 13, *) {
-            titleColor = .lightGray
+            
+            sectionTitleColor = .secondaryLabel
+            titleColor = .label
             valueColor = .secondaryLabel
             backgroundColor = .groupTableViewBackground
             cellBackgroundColor = .secondarySystemGroupedBackground
             searchTintColor = .label
         }
         
+        view.backgroundColor = backgroundColor
+        
         form = UITableView(frame: view.frame, style: .grouped)
         form.dataSource = self
         form.delegate = self
         form.keyboardDismissMode = .interactive
+        form.backgroundColor = .clear
         form.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         form.register(MRTextFieldTableCell.self, forCellReuseIdentifier: textfieldIdentifier)
         form.register(MRSwitchTableCell.self, forCellReuseIdentifier: switchIdentifier)
@@ -235,7 +245,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         
         view.addSubview(form)
         form.autoPinEdgesToSuperviewEdges()
-        form.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: UIView.safeArea.bottom, right: 0)
+        form.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: UIView.safeArea.bottom, right: 0)
     }
     
     override open func viewWillAppear(_ animated: Bool) {
@@ -265,23 +275,50 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     // MARK: - UITableView DataSource & Delegate
     
     open func numberOfSections(in tableView: UITableView) -> Int {
+        
         return data.count
     }
     
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         let dataSection = data[section]
         return (dataSection.stackable && !dataSection.stacked) || !dataSection.stackable ? dataSection.rows.count : 0
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
         let dataSection = data[indexPath.section]
         let dataRow = dataSection.rows[indexPath.row]
         return dataRow.visible ? UITableView.automaticDimension : 0
     }
     
     open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
         let dataSection = data[section]
         return dataSection.title
+    }
+    
+    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let dataSection = data[section]
+        
+        let header = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 36))
+        let title = UILabel(frame: header.frame)
+        header.addSubview(title)
+        
+        title.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
+        title.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
+        title.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
+        title.font = sectionTitleFont
+        title.textColor = sectionTitleColor
+        title.text = dataSection.title?.uppercased()
+        
+        return header
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        return 36.0
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -292,12 +329,14 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         if row.type == .rowDefault || row.type == .rowList || row.type == .rowListMulti {
             
             let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+            cell.isHidden = !row.visible
+            cell.selectionStyle = row.type != .rowDefault ? .default : .none
             cell.backgroundColor = cellBackgroundColor
             cell.clipsToBounds = true
             cell.textLabel?.textColor = titleColor
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            cell.textLabel?.font = cellTitleFont
             cell.detailTextLabel?.textColor = valueColor
-            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            cell.detailTextLabel?.font = cellValueFont
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
@@ -305,12 +344,14 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowSubtitle {
             
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: subtitleIdentifier)
+            cell.isHidden = !row.visible
+            cell.selectionStyle = .none
             cell.backgroundColor = cellBackgroundColor
             cell.clipsToBounds = true
             cell.textLabel?.textColor = titleColor
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            cell.textLabel?.font = cellTitleFont
             cell.detailTextLabel?.textColor = valueColor
-            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+            cell.detailTextLabel?.font = cellValueFont
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
@@ -318,25 +359,32 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowTextField {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: textfieldIdentifier, for: indexPath) as! MRTextFieldTableCell
+            cell.isHidden = !row.visible
+            cell.selectionStyle = .none
             cell.delegate = self
             cell.backgroundColor = cellBackgroundColor
             cell.accessoryType = .none
-            cell.configure(with: row)
+            cell.lblTitle.font = cellTitleFont
             cell.lblTitle.textColor = titleColor
             cell.txfValue.isEnabled = editingEnabled
+            cell.txfValue.font = cellValueFont
             cell.txfValue.textColor = valueColor
+            cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
             
         } else if row.type == .rowSwitch {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: switchIdentifier, for: indexPath) as! MRSwitchTableCell
+            cell.isHidden = !row.visible
+            cell.selectionStyle = .none
             cell.delegate = self
             cell.backgroundColor = cellBackgroundColor
             cell.accessoryType = .none
-            cell.configure(with: row)
             cell.swSwitch.isEnabled = editingEnabled
             cell.lblTitle.textColor = titleColor
+            cell.lblTitle.font = cellTitleFont
+            cell.configure(with: row)
             if switchColor != nil { cell.swSwitch.onTintColor = switchColor }
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
@@ -344,12 +392,16 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowDate {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: dateIdentifier, for: indexPath) as! MRDateTableCell
+            cell.isHidden = !row.visible 
+            cell.selectionStyle = .none
             cell.delegate = self
             cell.backgroundColor = cellBackgroundColor
             cell.accessoryType = .none
-            cell.configure(with: row)
             cell.lblTitle.textColor = titleColor
+            cell.lblTitle.font = cellTitleFont
             cell.txfValue.textColor = valueColor
+            cell.txfValue.font = cellValueFont
+            cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
         }
@@ -374,6 +426,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                 list.valueColor = valueColor
                 list.cellBackgroundColor = cellBackgroundColor
                 list.multiSelect = row.type == .rowListMulti
+                list.autoDismissOnSelect = autoDismissListsOnSelection
                 list.delegate = self
                 navigationController?.pushViewController(list, animated: true)
             }

@@ -35,28 +35,25 @@ public class MRDateTableCell: UITableViewCell {
         datePicker.addTarget(self, action: #selector(datePickerDidChangeValue(picker:)), for: .valueChanged)
         
         lblTitle = UILabel()
-        lblTitle.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         lblTitle.numberOfLines = 0
         addSubview(lblTitle)
         
         txfValue = UITextField()
-        txfValue.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         txfValue.textAlignment = .right
         txfValue.inputView = datePicker
         addSubview(txfValue)
         
-        lblTitle.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
-        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
-        lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
-        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
-        lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -16)
-        lblTitle.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 16)
+        lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
+        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 16)
+        lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -20)
         
-        txfValue.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
-        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
-        txfValue.autoPinEdge(toSuperviewEdge: .trailing, withInset: 16)
-        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
-        txfValue.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        txfValue.autoSetDimension(.width, toSize: 100, relation: .greaterThanOrEqual)
+        txfValue.autoSetDimension(.height, toSize: 28)
+        txfValue.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
+        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8, relation: .greaterThanOrEqual)
+        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8, relation: .greaterThanOrEqual)
+        txfValue.autoAlignAxis(toSuperviewAxis: .horizontal)
     }
     
     required public init?(coder aDecoder: NSCoder) {
