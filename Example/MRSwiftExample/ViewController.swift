@@ -93,8 +93,8 @@ class ViewController: UIViewController {
                 MRFormRow(default: "standard_2", title: "Title 1-2", value: "Value 1-2", visibilityBindKey: nil)
             ]),
             MRFormSection(id: nil, title: "TextField", subtitle: nil, value: nil, rows: [
-                MRFormRow(textField: "textfield_1", title: "Title 2-1", placeholder: nil, value: "Value 2-1", visibilityBindKey: nil),
-                MRFormRow(textField: "textfield_2", title: "Title 2-2", placeholder: nil, value: "Value 2-2", visibilityBindKey: nil)
+                MRFormRow(textField: "textfield_1", title: "Title 2-1", placeholder: nil, value: nil, visibilityBindKey: nil),
+                MRFormRow(textField: "textfield_2", title: "Title 2-2", placeholder: nil, value: nil, visibilityBindKey: nil)
             ]),
             MRFormSection(id: nil, title: "Subtitle", subtitle: nil, value: nil, rows: [
                 MRFormRow(subtitle: "subtitle_1", title: "Title 3-1", subtitle: "Subtitle 3-1", visibilityBindKey: "textfield_1"),
@@ -105,8 +105,8 @@ class ViewController: UIViewController {
                 MRFormRow(switch: "switch_2", title: "Title 4-2", value: false, visibilityBindKey: nil)
             ]),
             MRFormSection(id: nil, title: "Date", subtitle: nil, value: nil, rows: [
-                MRFormRow(date: "date_1", title: "Title 5-1", placeholder: nil, dateFormat: "dd/MM/YYYY", value: Date(), visibilityBindKey: nil),
-                MRFormRow(date: "date_2", title: "Title 5-2", placeholder: nil, dateFormat: "HH:mm", value: Date(), visibilityBindKey: "switch_1")
+                MRFormRow(date: "date_1", title: "Title 5-1", placeholder: nil, dateFormat: "dd/MM/YYYY", value: nil, visibilityBindKey: nil),
+                MRFormRow(date: "date_2", title: "Title 5-2", placeholder: nil, dateFormat: "HH:mm", value: nil, visibilityBindKey: "switch_1")
             ]),
             MRFormSection(id: nil, title: "List", subtitle: nil, value: nil, rows: [
                 MRFormRow(list: "list_1", title: "Title 6-1", value: nil, extraData: [
