@@ -12,11 +12,11 @@ import RxSwift
 
 open class MRDataListItem : NSObject {
     
-    public var key: String?
-    public var title: String?
-    public var subtitle: String?
-    public var selected: Bool = false
-    public var index: Int = 0
+    open var key: String?
+    open var title: String?
+    open var subtitle: String?
+    open var selected: Bool = false
+    open var index: Int = 0
     
     public convenience init(key: String?, title: String?, subtitle: String?, selected: Bool) {
         self.init()
@@ -56,7 +56,7 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     open var multiSelect: Bool = false
     private var selectedCount: Int = 0
     private let cellIdentifier = "cellIdentifier"
-    public weak var delegate: MRDataListViewControllerDelegate?
+    open weak var delegate: MRDataListViewControllerDelegate?
     
     private let searchController = UISearchController(searchResultsController: nil)
     private var searchDispose: Disposable?
