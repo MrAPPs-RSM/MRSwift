@@ -471,7 +471,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     
     // MARK: - MRDataListViewController Delegate
     
-    public func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: MRDataListItem) {
+    open func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: MRDataListItem) {
         
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
@@ -480,7 +480,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         showLinkedItems(key: item.key, show: true)
     }
     
-    public func mrDataListViewControllerDidSelectValues(viewController: UIViewController, value: [MRDataListItem]) {
+    open func mrDataListViewControllerDidSelectValues(viewController: UIViewController, value: [MRDataListItem]) {
         
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
