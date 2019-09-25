@@ -204,7 +204,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open var backgroundColor = UIColor(netHex: 0xf5f5f5)
     open var sectionTitleColor = UIColor.lightGray
     open var titleColor = UIColor.black
-    open var valueColor = UIColor.lightGray
+    open var valueColor = UIColor.black
     open var cellBackgroundColor = UIColor.white
     open var editingEnabled: Bool = true
     open var searchTintColor: UIColor?
@@ -224,8 +224,16 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         if #available(iOS 13, *) {
             
             sectionTitleColor = .secondaryLabel
-            titleColor = .label
-            valueColor = .secondaryLabel
+            titleColor = .secondaryLabel
+            valueColor = UIColor { (traitCollection: UITraitCollection) -> UIColor in
+                switch traitCollection.userInterfaceStyle {
+                    case
+                        .unspecified,
+                        .light: return .black
+                    case
+                        .dark: return .white
+                }
+            }
             backgroundColor = .groupTableViewBackground
             cellBackgroundColor = .secondarySystemGroupedBackground
             searchTintColor = .label
@@ -392,7 +400,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowDate {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: dateIdentifier, for: indexPath) as! MRDateTableCell
-            cell.isHidden = !row.visible 
+            cell.isHidden = !row.visible
             cell.selectionStyle = .none
             cell.delegate = self
             cell.backgroundColor = cellBackgroundColor
