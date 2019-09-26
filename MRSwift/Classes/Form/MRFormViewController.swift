@@ -19,13 +19,13 @@ public extension UITableViewCell {
             if let item = row.value as? MRDataListItem {
                 detailTextLabel?.text = item.title
             } else {
-                detailTextLabel?.text = ""
+                detailTextLabel?.text = row.value as? String
             }
         } else if row.type == .rowListMulti {
             if let items = row.value as? [MRDataListItem] {
                 detailTextLabel?.text = items.count > 0 ? "\(items.count) sel." : nil
             } else {
-                detailTextLabel?.text = ""
+                detailTextLabel?.text = row.value as? String
             }
         } else {
             detailTextLabel?.text = row.type == .rowSubtitle ? row.subtitle : row.value as? String
