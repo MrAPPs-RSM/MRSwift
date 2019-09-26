@@ -115,10 +115,18 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
         super.viewDidLoad()
         
         navigationItem.title = navTitle
-        if let navBackIcon = navBackIcon {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(image: navBackIcon, style: .plain, target: self, action: #selector(goBack))
+        if UIDevice.isIpad {
+            if #available(iOS 13.0, *) {
+                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(goBack))
+            } else {
+                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(goBack))
+            }
+        } else {
+            if let navBackIcon = navBackIcon {
+                navigationItem.leftBarButtonItem = UIBarButtonItem(image: navBackIcon, style: .plain, target: self, action: #selector(goBack))
+            }
         }
-        
+
         view.backgroundColor = backgroundColor
         
         searchBar = UISearchBar()
@@ -315,7 +323,12 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     }
     
     @objc func goBack() {
-        navigationController?.popViewController(animated: true)
+        
+        if UIDevice.isIpad {
+            navigationController?.dismiss(animated: true, completion: nil)
+        } else {
+           navigationController?.popViewController(animated: true)
+        }
     }
     
     // MARK: - Battery Warning

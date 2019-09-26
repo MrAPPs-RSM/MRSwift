@@ -189,6 +189,14 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     // MARK: - Layout
     
     open var form: UITableView!
+    private var scrollView: UIScrollView!
+    private var containerView: UIView!
+    
+    // MARK: - Constraints
+    
+    private var cntContentHeight: NSLayoutConstraint?
+    private var cntContentLeading: NSLayoutConstraint?
+    private var cntContentTrailing: NSLayoutConstraint?
     
     // MARK: - Constants & Variables
     
@@ -213,8 +221,21 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open var cellTitleFont = UIFont.systemFont(ofSize: 16, weight: .regular)
     open var cellValueFont = UIFont.systemFont(ofSize: 16, weight: .regular)
     open var autoDismissListsOnSelection: Bool = true
+    open var iPadMargin: CGFloat = 100
     
     open var currentIndexPath = IndexPath(row: 0, section: 0)
+    
+    private var marginsActive : Bool {
+        return UIDevice.isIpad && iPadMargin > 0
+    }
+    
+    // MARK: - Initialization
+    
+    deinit {
+        if marginsActive {
+            form.removeObserver(self, forKeyPath: "contentSize")
+        }
+    }
     
     // MARK: - UIViewController Methods
     
@@ -251,9 +272,36 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         form.register(MRSwitchTableCell.self, forCellReuseIdentifier: switchIdentifier)
         form.register(MRDateTableCell.self, forCellReuseIdentifier: dateIdentifier)
         
-        view.addSubview(form)
-        form.autoPinEdgesToSuperviewEdges()
-        form.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: UIView.safeArea.bottom, right: 0)
+        if marginsActive {
+            
+            scrollView = UIScrollView()
+            view.addSubview(scrollView)
+            scrollView.autoPinEdgesToSuperviewEdges()
+            
+            let containerView = UIView()
+            scrollView.addSubview(containerView)
+            scrollView.alwaysBounceVertical = true
+            scrollView.showsVerticalScrollIndicator = true
+            containerView.autoPinEdgesToSuperviewEdges()
+            containerView.autoMatch(.width, to: .width, of: scrollView)
+            
+            containerView.addSubview(form)
+            form.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: UIView.safeArea.bottom, right: 0)
+            form.autoPinEdge(toSuperviewEdge: .top)
+            form.autoPinEdge(toSuperviewEdge: .bottom)
+            form.isScrollEnabled = false
+            form.showsVerticalScrollIndicator = false
+            cntContentLeading = form.autoPinEdge(toSuperviewEdge: .leading)
+            cntContentTrailing = form.autoPinEdge(toSuperviewEdge: .trailing)
+            cntContentHeight = form.autoSetDimension(.height, toSize: 100)
+            form.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+            
+        } else {
+            
+            view.addSubview(form)
+            form.autoPinEdgesToSuperviewEdges()
+            form.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: UIView.safeArea.bottom, right: 0)
+        }
     }
     
     override open func viewWillAppear(_ animated: Bool) {
@@ -266,6 +314,15 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         super.viewWillDisappear(animated)
         
         unregisterForKeyboardNotifications()
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if marginsActive {
+            cntContentLeading?.constant = UIApplication.shared.statusBarOrientation.isPortrait ? iPadMargin : iPadMargin*1.8
+            cntContentTrailing?.constant = UIApplication.shared.statusBarOrientation.isPortrait ? -iPadMargin : -(iPadMargin*1.8)
+        }
     }
     
     // MARK: - Keyboard Handlers
@@ -424,6 +481,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         let row = section.rows[indexPath.row]
         
         if (row.type == .rowList || row.type == .rowListMulti) && editingEnabled {
+            
             if let extraData = row.extraData as? [MRDataListItem] {
                 
                 currentIndexPath = indexPath
@@ -436,7 +494,18 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                 list.multiSelect = row.type == .rowListMulti
                 list.autoDismissOnSelect = autoDismissListsOnSelection
                 list.delegate = self
-                navigationController?.pushViewController(list, animated: true)
+                
+                if UIDevice.isIpad {
+                    let nav = UINavigationController(rootViewController: list)
+                    if #available(iOS 13.0, *) {
+                        
+                    } else {
+                        nav.modalPresentationStyle = .formSheet
+                    }
+                    present(nav, animated: true, completion: nil)
+                } else {
+                    navigationController?.pushViewController(list, animated: true)
+                }
             }
         }
     }
@@ -517,6 +586,13 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         }
         
         form.reloadRows(at: indexPathsToUpdate, with: .automatic)
+    }
+    
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        if keyPath == "contentSize" && object is UITableView && marginsActive {
+            cntContentHeight?.constant = form.contentSize.height
+        }
     }
     
     // MARK: - Battery Warning
