@@ -58,6 +58,7 @@ open class MRFormRow : NSObject {
     public var accessoryType: UITableViewCell.AccessoryType = .none
     public var type: MRFormRowType = .rowDefault
     public var dateFormat: String = ""
+    public var enabled: Bool = true
     public var visible: Bool = true
     public var visibilityBindKey: String?
     
@@ -242,6 +243,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     override open func viewDidLoad() {
         super.viewDidLoad()
         
+        if let backIcon = navBackIcon {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: backIcon, style: .plain, target: self, action: #selector(goBack))
+        }
+        
         if #available(iOS 13, *) {
             
             sectionTitleColor = .secondaryLabel
@@ -381,7 +386,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         return header
     }
     
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         return 36.0
     }
@@ -567,6 +572,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     // MARK: - Other Methods
+    
+    @objc func goBack() {
+        navigationController?.popViewController(animated: true)
+    }
     
     private func showLinkedItems(key: String, show: Bool) {
         
