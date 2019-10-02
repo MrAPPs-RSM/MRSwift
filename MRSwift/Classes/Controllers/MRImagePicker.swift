@@ -135,13 +135,15 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             if photos == .notDetermined {
                 PHPhotoLibrary.requestAuthorization({status in
                     if status == .authorized {
-                        viewController.present(self.picker, animated: true, completion: nil)
+                        
                     } else {
                         if self.errorBlock != nil {
                             self.errorBlock!("Photo library permissions are disabled")
                         }
                     }
                 })
+            } else if photos == .authorized {
+                viewController.present(self.picker, animated: true, completion: nil)
             }
         } else {
             AVCaptureDevice.requestAccess(for: .video) { granted in
@@ -182,49 +184,49 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         var image: UIImage?
-        var videoUrl: URL?
         var fileUrl: URL?
         var fileName: String = ""
         
         if (info[.mediaType] as! String) == (kUTTypeImage as String) {
             
-            if let pickedImage = info[.originalImage] as? UIImage {
-                if let imageUrl = info[.referenceURL] as? URL {
-                    fileUrl = imageUrl
-                }
+            if let pickedImage = info[.editedImage] as? UIImage {
                 image = pickedImage
+            } else if let pickedImage = info[.originalImage] as? UIImage {
+                image = pickedImage
+            }
+            if let imageUrl = info[.referenceURL] as? URL {
+                fileUrl = imageUrl
             }
             
         } else if (info[.mediaType] as! String) == (kUTTypeMovie as String) {
             
             if let pickedVideoUrl = info[.mediaURL] as? URL {
                 fileUrl = pickedVideoUrl
-                videoUrl = pickedVideoUrl
             }
         }
         
-        if let fileUrl = fileUrl {
+        if let foundFileUrl = fileUrl {
             PHPhotoLibrary.requestAuthorization { (status) in
                 if status == .authorized {
-                    if let asset = PHAsset.fetchAssets(withALAssetURLs: [fileUrl], options: nil).firstObject {
+                    if let asset = PHAsset.fetchAssets(withALAssetURLs: [foundFileUrl], options: nil).firstObject {
                         PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { _, _, _, info in
                             if let url = info!["PHImageFileURLKey"] as? URL {
                                 fileName = url.lastPathComponent
                             }
-                            self.completionBlock(image, videoUrl, fileName)
+                            self.completionBlock(image, foundFileUrl, fileName)
                             picker.dismiss(animated: true, completion: nil)
                         })
                     } else {
-                        self.completionBlock(image, videoUrl, fileName)
+                        self.completionBlock(image, foundFileUrl, fileName)
                         picker.dismiss(animated: true, completion: nil)
                     }
                 } else {
-                    self.completionBlock(image, videoUrl, fileName)
+                    self.completionBlock(image, foundFileUrl, fileName)
                     picker.dismiss(animated: true, completion: nil)
                 }
             }
         } else {
-            self.completionBlock(image, videoUrl, fileName)
+            self.completionBlock(image, fileUrl, fileName)
             picker.dismiss(animated: true, completion: nil)
         }
     }

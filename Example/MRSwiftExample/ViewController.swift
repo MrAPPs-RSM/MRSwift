@@ -158,6 +158,14 @@ class ViewController: UIViewController {
         present(menu, animated: true, completion: nil)
     }
     
+    @IBAction func didTapFilePickerButton(_ sender: Any) {
+        
+        let picker = MRFilePicker()
+        picker.pickFile(on: self) { (fileUrl, message) in
+
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

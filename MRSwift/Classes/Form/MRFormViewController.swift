@@ -42,6 +42,7 @@ public enum MRFormRowType {
     case rowDate
     case rowList
     case rowListMulti
+    case rowAttachment
 }
 
 open class MRFormRow : NSObject {
@@ -61,6 +62,8 @@ open class MRFormRow : NSObject {
     public var enabled: Bool = true
     public var visible: Bool = true
     public var visibilityBindKey: String?
+    public var extraInfo: String?
+    public var attachmentUrl: URL?
     
     public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?) {
         self.init()
@@ -396,7 +399,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         let section = data[indexPath.section]
         let row = section.rows[indexPath.row]
         
-        if row.type == .rowDefault || row.type == .rowList || row.type == .rowListMulti {
+        if row.type == .rowDefault || row.type == .rowAttachment || row.type == .rowList || row.type == .rowListMulti {
             
             let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
             cell.isHidden = !row.visible
@@ -512,6 +515,9 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                     navigationController?.pushViewController(list, animated: true)
                 }
             }
+            
+        } else if row.type == .rowAttachment {
+            
         }
     }
     
