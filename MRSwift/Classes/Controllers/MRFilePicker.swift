@@ -13,6 +13,8 @@ public typealias FilePickerCompletion = (_ fileUrl: URL?, _ message: String?) ->
 
 open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControllerDelegate {
     
+    public static let shared = MRFilePicker()
+    
     private static let MRFilePickerPickTitleText = "MRFilePickerPickTitleText"
     private static let MRFilePickerCancelTitleText = "MRFilePickerCancelTitleText"
     
