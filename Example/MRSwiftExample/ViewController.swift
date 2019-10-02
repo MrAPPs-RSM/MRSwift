@@ -119,6 +119,10 @@ class ViewController: UIViewController {
                     MRDataListItem(key: nil, title: "2", subtitle: nil, selected: false),
                     MRDataListItem(key: nil, title: "3", subtitle: nil, selected: false)
                 ], visibilityBindKey: nil)
+            ]),
+            MRFormSection(id: nil, title: "Attachment", subtitle: nil, value: nil, rows: [
+                MRFormRow(attachment: "attachment_1", title: "Title 7-1", value: nil, attachmentUrl: nil, visibilityBindKey: nil),
+                MRFormRow(attachment: "attachment_2", title: "Title 7-2", value: nil, attachmentUrl: nil, visibilityBindKey: nil)
             ])
         ]
         navigationController?.pushViewController(viewController, animated: true)

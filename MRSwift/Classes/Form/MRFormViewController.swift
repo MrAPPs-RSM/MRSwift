@@ -76,6 +76,17 @@ open class MRFormRow : NSObject {
         self.type = .rowDefault
     }
     
+    public convenience init(attachment key: String?, title: String?, value: String?, attachmentUrl: URL?, visibilityBindKey: String?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.visibilityBindKey = visibilityBindKey
+        self.visible = visibilityBindKey == nil
+        self.type = .rowAttachment
+    }
+    
     public convenience init(switch key: String?, title: String?, value: Bool, visibilityBindKey: String?) {
         self.init()
         
@@ -399,7 +410,24 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         let section = data[indexPath.section]
         let row = section.rows[indexPath.row]
         
-        if row.type == .rowDefault || row.type == .rowAttachment || row.type == .rowList || row.type == .rowListMulti {
+        if row.type == .rowAttachment {
+            
+            let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+            cell.isHidden = !row.visible
+            cell.selectionStyle = .default
+            cell.backgroundColor = cellBackgroundColor
+            cell.clipsToBounds = true
+            cell.textLabel?.textColor = titleColor
+            cell.textLabel?.font = cellTitleFont
+            cell.detailTextLabel?.textColor = valueColor
+            cell.detailTextLabel?.font = cellValueFont
+            cell.textLabel?.text = row.title
+            cell.detailTextLabel?.text = row.attachmentUrl != nil ? "File" : ""
+            cell.accessoryType = .disclosureIndicator
+            if tintColor != nil { cell.tintColor = tintColor }
+            return cell
+            
+        } else if row.type == .rowDefault || row.type == .rowAttachment || row.type == .rowList || row.type == .rowListMulti {
             
             let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
             cell.isHidden = !row.visible
@@ -518,6 +546,11 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
         } else if row.type == .rowAttachment {
             
+            let picker = MRFilePicker()
+            picker.pickFile(on: self) { (fileUrl, message) in
+                self.data[indexPath.section].rows[indexPath.row].attachmentUrl = fileUrl
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
         }
     }
     
