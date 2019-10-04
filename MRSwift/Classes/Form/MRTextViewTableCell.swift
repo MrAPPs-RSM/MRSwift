@@ -38,8 +38,8 @@ public class MRTextViewTableCell: UITableViewCell, UITextViewDelegate {
         txwValue.delegate = self
         addSubview(txwValue)
         
-        lblTitle.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
-        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
+        lblTitle.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
+        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
         lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
         lblTitle.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
         
@@ -47,7 +47,7 @@ public class MRTextViewTableCell: UITableViewCell, UITextViewDelegate {
         txwValue.autoPinEdge(.top, to: .bottom, of: lblTitle, withOffset: 8)
         txwValue.autoPinEdge(.leading, to: .leading, of: lblTitle)
         txwValue.autoPinEdge(.trailing, to: .trailing, of: lblTitle)
-        txwValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
+        txwValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
     }
     
     required public init?(coder aDecoder: NSCoder) {

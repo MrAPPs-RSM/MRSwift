@@ -42,10 +42,10 @@ public class MRSwitchTableCell: UITableViewCell {
         swSwitch.addTarget(self, action: #selector(switchDidChangeValue(sender:)), for: .valueChanged)
         addSubview(swSwitch)
         
-        lblTitle.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
-        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
+        lblTitle.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
+        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
         lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
-        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
+        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
         lblTitle.autoPinEdge(.trailing, to: .leading, of: swSwitch, withOffset: -20)
         
         swSwitch.autoSetDimension(.width, toSize: 49, relation: .equal)
