@@ -46,7 +46,6 @@ public class MRTextFieldTableCell: UITableViewCell {
         lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -20)
         lblTitle.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-        txfValue.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
         txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
         txfValue.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
         txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)

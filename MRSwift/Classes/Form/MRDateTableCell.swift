@@ -43,17 +43,17 @@ public class MRDateTableCell: UITableViewCell {
         txfValue.inputView = datePicker
         addSubview(txfValue)
         
-        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 16)
+        lblTitle.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
+        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
         lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
-        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 16)
+        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
         lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -20)
+        lblTitle.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-        txfValue.autoSetDimension(.width, toSize: 100, relation: .greaterThanOrEqual)
-        txfValue.autoSetDimension(.height, toSize: 28)
+        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
         txfValue.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
-        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8, relation: .greaterThanOrEqual)
-        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8, relation: .greaterThanOrEqual)
-        txfValue.autoAlignAxis(toSuperviewAxis: .horizontal)
+        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
+        txfValue.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
     
     required public init?(coder aDecoder: NSCoder) {

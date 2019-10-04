@@ -96,25 +96,29 @@ class ViewController: UIViewController {
                 MRFormRow(textField: "textfield_1", title: "Title 2-1", placeholder: nil, value: nil, visibilityBindKey: nil),
                 MRFormRow(textField: "textfield_2", title: "Title 2-2", placeholder: nil, value: nil, visibilityBindKey: nil)
             ]),
+            MRFormSection(id: nil, title: "TextArea", subtitle: nil, value: nil, rows: [
+                MRFormRow(textArea: "textarea_1", title: "Title 3-1", placeholder: nil, value: nil, visibilityBindKey: nil),
+                MRFormRow(textArea: "textarea_2", title: "Title 3-2", placeholder: nil, value: nil, visibilityBindKey: nil)
+            ]),
             MRFormSection(id: nil, title: "Subtitle", subtitle: nil, value: nil, rows: [
-                MRFormRow(subtitle: "subtitle_1", title: "Title 3-1", subtitle: "Subtitle 3-1", visibilityBindKey: "textfield_1"),
-                MRFormRow(subtitle: "subtitle_2", title: "Title 3-2", subtitle: "Subtitle 3-2", visibilityBindKey: nil)
+                MRFormRow(subtitle: "subtitle_1", title: "Title 4-1", subtitle: "Subtitle 3-1", visibilityBindKey: "textfield_1"),
+                MRFormRow(subtitle: "subtitle_2", title: "Title 4-2", subtitle: "Subtitle 3-2", visibilityBindKey: nil)
             ]),
             MRFormSection(id: nil, title: "Switch", subtitle: nil, value: nil, rows: [
-                MRFormRow(switch: "switch_1", title: "Title 4-1", value: false, visibilityBindKey: nil),
-                MRFormRow(switch: "switch_2", title: "Title 4-2", value: false, visibilityBindKey: nil)
+                MRFormRow(switch: "switch_1", title: "Title 5-1", value: false, visibilityBindKey: nil),
+                MRFormRow(switch: "switch_2", title: "Title 5-2", value: false, visibilityBindKey: nil)
             ]),
             MRFormSection(id: nil, title: "Date", subtitle: nil, value: nil, rows: [
-                MRFormRow(date: "date_1", title: "Title 5-1", placeholder: nil, dateFormat: "dd/MM/YYYY", value: nil, visibilityBindKey: nil),
-                MRFormRow(date: "date_2", title: "Title 5-2", placeholder: nil, dateFormat: "HH:mm", value: nil, visibilityBindKey: "switch_1")
+                MRFormRow(date: "date_1", title: "Title 6-1", placeholder: nil, dateFormat: "dd/MM/YYYY", value: nil, visibilityBindKey: nil),
+                MRFormRow(date: "date_2", title: "Title 6-2", placeholder: nil, dateFormat: "HH:mm", value: nil, visibilityBindKey: "switch_1")
             ]),
             MRFormSection(id: nil, title: "List", subtitle: nil, value: nil, rows: [
-                MRFormRow(list: "list_1", title: "Title 6-1", value: nil, extraData: [
+                MRFormRow(list: "list_1", title: "Title 7-1", value: nil, extraData: [
                     MRDataListItem(key: nil, title: "A", subtitle: nil, selected: false),
                     MRDataListItem(key: nil, title: "B", subtitle: nil, selected: false),
                     MRDataListItem(key: nil, title: "C", subtitle: nil, selected: false)
                 ], visibilityBindKey: nil),
-                MRFormRow(listMulti: "list_2", title: "Title 6-2", value: nil, extraData: [
+                MRFormRow(listMulti: "list_2", title: "Title 7-2", value: nil, extraData: [
                     MRDataListItem(key: nil, title: "1", subtitle: nil, selected: false),
                     MRDataListItem(key: nil, title: "2", subtitle: nil, selected: false),
                     MRDataListItem(key: nil, title: "3", subtitle: nil, selected: false)

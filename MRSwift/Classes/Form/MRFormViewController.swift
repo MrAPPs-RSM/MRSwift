@@ -38,6 +38,7 @@ public enum MRFormRowType {
     case rowDefault
     case rowSubtitle
     case rowTextField
+    case rowTextArea
     case rowSwitch
     case rowDate
     case rowList
@@ -62,43 +63,47 @@ open class MRFormRow : NSObject {
     public var enabled: Bool = true
     public var visible: Bool = true
     public var visibilityBindKey: String?
+    public var visibilityBindValue: Any?
     public var extraInfo: String?
     public var attachmentUrl: URL?
     
-    public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?) {
+    public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
         self.title = title
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowDefault
     }
     
-    public convenience init(attachment key: String?, title: String?, value: String?, attachmentUrl: URL?, visibilityBindKey: String?) {
+    public convenience init(attachment key: String?, title: String?, value: String?, attachmentUrl: URL?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
         self.title = title
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowAttachment
     }
     
-    public convenience init(switch key: String?, title: String?, value: Bool, visibilityBindKey: String?) {
+    public convenience init(switch key: String?, title: String?, value: Bool, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
         self.title = title
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowSwitch
     }
     
-    public convenience init(date key: String?, title: String?, placeholder: String?, dateFormat: String, value: Date?, visibilityBindKey: String?) {
+    public convenience init(date key: String?, title: String?, placeholder: String?, dateFormat: String, value: Date?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
@@ -106,33 +111,48 @@ open class MRFormRow : NSObject {
         self.dateFormat = dateFormat
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowDate
     }
     
-    public convenience init(textField key: String?, title: String?, placeholder: String?, value: String?, visibilityBindKey: String?) {
+    public convenience init(textField key: String?, title: String?, placeholder: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
         self.title = title
         self.value = value
         self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowTextField
     }
     
-    public convenience init(subtitle key: String?, title: String?, subtitle: String?, visibilityBindKey: String?) {
+    public convenience init(textArea key: String?, title: String?, placeholder: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
+        self.visible = visibilityBindKey == nil
+        self.type = .rowTextArea
+    }
+    
+    public convenience init(subtitle key: String?, title: String?, subtitle: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
         self.title = title
         self.subtitle = subtitle
         self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowSubtitle
     }
     
-    public convenience init(list key: String?, title: String?, value: String?, extraData: Any?, visibilityBindKey: String?) {
+    public convenience init(list key: String?, title: String?, value: String?, extraData: Any?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
@@ -140,11 +160,12 @@ open class MRFormRow : NSObject {
         self.value = value
         self.extraData = extraData
         self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowList
     }
     
-    public convenience init(listMulti key: String?, title: String?, value: String?, extraData: Any?, visibilityBindKey: String?) {
+    public convenience init(listMulti key: String?, title: String?, value: String?, extraData: Any?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
@@ -152,6 +173,7 @@ open class MRFormRow : NSObject {
         self.value = value
         self.extraData = extraData
         self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowListMulti
     }
@@ -199,7 +221,7 @@ open class MRFormSection : NSObject {
     }
 }
 
-open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, MRTextFieldTableCellDelegate, MRSwitchTableCellDelegate, MRDateTableCellDelegate, MRDataListViewControllerDelegate {
+open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, MRTextFieldTableCellDelegate, MRTextViewTableCellDelegate, MRSwitchTableCellDelegate, MRDateTableCellDelegate, MRDataListViewControllerDelegate {
     
     // MARK: - Layout
     
@@ -218,7 +240,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open var data = [MRFormSection]()
     private let cellIdentifier = "cellIdentifier"
     private let subtitleIdentifier = "subtitleIdentifier"
-    private let textfieldIdentifier = "textfieldIdentifier"
+    private let textfieldIdentifier = "textFieldIdentifier"
+    private let textAreaIdentifier = "textAreaIdentifier"
     private let switchIdentifier = "switchIdentifier"
     private let dateIdentifier = "dateIdentifier"
     
@@ -288,6 +311,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         form.backgroundColor = .clear
         form.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         form.register(MRTextFieldTableCell.self, forCellReuseIdentifier: textfieldIdentifier)
+        form.register(MRTextViewTableCell.self, forCellReuseIdentifier: textAreaIdentifier)
         form.register(MRSwitchTableCell.self, forCellReuseIdentifier: switchIdentifier)
         form.register(MRDateTableCell.self, forCellReuseIdentifier: dateIdentifier)
         
@@ -474,6 +498,23 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
             
+        } else if row.type == .rowTextArea {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: textAreaIdentifier, for: indexPath) as! MRTextViewTableCell
+            cell.isHidden = !row.visible
+            cell.selectionStyle = .none
+            cell.delegate = self
+            cell.backgroundColor = cellBackgroundColor
+            cell.accessoryType = .none
+            cell.lblTitle.font = cellTitleFont
+            cell.lblTitle.textColor = titleColor
+            cell.txwValue.isEditable = editingEnabled
+            cell.txwValue.font = cellValueFont
+            cell.txwValue.textColor = valueColor
+            cell.configure(with: row)
+            if tintColor != nil { cell.tintColor = tintColor }
+            return cell
+            
         } else if row.type == .rowSwitch {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: switchIdentifier, for: indexPath) as! MRSwitchTableCell
@@ -562,7 +603,19 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
             data[indexPath.section].rows[indexPath.row].value = cell.txfValue.text
             let item = data[indexPath.section].rows[indexPath.row]
-            showLinkedItems(key: item.key, show: cell.txfValue.text?.isEmpty == false)
+            showLinkedItems(key: item.key, value: cell.txfValue.text)
+        }
+    }
+    
+    // MARK: - MRTextViewTableCell Delegate
+    
+    public func mrTextViewTableCellDidChangeText(cell: MRTextViewTableCell) {
+        
+        if let indexPath = form.indexPath(for: cell) {
+            
+            data[indexPath.section].rows[indexPath.row].value = cell.txwValue.text
+            let item = data[indexPath.section].rows[indexPath.row]
+            showLinkedItems(key: item.key, value: cell.txwValue.text)
         }
     }
     
@@ -574,7 +627,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
             data[indexPath.section].rows[indexPath.row].value = cell.swSwitch.isOn
             let item = data[indexPath.section].rows[indexPath.row]
-            showLinkedItems(key: item.key, show: cell.swSwitch.isOn)
+            showLinkedItems(key: item.key, value: cell.swSwitch.isOn)
         }
     }
     
@@ -586,7 +639,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
             data[indexPath.section].rows[indexPath.row].value = cell.datePicker.date
             let item = data[indexPath.section].rows[indexPath.row]
-            showLinkedItems(key: item.key, show: true)
+            showLinkedItems(key: item.key, value: cell.datePicker.date)
         }
     }
     
@@ -598,7 +651,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         form.reloadRows(at: [currentIndexPath], with: .none)
         
         let item = data[currentIndexPath.section].rows[currentIndexPath.row]
-        showLinkedItems(key: item.key, show: true)
+        showLinkedItems(key: item.key, value: value)
     }
     
     open func mrDataListViewControllerDidSelectValues(viewController: UIViewController, value: [MRDataListItem]) {
@@ -607,7 +660,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         form.reloadRows(at: [currentIndexPath], with: .none)
         
         let item = data[currentIndexPath.section].rows[currentIndexPath.row]
-        showLinkedItems(key: item.key, show: value.count > 0)
+        showLinkedItems(key: item.key, value: value.count > 0)
     }
     
     // MARK: - Other Methods
@@ -616,7 +669,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         navigationController?.popViewController(animated: true)
     }
     
-    private func showLinkedItems(key: String, show: Bool) {
+    private func showLinkedItems(key: String, value: Any?) {
         
         var indexPathsToUpdate = [IndexPath]()
         
@@ -624,11 +677,24 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             let section = data[i]
             for j in 0..<section.rows.count {
                 let row = section.rows[j]
+                var show = true
                 if row.visibilityBindKey == key {
-                    if data[i].rows[j].visible != show {
-                        data[i].rows[j].visible = show
-                        indexPathsToUpdate.append(IndexPath(row: j, section: i))
+                    if let visibilityValue = row.visibilityBindValue {
+                        show = false
+                        if let stringValue = value as? String, let visStringValue = visibilityValue as? String {
+                            show = stringValue.compare(visStringValue) == .orderedSame
+                        } else if let intValue = value as? Int, let visIntValue = visibilityValue as? Int {
+                            show = intValue == visIntValue
+                        } else if let boolValue = value as? Bool, let visBoolValue = visibilityValue as? Bool {
+                            show = boolValue == visBoolValue
+                        }
+                    } else {
+                       show = value != nil
                     }
+                }
+                if data[i].rows[j].visible != show {
+                    data[i].rows[j].visible = show
+                    indexPathsToUpdate.append(IndexPath(row: j, section: i))
                 }
             }
         }
