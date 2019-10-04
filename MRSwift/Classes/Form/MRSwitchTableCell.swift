@@ -48,10 +48,10 @@ public class MRSwitchTableCell: UITableViewCell {
         lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
         lblTitle.autoPinEdge(.trailing, to: .leading, of: swSwitch, withOffset: -20)
         
-        swSwitch.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
-        swSwitch.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
+        swSwitch.autoSetDimension(.width, toSize: 49, relation: .equal)
+        swSwitch.autoSetDimension(.height, toSize: 31, relation: .equal)
         swSwitch.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
-        swSwitch.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
+        swSwitch.autoAlignAxis(toSuperviewAxis: .horizontal)
     }
     
     override public func awakeFromNib() {

@@ -105,8 +105,8 @@ class ViewController: UIViewController {
                 MRFormRow(subtitle: "subtitle_2", title: "Title 4-2", subtitle: "Subtitle 3-2", visibilityBindKey: nil)
             ]),
             MRFormSection(id: nil, title: "Switch", subtitle: nil, value: nil, rows: [
-                MRFormRow(switch: "switch_1", title: "Title 5-1", value: false, visibilityBindKey: nil),
-                MRFormRow(switch: "switch_2", title: "Title 5-2", value: false, visibilityBindKey: nil)
+                MRFormRow(switch: "switch_1", title: "Titleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee 5-1", value: false, visibilityBindKey: nil),
+                MRFormRow(switch: "switch_2", title: "Titleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee 5-2", value: false, visibilityBindKey: nil)
             ]),
             MRFormSection(id: nil, title: "Date", subtitle: nil, value: nil, rows: [
                 MRFormRow(date: "date_1", title: "Title 6-1", placeholder: nil, dateFormat: "dd/MM/YYYY", value: nil, visibilityBindKey: nil),

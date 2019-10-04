@@ -329,7 +329,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             containerView.autoMatch(.width, to: .width, of: scrollView)
             
             containerView.addSubview(form)
-            form.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: UIView.safeArea.bottom, right: 0)
+            form.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: UIView.safeArea.bottom, right: 0)
             form.autoPinEdge(toSuperviewEdge: .top)
             form.autoPinEdge(toSuperviewEdge: .bottom)
             form.isScrollEnabled = false
@@ -343,7 +343,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
             view.addSubview(form)
             form.autoPinEdgesToSuperviewEdges()
-            form.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: UIView.safeArea.bottom, right: 0)
+            form.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: UIView.safeArea.bottom, right: 0)
         }
     }
     
@@ -400,12 +400,6 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         return dataRow.visible ? UITableView.automaticDimension : 0
     }
     
-    open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        
-        let dataSection = data[section]
-        return dataSection.title
-    }
-    
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let dataSection = data[section]
@@ -426,7 +420,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        return 36.0
+        let dataSection = data[section]
+        return dataSection.title != nil ? 36.0 : 0
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
