@@ -502,7 +502,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.txfValue.font = cellValueFont
             cell.txfValue.textColor = valueColor
             switch (row.valueType) {
-                case .integer, .decimal: cell.txfValue.keyboardType = .numberPad
+                case .integer: cell.txfValue.keyboardType = .numberPad
+                case .decimal: cell.txfValue.keyboardType = .decimalPad
                 case .email: cell.txfValue.keyboardType = .emailAddress
                 case .url: cell.txfValue.keyboardType = .URL
                 default: cell.txfValue.keyboardType = .default
@@ -525,7 +526,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.txwValue.font = cellValueFont
             cell.txwValue.textColor = valueColor
             switch (row.valueType) {
-                case .integer, .decimal: cell.txwValue.keyboardType = .numberPad
+                case .integer: cell.txwValue.keyboardType = .numberPad
+                case .decimal: cell.txwValue.keyboardType = .decimalPad
                 case .email: cell.txwValue.keyboardType = .emailAddress
                 case .url: cell.txwValue.keyboardType = .URL
                 default: cell.txwValue.keyboardType = .default
