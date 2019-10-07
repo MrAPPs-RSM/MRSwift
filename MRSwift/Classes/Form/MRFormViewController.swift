@@ -15,7 +15,9 @@ public extension UITableViewCell {
         
         accessoryType = row.type == .rowList || row.type == .rowListMulti ? .disclosureIndicator : row.accessoryType
         textLabel?.text = row.mandatory ? "\(row.title ?? "")*" : row.title
-        if row.type == .rowList {
+        if row.type == .rowAttachment {
+            detailTextLabel?.text = row.attachmentUrl != nil ? "File" : ""
+        } else if row.type == .rowList {
             if let item = row.value as? MRDataListItem {
                 detailTextLabel?.text = item.title
             } else {
@@ -46,6 +48,15 @@ public enum MRFormRowType {
     case rowAttachment
 }
 
+public enum MRFormRowValueType {
+    case genericText
+    case integer
+    case decimal
+    case email
+    case url
+    case letters
+}
+
 open class MRFormRow : NSObject {
     
     public var id: Any?
@@ -59,6 +70,8 @@ open class MRFormRow : NSObject {
     public var extraData: Any?
     public var accessoryType: UITableViewCell.AccessoryType = .none
     public var type: MRFormRowType = .rowDefault
+    public var valueType: MRFormRowValueType = .genericText
+    public var valueRegex: String?
     public var dateFormat: String = ""
     public var enabled: Bool = true
     public var visible: Bool = true
@@ -440,9 +453,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.textLabel?.font = cellTitleFont
             cell.detailTextLabel?.textColor = valueColor
             cell.detailTextLabel?.font = cellValueFont
-            cell.textLabel?.text = row.title
-            cell.detailTextLabel?.text = row.attachmentUrl != nil ? "File" : ""
             cell.accessoryType = .disclosureIndicator
+            cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
             
@@ -489,6 +501,12 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.txfValue.isEnabled = editingEnabled
             cell.txfValue.font = cellValueFont
             cell.txfValue.textColor = valueColor
+            switch (row.valueType) {
+                case .integer, .decimal: cell.txfValue.keyboardType = .numberPad
+                case .email: cell.txfValue.keyboardType = .emailAddress
+                case .url: cell.txfValue.keyboardType = .URL
+                default: cell.txfValue.keyboardType = .default
+            }
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
@@ -506,6 +524,12 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.txwValue.isEditable = editingEnabled
             cell.txwValue.font = cellValueFont
             cell.txwValue.textColor = valueColor
+            switch (row.valueType) {
+                case .integer, .decimal: cell.txwValue.keyboardType = .numberPad
+                case .email: cell.txwValue.keyboardType = .emailAddress
+                case .url: cell.txwValue.keyboardType = .URL
+                default: cell.txwValue.keyboardType = .default
+            }
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
