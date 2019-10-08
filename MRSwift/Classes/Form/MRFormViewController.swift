@@ -611,7 +611,9 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             let picker = MRFilePicker()
             picker.pickFile(on: self) { (fileUrl, message) in
                 self.data[indexPath.section].rows[indexPath.row].attachmentUrl = fileUrl
-                tableView.reloadRows(at: [indexPath], with: .none)
+                DispatchQueue.main.async {
+                    tableView.reloadRows(at: [indexPath], with: .none)
+                }
             }
         }
     }

@@ -41,6 +41,26 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
     private var errorBlock: MRImagePickerErrorBlock?
     
     private var picker: UIImagePickerController!
+    private var lastCacheUpdate: TimeInterval = 0
+    
+    public var cacheClearInterval : TimeInterval {
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "MRImagePickerClearCacheInterval")
+            UserDefaults.standard.synchronize()
+        }
+        get {
+            let currentValue = UserDefaults.standard.double(forKey: "MRImagePickerClearCacheInterval")
+            return currentValue > 0 ? currentValue : 604800
+        }
+    }
+    
+    var cacheFolder : URL {
+        
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory.appendingPathComponent("MRImagePickerCache")
+    }
     
     public override init() {
         super.init()
@@ -185,7 +205,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         
         var image: UIImage?
         var fileUrl: URL?
-        var fileName: String = ""
+        let fileName: String = "file"
         
         if (info[.mediaType] as! String) == (kUTTypeImage as String) {
             
@@ -194,8 +214,10 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             } else if let pickedImage = info[.originalImage] as? UIImage {
                 image = pickedImage
             }
-            if let imageUrl = info[.referenceURL] as? URL {
-                fileUrl = imageUrl
+            if let image = image {
+                if let imageUrl = saveImageToLocalFolder(image: image) {
+                    fileUrl = imageUrl
+                }
             }
             
         } else if (info[.mediaType] as! String) == (kUTTypeMovie as String) {
@@ -205,38 +227,55 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             }
         }
         
-        if let foundFileUrl = fileUrl {
-            PHPhotoLibrary.requestAuthorization { (status) in
-                if status == .authorized {
-                    if let asset = PHAsset.fetchAssets(withALAssetURLs: [foundFileUrl], options: nil).firstObject {
-                        PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { _, _, _, info in
-                            if let url = info!["PHImageFileURLKey"] as? URL {
-                                fileName = url.lastPathComponent
-                            }
-                            self.completionBlock(image, foundFileUrl, fileName)
-                            picker.dismiss(animated: true, completion: nil)
-                        })
-                    } else {
-                        self.completionBlock(image, foundFileUrl, fileName)
-                        picker.dismiss(animated: true, completion: nil)
-                    }
-                } else {
-                    self.completionBlock(image, foundFileUrl, fileName)
-                    picker.dismiss(animated: true, completion: nil)
-                }
-            }
-        } else {
-            self.completionBlock(image, fileUrl, fileName)
-            picker.dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        
+        completionBlock(image, fileUrl, fileName)
+        picker.dismiss(animated: true, completion: nil)
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Other Methods
+    
+    public func clearCacheIfNeeded() {
+        
+        let currentTimeInterval = Date().timeIntervalSince1970
+        if currentTimeInterval - lastCacheUpdate > cacheClearInterval {
+            do {
+                try FileManager.default.removeItem(at: cacheFolder)
+            } catch {
+                print("[MRImagePicker] Error: " + error.localizedDescription)
+            }
+        }
+    }
+    
+    private func saveImageToLocalFolder(image: UIImage?) -> URL? {
+        
+        clearCacheIfNeeded()
+        
+        guard let image = image else { return nil }
+        
+        let cacheFolder = self.cacheFolder
+        let manager = FileManager.default
+        
+        var isDir: ObjCBool = false
+        if !manager.fileExists(atPath: cacheFolder.absoluteString, isDirectory: &isDir) {
+            do {
+                try manager.createDirectory(at: cacheFolder, withIntermediateDirectories: false, attributes: nil)
+            } catch {
+                print("[MRImagePicker] Error: " + error.localizedDescription)
+            }
+        }
+        
+        let fileDir = cacheFolder.appendingPathComponent(UUID().uuidString)
+        let data = image.jpegData(compressionQuality: 1.0)
+        do {
+            try data?.write(to: fileDir)
+            lastCacheUpdate = Date().timeIntervalSince1970
+        } catch {
+            print("[MRImagePicker] Error: " + error.localizedDescription)
+        }
+        
+        return fileDir
     }
 }
