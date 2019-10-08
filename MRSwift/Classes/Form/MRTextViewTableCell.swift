@@ -36,6 +36,7 @@ public class MRTextViewTableCell: UITableViewCell, UITextViewDelegate {
         
         txwValue = UITextView()
         txwValue.delegate = self
+        txwValue.textContainerInset.left = -6
         addSubview(txwValue)
         
         lblTitle.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
