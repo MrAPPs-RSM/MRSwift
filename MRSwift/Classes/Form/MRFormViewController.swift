@@ -13,7 +13,7 @@ public extension UITableViewCell {
     
     @objc func configure(with row: MRFormRow) {
         
-        accessoryType = row.type == .rowList || row.type == .rowListMulti ? .disclosureIndicator : row.accessoryType
+        accessoryType = row.type == .rowList || row.type == .rowListMulti || row.type == .rowAttachment ? .disclosureIndicator : row.accessoryType
         textLabel?.text = row.mandatory ? "\(row.title ?? "")*" : row.title
         if row.type == .rowAttachment {
             detailTextLabel?.text = row.attachmentUrl != nil ? "File" : ""
