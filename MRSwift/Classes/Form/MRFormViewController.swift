@@ -79,6 +79,7 @@ open class MRFormRow : NSObject {
     public var visibilityBindValue: Any?
     public var extraInfo: String?
     public var attachmentUrl: URL?
+    public var attachmentExtensions = [MRFileExtension]()
     
     public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
@@ -609,8 +610,10 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowAttachment {
             
             let picker = MRFilePicker()
-            picker.pickFile(on: self) { (fileUrl, message) in
-                self.data[indexPath.section].rows[indexPath.row].attachmentUrl = fileUrl
+            picker.pickFile(on: self, fileExtensions: row.attachmentExtensions) { (fileUrl, message) in
+                if fileUrl != nil {
+                    self.data[indexPath.section].rows[indexPath.row].attachmentUrl = fileUrl
+                }
                 DispatchQueue.main.async {
                     tableView.reloadRows(at: [indexPath], with: .none)
                 }

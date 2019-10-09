@@ -11,6 +11,15 @@ import MobileCoreServices
 
 public typealias FilePickerCompletion = (_ fileUrl: URL?, _ message: String?) -> Void
 
+public enum MRFileExtension {
+    case jpg
+    case png
+    case pdf
+    case zip
+    case doc
+    case gif
+}
+
 open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControllerDelegate {
     
     public static let shared = MRFilePicker()
@@ -31,15 +40,19 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
         set (newValue) { UserDefaults.standard.set(newValue, forKey: MRFilePicker.MRFilePickerCancelTitleText) }
     }
     
-    open func pickFile(on viewController: UIViewController?, completion: @escaping FilePickerCompletion) {
+    open func pickFile(on viewController: UIViewController?, fileExtensions: [MRFileExtension], completion: @escaping FilePickerCompletion) {
         
         self.viewController = viewController
         self.pickerCompletion = completion
         
+        let isJpg = fileExtensions.contains(.jpg)
+        let isPng = fileExtensions.contains(.png)
+        let imageExtension: MRFileExtension = isPng && isJpg ? .png : isPng ? .png : .jpg
+         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: MRImagePicker.shared.photoCameraText, style: .default, handler: { (action) in
             if let onViewController = viewController {
-                MRImagePicker.shared.pick(in: onViewController, type: .photoCamera, editing: true, completionBlock: { (image, imageUrl, message) in
+                MRImagePicker.shared.pick(in: onViewController, type: .photoCamera, fileExtension: imageExtension, editing: true, completionBlock: { (image, imageUrl, message) in
                     if let completion = self.pickerCompletion {
                         completion(imageUrl, nil)
                     }
@@ -52,7 +65,7 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
         }))
         alert.addAction(UIAlertAction(title: MRImagePicker.shared.cameraRollText, style: .default, handler: { (action) in
             if let onViewController = viewController {
-                MRImagePicker.shared.pick(in: onViewController, type: .photoLibrary, editing: true, completionBlock: { (image, imageUrl, message) in
+                MRImagePicker.shared.pick(in: onViewController, type: .photoLibrary, fileExtension: imageExtension, editing: true, completionBlock: { (image, imageUrl, message) in
                     if let completion = self.pickerCompletion {
                         completion(imageUrl, nil)
                     }
@@ -64,7 +77,18 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
             }
         }))
         alert.addAction(UIAlertAction(title: pickerTitleText, style: .default, handler: { (action) in
-            let picker = UIDocumentPickerViewController(documentTypes: [String(kUTTypePDF), String(kUTTypePNG), String(kUTTypeJPEG)], in: .import)
+            var extensions = [String]()
+            for fileExtension in fileExtensions {
+                switch fileExtension {
+                    case .jpg: extensions.append(String(kUTTypeJPEG))
+                    case .png: extensions.append(String(kUTTypePNG))
+                    case .pdf: extensions.append(String(kUTTypePDF))
+                    case .zip: extensions.append(String(kUTTypeZipArchive))
+                    case .doc: extensions.append(String(kUTTypeText))
+                    case .gif: extensions.append(String(kUTTypeGIF))
+                }
+            }
+            let picker = UIDocumentPickerViewController(documentTypes: extensions, in: .import)
             picker.delegate = self
             viewController?.present(picker, animated: true, completion: nil)
         }))

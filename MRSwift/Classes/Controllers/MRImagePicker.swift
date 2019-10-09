@@ -39,6 +39,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
     
     private var completionBlock: MRImagePickerCompletionBlock!
     private var errorBlock: MRImagePickerErrorBlock?
+    private var currentFileExtension = MRFileExtension.jpg
     
     private var picker: UIImagePickerController!
     private var lastCacheUpdate: TimeInterval = 0
@@ -89,7 +90,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         set (newValue) { UserDefaults.standard.set(newValue, forKey: MRImagePicker.MRImagePickerCancelString) }
     }
     
-    public func pickWithActionSheet(in viewController: UIViewController, mediaType: MRMediaType, editing: Bool, iPadStartFrame: CGRect?, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
+    public func pickWithActionSheet(in viewController: UIViewController, mediaType: MRMediaType, fileExtension: MRFileExtension, editing: Bool, iPadStartFrame: CGRect?, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             
@@ -105,11 +106,11 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             
             alert.addAction(UIAlertAction(title: self.photoCameraText, style: .default, handler: { (action) in
                 let pickerType: MRImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
-                self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+                self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             }))
             alert.addAction(UIAlertAction(title: self.cameraRollText, style: .default, handler: { (action) in
                 let pickerType: MRImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
-                self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+                self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             }))
             alert.addAction(UIAlertAction(title: self.cancelText, style: .cancel, handler: nil))
             viewController.present(alert, animated: true, completion: nil)
@@ -117,19 +118,20 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         } else if UIImagePickerController.isSourceTypeAvailable(.camera) {
             
             let pickerType: MRImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
-            self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+            self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             
         } else if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             
             let pickerType: MRImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
-            self.pick(in: viewController, type: pickerType, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+            self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
         }
     }
     
-    public func pick(in viewController: UIViewController, type: MRImagePickerType, editing: Bool, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
+    public func pick(in viewController: UIViewController, type: MRImagePickerType, fileExtension: MRFileExtension, editing: Bool, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
         
         self.completionBlock = completionBlock
         self.errorBlock = errorBlock
+        self.currentFileExtension = fileExtension
         
         let isLibrary = type == .photoLibrary || type == .videoLibrary || type == .photoAndVideoLibrary
         let isPhoto = type == .photoLibrary || type == .photoCamera || type == .photoAndVideoLibrary || type == .photoAndVideoCamera
@@ -267,8 +269,15 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             }
         }
         
-        let fileDir = cacheFolder.appendingPathComponent(UUID().uuidString)
-        let data = image.jpegData(compressionQuality: 1.0)
+        var fileDir: URL!
+        var data: Data?
+        if currentFileExtension == .png {
+            data = image.pngData()
+            fileDir = cacheFolder.appendingPathComponent("\(UUID().uuidString).png")
+        } else {
+            data = image.jpegData(compressionQuality: 1.0)
+            fileDir = cacheFolder.appendingPathComponent("\(UUID().uuidString).jpg")
+        }
         do {
             try data?.write(to: fileDir)
             lastCacheUpdate = Date().timeIntervalSince1970
