@@ -258,6 +258,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     private let textAreaIdentifier = "textAreaIdentifier"
     private let switchIdentifier = "switchIdentifier"
     private let dateIdentifier = "dateIdentifier"
+    private let attachmentIdentifier = "attachmentIdentifier"
     
     open var tintColor: UIColor?
     open var switchColor: UIColor?
@@ -328,6 +329,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         form.register(MRTextViewTableCell.self, forCellReuseIdentifier: textAreaIdentifier)
         form.register(MRSwitchTableCell.self, forCellReuseIdentifier: switchIdentifier)
         form.register(MRDateTableCell.self, forCellReuseIdentifier: dateIdentifier)
+        form.register(MRAttachmentTableCell.self, forCellReuseIdentifier: attachmentIdentifier)
         
         if marginsActive {
             
@@ -445,16 +447,14 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         
         if row.type == .rowAttachment {
             
-            let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+            let cell = tableView.dequeueReusableCell(withIdentifier: attachmentIdentifier, for: indexPath) as! MRAttachmentTableCell
             cell.isHidden = !row.visible
-            cell.selectionStyle = .default
             cell.backgroundColor = cellBackgroundColor
             cell.clipsToBounds = true
-            cell.textLabel?.textColor = titleColor
-            cell.textLabel?.font = cellTitleFont
-            cell.detailTextLabel?.textColor = valueColor
-            cell.detailTextLabel?.font = cellValueFont
-            cell.accessoryType = .disclosureIndicator
+            cell.lblTitle.textColor = titleColor
+            cell.lblTitle.font = cellTitleFont
+            cell.lblFileName.textColor = valueColor
+            cell.lblFileName.font = cellValueFont
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
