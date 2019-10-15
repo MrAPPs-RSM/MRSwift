@@ -80,6 +80,7 @@ open class MRFormRow : NSObject {
     public var extraInfo: String?
     public var attachmentUrl: URL?
     public var attachmentExtensions = [MRFileExtension]()
+    public var maxFileSize: Int?    //Mb
     
     public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
@@ -610,7 +611,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowAttachment {
             
             let picker = MRFilePicker()
-            picker.pickFile(on: self, fileExtensions: row.attachmentExtensions) { (fileUrl, message) in
+            picker.pickFile(on: self, fileExtensions: row.attachmentExtensions, maxSize: maxFileSize) { (fileUrl, message) in
                 if fileUrl != nil {
                     self.data[indexPath.section].rows[indexPath.row].attachmentUrl = fileUrl
                 }
