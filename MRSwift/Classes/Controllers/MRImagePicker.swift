@@ -40,6 +40,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
     private var completionBlock: MRImagePickerCompletionBlock!
     private var errorBlock: MRImagePickerErrorBlock?
     private var currentFileExtension = MRFileExtension.jpg
+    private var currentMaxSize: Int?  //Mb
     
     private var picker: UIImagePickerController!
     private var lastCacheUpdate: TimeInterval = 0
@@ -90,7 +91,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         set (newValue) { UserDefaults.standard.set(newValue, forKey: MRImagePicker.MRImagePickerCancelString) }
     }
     
-    public func pickWithActionSheet(in viewController: UIViewController, mediaType: MRMediaType, fileExtension: MRFileExtension, editing: Bool, iPadStartFrame: CGRect?, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
+    public func pickWithActionSheet(in viewController: UIViewController, mediaType: MRMediaType, fileExtension: MRFileExtension, maxSize: Int?, editing: Bool, iPadStartFrame: CGRect?, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             
@@ -106,11 +107,11 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             
             alert.addAction(UIAlertAction(title: self.photoCameraText, style: .default, handler: { (action) in
                 let pickerType: MRImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
-                self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+                self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, maxSize: maxSize, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             }))
             alert.addAction(UIAlertAction(title: self.cameraRollText, style: .default, handler: { (action) in
                 let pickerType: MRImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
-                self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+                self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, maxSize: maxSize, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             }))
             alert.addAction(UIAlertAction(title: self.cancelText, style: .cancel, handler: nil))
             viewController.present(alert, animated: true, completion: nil)
@@ -118,20 +119,21 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
         } else if UIImagePickerController.isSourceTypeAvailable(.camera) {
             
             let pickerType: MRImagePickerType = mediaType == .photo ? .photoCamera : mediaType == .video ? .videoCamera : .photoAndVideoCamera
-            self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+            self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, maxSize: maxSize, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
             
         } else if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             
             let pickerType: MRImagePickerType = mediaType == .photo ? .photoLibrary : mediaType == .video ? .videoLibrary : .photoAndVideoLibrary
-            self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
+            self.pick(in: viewController, type: pickerType, fileExtension: fileExtension, maxSize: maxSize, editing: editing, completionBlock: completionBlock, errorBlock: errorBlock)
         }
     }
     
-    public func pick(in viewController: UIViewController, type: MRImagePickerType, fileExtension: MRFileExtension, editing: Bool, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
+    public func pick(in viewController: UIViewController, type: MRImagePickerType, fileExtension: MRFileExtension, maxSize: Int?, editing: Bool, completionBlock: @escaping MRImagePickerCompletionBlock, errorBlock: MRImagePickerErrorBlock?) {
         
         self.completionBlock = completionBlock
         self.errorBlock = errorBlock
         self.currentFileExtension = fileExtension
+        self.currentMaxSize = maxSize
         
         let isLibrary = type == .photoLibrary || type == .videoLibrary || type == .photoAndVideoLibrary
         let isPhoto = type == .photoLibrary || type == .photoCamera || type == .photoAndVideoLibrary || type == .photoAndVideoCamera
@@ -227,6 +229,11 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             if let pickedVideoUrl = info[.mediaURL] as? URL {
                 fileUrl = pickedVideoUrl
             }
+        }
+        
+        if let fileUrl = fileUrl, let data = try? Data(contentsOf: fileUrl), let maxSize = currentMaxSize, (maxSize*1024*1024) < data.count {
+            completionBlock(image, fileUrl, "File too big")
+            return
         }
         
         completionBlock(image, fileUrl, fileName)

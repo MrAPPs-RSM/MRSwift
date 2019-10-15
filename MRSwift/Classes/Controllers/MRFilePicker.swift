@@ -29,6 +29,7 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
     
     private var viewController: UIViewController?
     private var pickerCompletion: FilePickerCompletion?
+    private var currentMaxSize: Int?   //Mb
     
     public var pickerTitleText : String? {
         get { return UserDefaults.standard.string(forKey: MRFilePicker.MRFilePickerPickTitleText) ?? "Search document" }
@@ -40,10 +41,11 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
         set (newValue) { UserDefaults.standard.set(newValue, forKey: MRFilePicker.MRFilePickerCancelTitleText) }
     }
     
-    open func pickFile(on viewController: UIViewController?, fileExtensions: [MRFileExtension], completion: @escaping FilePickerCompletion) {
+    open func pickFile(on viewController: UIViewController?, fileExtensions: [MRFileExtension], maxSize: Int?, completion: @escaping FilePickerCompletion) {
         
         self.viewController = viewController
         self.pickerCompletion = completion
+        self.currentMaxSize = maxSize
         
         let isJpg = fileExtensions.contains(.jpg)
         let isPng = fileExtensions.contains(.png)
@@ -52,7 +54,7 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: MRImagePicker.shared.photoCameraText, style: .default, handler: { (action) in
             if let onViewController = viewController {
-                MRImagePicker.shared.pick(in: onViewController, type: .photoCamera, fileExtension: imageExtension, editing: true, completionBlock: { (image, imageUrl, message) in
+                MRImagePicker.shared.pick(in: onViewController, type: .photoCamera, fileExtension: imageExtension, maxSize: maxSize, editing: true, completionBlock: { (image, imageUrl, message) in
                     if let completion = self.pickerCompletion {
                         completion(imageUrl, nil)
                     }
@@ -65,7 +67,7 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
         }))
         alert.addAction(UIAlertAction(title: MRImagePicker.shared.cameraRollText, style: .default, handler: { (action) in
             if let onViewController = viewController {
-                MRImagePicker.shared.pick(in: onViewController, type: .photoLibrary, fileExtension: imageExtension, editing: true, completionBlock: { (image, imageUrl, message) in
+                MRImagePicker.shared.pick(in: onViewController, type: .photoLibrary, fileExtension: imageExtension, maxSize: maxSize, editing: true, completionBlock: { (image, imageUrl, message) in
                     if let completion = self.pickerCompletion {
                         completion(imageUrl, nil)
                     }
@@ -104,9 +106,17 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         
         if let fileUrl = urls.first {
+            
             print("[MRFilePicker] Document Url: \(fileUrl)")
-            if let completion = pickerCompletion {
-                completion(fileUrl, nil)
+            if let data = try? Data(contentsOf: fileUrl), let maxSize = currentMaxSize, (maxSize*1024*1024) < data.count {
+                if let completion = pickerCompletion {
+                    completion(nil, "File too big")
+                    return
+                }
+            } else {
+                if let completion = pickerCompletion {
+                    completion(fileUrl, nil)
+                }
             }
         }
     }
