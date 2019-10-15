@@ -80,7 +80,6 @@ open class MRFormRow : NSObject {
     public var extraInfo: String?
     public var attachmentUrl: URL?
     public var attachmentExtensions = [MRFileExtension]()
-    public var maxFileSize: Int?    //Mb
     
     public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
@@ -276,6 +275,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open var cellValueFont = UIFont.systemFont(ofSize: 16, weight: .regular)
     open var autoDismissListsOnSelection: Bool = true
     open var iPadMargin: CGFloat = 100
+    open var maxFileSize: Int?    //Mb
     
     open var currentIndexPath = IndexPath(row: 0, section: 0)
     
