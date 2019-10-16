@@ -715,13 +715,11 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                         } else if let boolValue = value as? Bool, let visBoolValue = visibilityValue as? Bool {
                             show = boolValue == visBoolValue
                         }
+                        data[i].rows[j].visible = show
+                        indexPathsToUpdate.append(IndexPath(row: j, section: i))
                     } else {
                        show = value != nil
                     }
-                }
-                if data[i].rows[j].visible != show {
-                    data[i].rows[j].visible = show
-                    indexPathsToUpdate.append(IndexPath(row: j, section: i))
                 }
             }
         }
