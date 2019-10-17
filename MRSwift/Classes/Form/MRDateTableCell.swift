@@ -72,7 +72,13 @@ public class MRDateTableCell: UITableViewCell {
     
     public override func configure(with row: MRFormRow) {
         
-        dateFormatter.dateFormat = row.dateFormat
+        dateFormatter = DateFormatter()
+        if !row.dateFormat.isEmpty {
+            dateFormatter.dateFormat = row.dateFormat
+        } else {
+            dateFormatter.dateStyle = .medium
+        }
+        
         lblTitle.text = row.mandatory ? "\(row.title ?? "")*" : row.title
         txfValue.placeholder = row.placeholder
         setDate(date: row.value as? Date)
