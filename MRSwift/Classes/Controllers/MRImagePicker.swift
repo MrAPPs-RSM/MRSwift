@@ -159,7 +159,9 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             if photos == .notDetermined {
                 PHPhotoLibrary.requestAuthorization({status in
                     if status == .authorized {
-                        
+                        DispatchQueue.main.async {
+                            viewController.present(self.picker, animated: true, completion: nil)
+                        }
                     } else {
                         if self.errorBlock != nil {
                             self.errorBlock!("Photo library permissions are disabled")
