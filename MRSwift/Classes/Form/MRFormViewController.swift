@@ -500,6 +500,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.accessoryType = .none
             cell.lblTitle.font = cellTitleFont
             cell.lblTitle.textColor = titleColor
+            cell.txfValue.placeholder = row.placeholder
             cell.txfValue.isEnabled = editingEnabled
             cell.txfValue.font = cellValueFont
             cell.txfValue.textColor = valueColor
@@ -564,6 +565,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.accessoryType = .none
             cell.lblTitle.textColor = titleColor
             cell.lblTitle.font = cellTitleFont
+            cell.txfValue.placeholder = row.placeholder
             cell.txfValue.textColor = valueColor
             cell.txfValue.font = cellValueFont
             cell.configure(with: row)
