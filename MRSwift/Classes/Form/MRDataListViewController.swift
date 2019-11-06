@@ -264,7 +264,7 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
         }
  
         if let index = allData.index(where: { (allDataItem) -> Bool in
-            return allDataItem.key == item.key || allDataItem.title == item.title
+            return (allDataItem.key != nil && allDataItem.key == item.key) || allDataItem.title == item.title
         }) {
             
             allData.remove(at: index)
