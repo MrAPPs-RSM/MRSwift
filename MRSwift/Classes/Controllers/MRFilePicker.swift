@@ -29,7 +29,7 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
     
     private var viewController: UIViewController?
     private var pickerCompletion: FilePickerCompletion?
-    private var currentMaxSize: Int?   //Mb
+    private var currentMaxSize: Int?   //Bytes
     
     public var pickerTitleText : String? {
         get { return UserDefaults.standard.string(forKey: MRFilePicker.MRFilePickerPickTitleText) ?? "Search document" }
@@ -108,7 +108,7 @@ open class MRFilePicker: NSObject, UIDocumentPickerDelegate, UINavigationControl
         if let fileUrl = urls.first {
             
             print("[MRFilePicker] Document Url: \(fileUrl)")
-            if let data = try? Data(contentsOf: fileUrl), let maxSize = currentMaxSize, (maxSize*1024*1024) < data.count {
+            if let data = try? Data(contentsOf: fileUrl), let maxSize = currentMaxSize, maxSize < data.count {
                 if let completion = pickerCompletion {
                     completion(nil, "File too big")
                     return

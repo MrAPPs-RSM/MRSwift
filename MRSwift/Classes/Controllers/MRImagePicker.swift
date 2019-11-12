@@ -40,7 +40,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
     private var completionBlock: MRImagePickerCompletionBlock!
     private var errorBlock: MRImagePickerErrorBlock?
     private var currentFileExtension = MRFileExtension.jpg
-    private var currentMaxSize: Int?  //Mb
+    private var currentMaxSize: Int?  //Bytes
     
     private var picker: UIImagePickerController!
     private var lastCacheUpdate: TimeInterval = 0
@@ -233,7 +233,7 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
             }
         }
         
-        if let fileUrl = fileUrl, let data = try? Data(contentsOf: fileUrl), let maxSize = currentMaxSize, (maxSize*1024*1024) < data.count {
+        if let fileUrl = fileUrl, let data = try? Data(contentsOf: fileUrl), let maxSize = currentMaxSize, maxSize < data.count {
             completionBlock(image, fileUrl, "File too big")
             return
         }

@@ -80,6 +80,7 @@ open class MRFormRow : NSObject {
     public var extraInfo: String?
     public var attachmentUrl: URL?
     public var attachmentExtensions = [MRFileExtension]()
+    public var attachmentMaxSize: Int?    //Bytes
     
     public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
@@ -93,12 +94,13 @@ open class MRFormRow : NSObject {
         self.type = .rowDefault
     }
     
-    public convenience init(attachment key: String?, title: String?, value: String?, attachmentUrl: URL?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
+    public convenience init(attachment key: String?, title: String?, value: String?, attachmentUrl: URL?, maxSize: Int?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
         self.key = key ?? ""
         self.title = title
         self.value = value
+        self.attachmentMaxSize = maxSize
         self.visibilityBindKey = visibilityBindKey
         self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
@@ -613,7 +615,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         } else if row.type == .rowAttachment {
             
             let picker = MRFilePicker()
-            picker.pickFile(on: self, fileExtensions: row.attachmentExtensions, maxSize: maxFileSize) { (fileUrl, message) in
+            picker.pickFile(on: self, fileExtensions: row.attachmentExtensions, maxSize: row.attachmentMaxSize ?? maxFileSize) { (fileUrl, message) in
                 if fileUrl != nil {
                     self.data[indexPath.section].rows[indexPath.row].attachmentUrl = fileUrl
                 }
