@@ -80,7 +80,7 @@ open class MRFormRow : NSObject {
     public var extraInfo: String?
     public var attachmentUrl: URL?
     public var attachmentExtensions = [MRFileExtension]()
-    public var attachmentMaxSize: Int?    //Bytes
+    public var attachmentMaxSize: Int?    //Byte
     
     public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
@@ -278,6 +278,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open var autoDismissListsOnSelection: Bool = true
     open var iPadMargin: CGFloat = 100
     open var maxFileSize: Int?    //Mb
+    open var sectionHeaderHeight: CGFloat = 36
     
     open var currentIndexPath = IndexPath(row: 0, section: 0)
     
@@ -440,7 +441,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         let dataSection = data[section]
-        return dataSection.title != nil ? 36.0 : 0
+        return dataSection.title != nil ? sectionHeaderHeight : 0
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -590,6 +591,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                 
                 currentIndexPath = indexPath
                 let list = MRDataListViewController(data: extraData, navTitle: row.title, navBackIcon: navBackIcon, selectedValue: row.value as? String)
+                list.navigationItem.title = row.title
                 list.searchTintColor = searchTintColor
                 list.backgroundColor = backgroundColor
                 list.titleColor = titleColor
