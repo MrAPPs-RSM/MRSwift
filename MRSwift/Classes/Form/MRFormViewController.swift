@@ -465,7 +465,14 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             
         } else if row.type == .rowDefault || row.type == .rowAttachment || row.type == .rowList || row.type == .rowListMulti {
             
-            let cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+            var cell: UITableViewCell!
+            if row.type == .rowDefault {
+                cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
+                cell.detailTextLabel?.numberOfLines = 0
+            } else {
+                cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+                cell.detailTextLabel?.numberOfLines = 1
+            }
             cell.isHidden = !row.visible
             cell.selectionStyle = row.type != .rowDefault ? .default : .none
             cell.backgroundColor = cellBackgroundColor
