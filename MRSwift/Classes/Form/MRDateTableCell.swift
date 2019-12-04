@@ -43,16 +43,17 @@ public class MRDateTableCell: UITableViewCell {
         txfValue.inputView = datePicker
         addSubview(txfValue)
         
-        lblTitle.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
-        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
+        //lblTitle.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
+        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 16)
         lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
-        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
+        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 16)
         lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -20)
         lblTitle.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
+        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8, relation: .greaterThanOrEqual)
         txfValue.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
-        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
+        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8, relation: .greaterThanOrEqual)
+        txfValue.autoAlignAxis(toSuperviewAxis: .horizontal)
         txfValue.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
     
@@ -75,8 +76,11 @@ public class MRDateTableCell: UITableViewCell {
         dateFormatter = DateFormatter()
         if !row.dateFormat.isEmpty {
             dateFormatter.dateFormat = row.dateFormat
+            let format = row.dateFormat.lowercased()
+            datePicker.datePickerMode = format.contains("hh") && row.dateFormat.contains("y") ? .dateAndTime : format.contains("hh") && !row.dateFormat.contains("y") ? .time : .date
         } else {
             dateFormatter.dateStyle = .medium
+            datePicker.datePickerMode = .date
         }
         
         lblTitle.text = row.mandatory ? "\(row.title ?? "")*" : row.title

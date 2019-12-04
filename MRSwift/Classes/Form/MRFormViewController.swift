@@ -413,10 +413,17 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         return (dataSection.stackable && !dataSection.stacked) || !dataSection.stackable ? dataSection.rows.count : 0
     }
     
+    open func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
+    
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         let dataSection = data[indexPath.section]
         let dataRow = dataSection.rows[indexPath.row]
+        if dataRow.type == .rowList || dataRow.type == .rowListMulti {
+            return 50
+        }
         return dataRow.visible ? UITableView.automaticDimension : 0
     }
     

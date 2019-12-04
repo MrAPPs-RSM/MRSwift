@@ -50,10 +50,10 @@ class MRAttachmentTableCell: UITableViewCell {
         lblFileName.numberOfLines = 1
         addSubview(lblFileName)
         
-        lblTitle.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
-        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        //lblTitle.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
+        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 16)
         lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
-        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
+        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 16)
         lblTitle.autoPinEdge(.trailing, to: .leading, of: imgAttachment, withOffset: -20, relation: .greaterThanOrEqual)
         lblTitle.autoPinEdge(.trailing, to: .leading, of: lblFileName, withOffset: -20, relation: .greaterThanOrEqual)
         lblTitle.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -66,10 +66,10 @@ class MRAttachmentTableCell: UITableViewCell {
         imgAttachment.autoPinEdge(toSuperviewEdge: .trailing, withInset: 40)
         imgAttachment.autoAlignAxis(toSuperviewAxis: .horizontal)
         
-        lblFileName.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
-        lblFileName.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        //lblFileName.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
+        lblFileName.autoPinEdge(toSuperviewEdge: .top, withInset: 16)
         lblFileName.autoPinEdge(toSuperviewEdge: .trailing, withInset: 40)
-        lblFileName.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
+        lblFileName.autoPinEdge(toSuperviewEdge: .bottom, withInset: 16)
         lblFileName.setContentHuggingPriority(.defaultLow, for: .horizontal)
         lblFileName.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
     }
