@@ -39,6 +39,7 @@ public class MRDateTableCell: UITableViewCell, UITextFieldDelegate {
         addSubview(lblTitle)
         
         txfValue = UITextField()
+        txfValue.delegate = self
         txfValue.textAlignment = .right
         txfValue.inputView = datePicker
         addSubview(txfValue)
