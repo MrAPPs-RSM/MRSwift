@@ -286,6 +286,20 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         return UIDevice.isIpad && iPadMargin > 0
     }
     
+    open class var cellsMargin : CGFloat {
+        get {
+            let margin = CGFloat(UserDefaults.standard.float(forKey: "MRFormViewControllerCellsMargin"))
+            if margin > 0 {
+                return margin
+            }
+            return 16
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "MRFormViewControllerCellsMargin")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
     // MARK: - Initialization
     
     deinit {
@@ -422,7 +436,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         let dataSection = data[indexPath.section]
         let dataRow = dataSection.rows[indexPath.row]
         if dataRow.type == .rowList || dataRow.type == .rowListMulti {
-            return 50
+            return (MRFormViewController.cellsMargin*2)+20
         }
         return dataRow.visible ? UITableView.automaticDimension : 0
     }

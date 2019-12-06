@@ -12,7 +12,7 @@ public protocol MRDateTableCellDelegate : class {
     func mrDateTableCellDidChangeDate(cell: MRDateTableCell)
 }
 
-public class MRDateTableCell: UITableViewCell {
+public class MRDateTableCell: UITableViewCell, UITextFieldDelegate {
     
     public var lblTitle: UILabel!
     public var txfValue: UITextField!
@@ -43,10 +43,12 @@ public class MRDateTableCell: UITableViewCell {
         txfValue.inputView = datePicker
         addSubview(txfValue)
         
+        let margin = MRFormViewController.cellsMargin
+        
         //lblTitle.autoSetDimension(.height, toSize: 28, relation: .greaterThanOrEqual)
-        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 16)
+        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: margin)
         lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
-        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 16)
+        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: margin)
         lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -20)
         lblTitle.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
@@ -103,4 +105,10 @@ public class MRDateTableCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    // MARK: - UITextField Delegate
+    
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        setDate(date: datePicker.date)
+        delegate?.mrDateTableCellDidChangeDate(cell: self)
+    }
 }

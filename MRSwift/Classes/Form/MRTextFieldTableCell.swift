@@ -39,16 +39,18 @@ public class MRTextFieldTableCell: UITableViewCell {
         txfValue.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: .editingChanged)
         addSubview(txfValue)
         
+        let margin = MRFormViewController.cellsMargin
+        
         //lblTitle.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
-        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 16)
+        lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: margin)
         lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
-        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: 16)
+        lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: margin)
         lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -20)
         lblTitle.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8, relation: .greaterThanOrEqual)
         txfValue.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
-        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 12)
+        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8, relation: .greaterThanOrEqual)
         txfValue.autoAlignAxis(toSuperviewAxis: .horizontal)
         txfValue.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
