@@ -48,7 +48,7 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
     open var navBackIcon: UIImage?
     open var selectedValue: String?
     open var searchTintColor: UIColor?
-    open var backgroundColor = UIColor(netHex: 0xf5f5f5)
+    open var backgroundColor: UIColor?
     open var titleColor = UIColor(netHex: 0x444444)
     open var valueColor = UIColor.black
     open var cellBackgroundColor = UIColor.white

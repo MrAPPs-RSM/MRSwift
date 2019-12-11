@@ -264,7 +264,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     
     open var tintColor: UIColor?
     open var switchColor: UIColor?
-    open var backgroundColor = UIColor(netHex: 0xf5f5f5)
+    open var backgroundColor: UIColor?
     open var sectionTitleColor = UIColor.lightGray
     open var titleColor = UIColor.black
     open var valueColor = UIColor.black
@@ -330,9 +330,17 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                         .dark: return .white
                 }
             }
-            backgroundColor = .groupTableViewBackground
+            if backgroundColor == nil {
+                backgroundColor = .groupTableViewBackground
+            }
             cellBackgroundColor = .secondarySystemGroupedBackground
             searchTintColor = .label
+            
+        } else {
+            
+            if backgroundColor == nil {
+                backgroundColor = UIColor(netHex: 0xf5f5f5)
+            }
         }
         
         view.backgroundColor = backgroundColor
