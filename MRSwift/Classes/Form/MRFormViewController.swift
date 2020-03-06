@@ -772,7 +772,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         if keyPath == "contentSize" && object is UITableView && marginsActive {
-            cntContentHeight?.constant = form.contentSize.height
+            cntContentHeight?.constant = form.contentSize.height + form.contentInset.top
         }
     }
     
