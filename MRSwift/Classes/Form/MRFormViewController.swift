@@ -40,6 +40,7 @@ public enum MRFormRowType {
     case rowDefault
     case rowSubtitle
     case rowTextField
+    case rowEmail
     case rowTextArea
     case rowSwitch
     case rowDate
@@ -142,6 +143,18 @@ open class MRFormRow : NSObject {
         self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowTextField
+    }
+    
+    public convenience init(email key: String?, title: String?, placeholder: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
+        self.visible = visibilityBindKey == nil
+        self.type = .rowEmail
     }
     
     public convenience init(textArea key: String?, title: String?, placeholder: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
@@ -529,7 +542,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
             
-        } else if row.type == .rowTextField {
+        } else if row.type == .rowTextField || row.type == .rowEmail {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: textfieldIdentifier, for: indexPath) as! MRTextFieldTableCell
             cell.isHidden = !row.visible
@@ -543,6 +556,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.txfValue.isEnabled = editingEnabled
             cell.txfValue.font = cellValueFont
             cell.txfValue.textColor = valueColor
+            cell.txfValue.keyboardType = row.type == .rowEmail ? .emailAddress : .default
             switch (row.valueType) {
                 case .integer: cell.txfValue.keyboardType = .numberPad
                 case .decimal: cell.txfValue.keyboardType = .decimalPad
