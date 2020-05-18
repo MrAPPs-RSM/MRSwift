@@ -169,12 +169,16 @@ public class MRImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigat
                     }
                 })
             } else if photos == .authorized {
-                viewController.present(self.picker, animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    viewController.present(self.picker, animated: true, completion: nil)
+                }
             }
         } else {
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted {
-                    viewController.present(self.picker, animated: true, completion: nil)
+                    DispatchQueue.main.async {
+                        viewController.present(self.picker, animated: true, completion: nil)
+                    }
                 } else {
                     if self.errorBlock != nil {
                         self.errorBlock!("Camera permissions are disabled")
