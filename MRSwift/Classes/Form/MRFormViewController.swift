@@ -564,6 +564,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                 case .url: cell.txfValue.keyboardType = .URL
                 default: cell.txfValue.keyboardType = .default
             }
+            cell.txfValue.autocapitalizationType = cell.txfValue.keyboardType == .emailAddress ? .none : .sentences
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
