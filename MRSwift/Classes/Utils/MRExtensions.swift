@@ -474,7 +474,7 @@ public extension UIImageView {
         }
         
         var url: URL?
-        if let remoteUrl = URL(string: stringUrl) {
+        if let remoteString = stringUrl.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed), let remoteUrl = URL(string: remoteString) {
             url = remoteUrl
         } else {
             url = URL(fileURLWithPath: stringUrl)
