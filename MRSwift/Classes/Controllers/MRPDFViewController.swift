@@ -226,7 +226,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             self.loadPdf(fromData: data)
         } else {
             pdfDelegate?.pdfDidStartDownload()
-            Alamofire.request(url).responseData(completionHandler: { (response) in
+            AF.request(url).responseData(completionHandler: { (response) in
                 self.pdfDelegate?.pdfDidFinishDownload()
                 guard let data = response.data, data.count > 0 else {
                     self.delegate?.mediaDidFailLoad(media: self.media)
