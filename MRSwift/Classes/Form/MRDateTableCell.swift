@@ -36,13 +36,7 @@ public class MRDateTableCell: UITableViewCell, UITextFieldDelegate {
         
         lblTitle = UILabel()
         lblTitle.numberOfLines = 0
-        addSubview(lblTitle)
-        
-        txfValue = UITextField()
-        txfValue.delegate = self
-        txfValue.textAlignment = .right
-        txfValue.inputView = datePicker
-        addSubview(txfValue)
+        contentView.addSubview(lblTitle)
         
         let margin = MRFormViewController.cellsMargin
         
@@ -50,14 +44,35 @@ public class MRDateTableCell: UITableViewCell, UITextFieldDelegate {
         lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: margin)
         lblTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
         lblTitle.autoPinEdge(toSuperviewEdge: .bottom, withInset: margin)
-        lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -20)
-        lblTitle.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        lblTitle.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
-        txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8, relation: .greaterThanOrEqual)
-        txfValue.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
-        txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8, relation: .greaterThanOrEqual)
-        txfValue.autoAlignAxis(toSuperviewAxis: .horizontal)
-        txfValue.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        if #available(iOS 14, *) {
+            
+            contentView.addSubview(datePicker)
+            
+            lblTitle.autoPinEdge(.trailing, to: .leading, of: datePicker, withOffset: -20)
+            
+            datePicker.autoPinEdge(toSuperviewEdge: .top, withInset: 8, relation: .greaterThanOrEqual)
+            datePicker.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
+            datePicker.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8, relation: .greaterThanOrEqual)
+            datePicker.autoAlignAxis(toSuperviewAxis: .horizontal)
+            datePicker.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            
+        } else {
+            
+            txfValue = UITextField()
+            txfValue.delegate = self
+            txfValue.textAlignment = .right
+            contentView.addSubview(txfValue)
+            lblTitle.autoPinEdge(.trailing, to: .leading, of: txfValue, withOffset: -20)
+            
+            txfValue.inputView = datePicker
+            txfValue.autoPinEdge(toSuperviewEdge: .top, withInset: 8, relation: .greaterThanOrEqual)
+            txfValue.autoPinEdge(toSuperviewEdge: .trailing, withInset: 20)
+            txfValue.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8, relation: .greaterThanOrEqual)
+            txfValue.autoAlignAxis(toSuperviewAxis: .horizontal)
+            txfValue.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -87,16 +102,24 @@ public class MRDateTableCell: UITableViewCell, UITextFieldDelegate {
         }
         
         lblTitle.text = row.mandatory ? "\(row.title ?? "")*" : row.title
-        txfValue.placeholder = row.placeholder
+        if #available(iOS 14, *) {
+            
+        } else {
+            txfValue.placeholder = row.placeholder
+        }
         setDate(date: row.value as? Date)
     }
     
     private func setDate(date: Date?) {
         
-        if let date = date {
-            txfValue.text = dateFormatter.string(from: date)
+        if #available(iOS 14, *) {
+            
         } else {
-            txfValue.text = ""
+            if let date = date {
+                txfValue.text = dateFormatter.string(from: date)
+            } else {
+                txfValue.text = ""
+            }
         }
     }
     

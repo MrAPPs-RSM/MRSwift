@@ -41,11 +41,11 @@ class MRWeb : MRWebProtocol {
     
     func download(file: MRFileToDownload, completion: @escaping StringCompleteBlock, progress progressBlock: ProgressBlock?) {
         
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+        let destination: DownloadRequest.Destination = { _, _ in
             return (file.localUrl!, [.removePreviousFile, .createIntermediateDirectories])
         }
         
-        Alamofire.download(file.remoteStringUrl, to: destination).response { response in
+        AF.download(file.remoteStringUrl, to: destination).response { response in
             
             completion(response.error == nil, response.error?.localizedDescription)
             

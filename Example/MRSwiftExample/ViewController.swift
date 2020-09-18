@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Right", style: .plain, target: self, action: #selector(self.didTapRightButton))
         
         btnImagePicker.observe(event: .touchUpInside) {
-            MRImagePicker.shared.pickWithActionSheet(in: self, mediaType: .photo, fileExtension: .png, editing: false, iPadStartFrame: nil, completionBlock: { (image, videoUrl, fileName) in
+            MRImagePicker.shared.pickWithActionSheet(in: self, mediaType: .photo, fileExtension: .png, maxSize: nil, editing: false, iPadStartFrame: nil, completionBlock: { (image, videoUrl, fileName) in
                 print("Image: \(image != nil)\nVideo: \(videoUrl != nil)")
             }, errorBlock: nil)
         }
@@ -86,6 +86,7 @@ class ViewController: UIViewController {
     @IBAction func didTapFormButton(_ sender: Any) {
         
         let viewController = MRFormViewController()
+        viewController.tintColor = .red
         
         viewController.data = [
             MRFormSection(id: nil, title: "Standard", subtitle: nil, value: nil, rows: [
@@ -125,8 +126,8 @@ class ViewController: UIViewController {
                 ], visibilityBindKey: nil)
             ]),
             MRFormSection(id: nil, title: "Attachment", subtitle: nil, value: nil, rows: [
-                MRFormRow(attachment: "attachment_1", title: "Title 7-1", value: nil, attachmentUrl: nil, visibilityBindKey: nil),
-                MRFormRow(attachment: "attachment_2", title: "Title 7-2", value: nil, attachmentUrl: nil, visibilityBindKey: nil)
+                MRFormRow(attachment: "attachment_1", title: "Title 7-1", value: nil, attachmentUrl: nil, maxSize: nil, visibilityBindKey: nil),
+                MRFormRow(attachment: "attachment_2", title: "Title 7-2", value: nil, attachmentUrl: nil, maxSize: nil, visibilityBindKey: nil)
             ])
         ]
         navigationController?.pushViewController(viewController, animated: true)
@@ -169,7 +170,7 @@ class ViewController: UIViewController {
     @IBAction func didTapFilePickerButton(_ sender: Any) {
         
         let picker = MRFilePicker()
-        picker.pickFile(on: self, fileExtensions: [.png, .jpg]) { (fileUrl, message) in
+        picker.pickFile(on: self, fileExtensions: [.png, .jpg], maxSize: nil) { (fileUrl, message) in
 
         }
     }

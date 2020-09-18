@@ -619,9 +619,13 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.accessoryType = .none
             cell.lblTitle.textColor = titleColor
             cell.lblTitle.font = cellTitleFont
-            cell.txfValue.placeholder = row.placeholder
-            cell.txfValue.textColor = valueColor
-            cell.txfValue.font = cellValueFont
+            if #available(iOS 14, *) {
+                cell.datePicker.tintColor = tintColor
+            } else {
+                cell.txfValue.placeholder = row.placeholder
+                cell.txfValue.textColor = valueColor
+                cell.txfValue.font = cellValueFont
+            }
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
