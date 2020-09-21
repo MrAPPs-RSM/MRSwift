@@ -32,12 +32,12 @@ public class MRTextViewTableCell: UITableViewCell, UITextViewDelegate {
         
         lblTitle = UILabel()
         lblTitle.numberOfLines = 0
-        addSubview(lblTitle)
+        contentView.addSubview(lblTitle)
         
         txwValue = UITextView()
         txwValue.delegate = self
         txwValue.textContainerInset.left = -6
-        addSubview(txwValue)
+        contentView.addSubview(txwValue)
         
         lblTitle.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
         lblTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 12)

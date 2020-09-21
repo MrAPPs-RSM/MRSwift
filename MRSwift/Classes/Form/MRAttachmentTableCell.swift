@@ -41,14 +41,14 @@ class MRAttachmentTableCell: UITableViewCell {
         
         lblTitle = UILabel()
         lblTitle.numberOfLines = 0
-        addSubview(lblTitle)
+        contentView.addSubview(lblTitle)
         
         imgAttachment = UIImageView()
-        addSubview(imgAttachment)
+        contentView.addSubview(imgAttachment)
         
         lblFileName = UILabel()
         lblFileName.numberOfLines = 1
-        addSubview(lblFileName)
+        contentView.addSubview(lblFileName)
         
         let margin = MRFormViewController.cellsMargin
         

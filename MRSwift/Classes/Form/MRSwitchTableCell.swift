@@ -35,12 +35,12 @@ public class MRSwitchTableCell: UITableViewCell {
         
         lblTitle = UILabel()
         lblTitle.numberOfLines = 0
-        addSubview(lblTitle)
+        contentView.addSubview(lblTitle)
         
         swSwitch = UISwitch()
         swSwitch.setOn(false, animated: false)
         swSwitch.addTarget(self, action: #selector(switchDidChangeValue(sender:)), for: .valueChanged)
-        addSubview(swSwitch)
+        contentView.addSubview(swSwitch)
         
         let margin = MRFormViewController.cellsMargin
         

@@ -90,7 +90,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         bubbleContainerView = UIView()
         bubbleContainerView.isUserInteractionEnabled = true
         
-        addSubview(bubbleContainerView)
+        contentView.addSubview(bubbleContainerView)
         cntBubbleContainerTop = bubbleContainerView.autoPinEdge(toSuperviewEdge: .top, withInset: 8)
         cntBubbleContainerLeading = bubbleContainerView.autoPinEdge(toSuperviewEdge: .leading, withInset: 40, relation: .greaterThanOrEqual)
         cntBubbleContainerTrailing = bubbleContainerView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 8)
@@ -269,7 +269,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             } else {
                 
                 lblSenderName?.textColor = .gray
-                addSubview(lblSenderName!)
+                contentView.addSubview(lblSenderName!)
                 lblSenderName?.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: lateralPadding, left: lateralPadding, bottom: lateralPadding, right: lateralPadding), excludingEdge: .bottom)
                 NSLayoutConstraint.deactivate([cntBubbleContainerTop])
                 cntBubbleContainerTop = bubbleContainerView.autoPinEdge(.top, to: .bottom, of: lblSenderName!, withOffset: 8)
@@ -311,7 +311,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             if messageDatePosition == .inside {
                 bubbleView?.insertSubview(lblMessageDate!, at: 1)
             } else {
-                addSubview(lblMessageDate!)
+                contentView.addSubview(lblMessageDate!)
                 lblMessageDate.autoPinEdge(.top, to: .bottom, of: bubbleContainerView, withOffset: 8)
             }
             lblMessageDate?.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12), excludingEdge: .top)

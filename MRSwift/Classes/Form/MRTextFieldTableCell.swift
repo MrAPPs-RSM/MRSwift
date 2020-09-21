@@ -32,12 +32,12 @@ public class MRTextFieldTableCell: UITableViewCell {
         
         lblTitle = UILabel()
         lblTitle.numberOfLines = 0
-        addSubview(lblTitle)
+        contentView.addSubview(lblTitle)
         
         txfValue = UITextField()
         txfValue.textAlignment = .right
         txfValue.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: .editingChanged)
-        addSubview(txfValue)
+        contentView.addSubview(txfValue)
         
         let margin = MRFormViewController.cellsMargin
         
