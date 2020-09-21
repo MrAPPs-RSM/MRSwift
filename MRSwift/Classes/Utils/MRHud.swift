@@ -85,7 +85,7 @@ public enum MRHudStyle {
     case rotationOnly(image: UIImage, duration: TimeInterval)
 }
 
-open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDelegate {
+@objc open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Views
     
@@ -107,7 +107,8 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
     
     private var theme = MRHudTheme.dark
     private var style = MRHudStyle.indeterminate
-    var progress: Float = 0
+    @objc public var progress: Float = 0
+    @objc public var isVisible = false
     private var contentOffset: CGFloat = 16
     private var shadowColor: UIColor = .black
     private var shadowOffset: CGSize = .zero
@@ -361,15 +362,16 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
         }
     }
     
-    open func show(in view: UIView) {
+    @objc open func show(in view: UIView) {
         
         if superview == nil {
             view.addSubview(self)
             autoPinEdgesToSuperviewEdges()
+            isVisible = true
         }
     }
     
-    open func show(in view: UIView, animated: Bool) {
+    @objc open func show(in view: UIView, animated: Bool) {
         
         if superview == nil {
             view.addSubview(self)
@@ -378,19 +380,22 @@ open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDel
                 alpha = 0.0
                 UIView.animate(withDuration: 0.3) {
                     self.alpha = 1.0
+                } completion: { (_) in
+                    self.isVisible = true
                 }
             }
         }
     }
     
-    open func hide() {
+    @objc open func hide() {
         if tblButtons != nil {
             tblButtons.removeObserver(self, forKeyPath: "contentSize")
         }
         removeFromSuperview()
+        self.isVisible = false
     }
     
-    open func hide(animated: Bool) {
+    @objc open func hide(animated: Bool) {
         
         if animated {
             UIView.animate(withDuration: 0.3, animations: {
