@@ -518,3 +518,21 @@ public extension UIImageView {
     }
 }
 
+public extension NSMutableAttributedString {
+    
+    convenience init?(html: String) {
+        guard let data = html.data(using: String.Encoding.utf16, allowLossyConversion: false) else {
+            return nil
+        }
+        
+        guard let attributedString = try? NSMutableAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) else {
+            return nil
+        }
+        
+        if attributedString.string.hasSuffix("\n") {
+            self.init(attributedString: attributedString.attributedSubstring(from: NSRange(location: 0, length: attributedString.length-1)))
+        } else {
+            self.init(attributedString: attributedString)
+        }
+    }
+}

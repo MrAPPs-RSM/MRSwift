@@ -69,7 +69,20 @@ public class MRSwitchTableCell: UITableViewCell {
     
     public override func configure(with row: MRFormRow) {
         
-        lblTitle.text = row.mandatory ? "\(row.title ?? "")*" : row.title
+        if let title = row.title {
+            let text = row.mandatory ? "\(title) *" : title
+            if let attributed = NSMutableAttributedString(html: text) {
+                attributed.addAttributes([
+                    .font: lblTitle.font,
+                    .foregroundColor: lblTitle.textColor
+                ], range: NSRange(location: 0, length: attributed.length))
+                lblTitle.attributedText = attributed
+            } else {
+                lblTitle.text = ""
+            }
+        } else {
+            lblTitle.text = ""
+        }
         swSwitch.isOn = (row.value as? Bool) ?? false
     }
     
