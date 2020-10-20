@@ -40,6 +40,7 @@ public enum MRFormRowType {
     case rowDefault
     case rowSubtitle
     case rowTextField
+    case rowPassword
     case rowEmail
     case rowTextArea
     case rowSwitch
@@ -143,6 +144,18 @@ open class MRFormRow : NSObject {
         self.visibilityBindValue = visibilityBindValue
         self.visible = visibilityBindKey == nil
         self.type = .rowTextField
+    }
+    
+    public convenience init(password key: String?, title: String?, placeholder: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.visibilityBindKey = visibilityBindKey
+        self.visibilityBindValue = visibilityBindValue
+        self.visible = visibilityBindKey == nil
+        self.type = .rowPassword
     }
     
     public convenience init(email key: String?, title: String?, placeholder: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
@@ -542,7 +555,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
             
-        } else if row.type == .rowTextField || row.type == .rowEmail {
+        } else if row.type == .rowTextField || row.type == .rowEmail || row.type == .rowPassword {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: textfieldIdentifier, for: indexPath) as! MRTextFieldTableCell
             cell.isHidden = !row.visible
@@ -557,6 +570,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.txfValue.font = cellValueFont
             cell.txfValue.textColor = valueColor
             cell.txfValue.keyboardType = row.type == .rowEmail ? .emailAddress : .default
+            cell.txfValue.isSecureTextEntry = row.type == .rowPassword
+            cell.txfValue.autocapitalizationType = row.type == .rowEmail || row.type == .rowPassword ? .none : .sentences
             switch (row.valueType) {
                 case .integer: cell.txfValue.keyboardType = .numberPad
                 case .decimal: cell.txfValue.keyboardType = .decimalPad
@@ -564,7 +579,6 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                 case .url: cell.txfValue.keyboardType = .URL
                 default: cell.txfValue.keyboardType = .default
             }
-            cell.txfValue.autocapitalizationType = cell.txfValue.keyboardType == .emailAddress ? .none : .sentences
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
             return cell
