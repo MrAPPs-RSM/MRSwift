@@ -12,7 +12,7 @@ import Cache
 open class Cache : NSObject {
     
     static let shared = Cache()
-    private var storage: Storage<Data>!
+    private var storage: Storage<String, Data>!
     
     override init() {
         
