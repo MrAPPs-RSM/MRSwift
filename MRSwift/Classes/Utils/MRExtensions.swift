@@ -495,11 +495,17 @@ public extension UIImageView {
                 self.image = image
                 
                 if cacheType == .none {
+                    UIView.transition(with: self,
+                                      duration: 0.3,
+                                      options: .transitionCrossDissolve,
+                                      animations: { self.image = image },
+                                      completion: nil)
+                    /*
                     let transition = CATransition()
                     transition.type = CATransitionType.fade
                     transition.duration = 0.3
                     transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-                    self.layer.add(transition, forKey: nil)
+                    self.layer.add(transition, forKey: nil)*/
                 }
             }
             
