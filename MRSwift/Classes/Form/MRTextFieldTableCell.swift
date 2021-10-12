@@ -9,7 +9,7 @@
 import UIKit
 import PureLayout
 
-public protocol MRTextFieldTableCellDelegate : class {
+public protocol MRTextFieldTableCellDelegate : AnyObject {
     func mrTextFieldTableCellDidChangeText(cell: MRTextFieldTableCell)
 }
 

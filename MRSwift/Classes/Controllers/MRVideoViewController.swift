@@ -16,7 +16,7 @@ public enum VideoAspect: Int {
     case resize = 3
 }
 
-public protocol MRVideoViewControllerDelegate : class {
+public protocol MRVideoViewControllerDelegate : AnyObject {
     func videoReadyToPlay()
     func videoDidPlay()
     func videoDidPause()

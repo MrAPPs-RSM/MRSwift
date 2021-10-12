@@ -13,7 +13,7 @@ extension UIViewController: UIViewControllerTransitioningDelegate {
     
     // MARK: - Animation
     
-    private func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return MRBottomMenuAnimation(presenting: true)
     }
     

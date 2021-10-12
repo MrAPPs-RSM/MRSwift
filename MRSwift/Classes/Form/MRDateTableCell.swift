@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol MRDateTableCellDelegate : class {
+public protocol MRDateTableCellDelegate : AnyObject {
     func mrDateTableCellDidChangeDate(cell: MRDateTableCell)
 }
 

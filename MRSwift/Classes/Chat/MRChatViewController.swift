@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MRSwift
 import PureLayout
 
 public enum ItemPosition {
@@ -78,8 +77,7 @@ open class MRChatViewController: UIViewController, UITableViewDataSource, UITabl
     // MARK: - MRChatMessageCell Delegate
     
     public func mrChatMessageCellDidSelectUrl(cell: MRChatMessageCell, url: URL) {
-        
-        UIApplication.shared.openURL(url)
+        UIApplication.shared.openUrl(url: url, on: UIApplication.shared.delegate?.window??.rootViewController)
     }
     
     public func mrChatMessageCellDidSelectImage(cell: MRChatMessageCell, image: UIImage?) {

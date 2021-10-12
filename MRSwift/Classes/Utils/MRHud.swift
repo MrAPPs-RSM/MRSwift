@@ -56,7 +56,7 @@ open class MRHudButton : NSObject {
     }
 }
 
-public protocol MRLabelDelegate : class {
+public protocol MRLabelDelegate : AnyObject {
     func labelDidChangeText(text: String?)
 }
 

@@ -28,7 +28,7 @@ open class MRDataListItem : NSObject {
     }
 }
 
-public protocol MRDataListViewControllerDelegate : class {
+public protocol MRDataListViewControllerDelegate : AnyObject {
     func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: MRDataListItem)
     func mrDataListViewControllerDidSelectValues(viewController: UIViewController, value: [MRDataListItem])
 }
@@ -263,7 +263,7 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
             selectedCount -= 1
         }
  
-        if let index = allData.index(where: { (allDataItem) -> Bool in
+        if let index = allData.firstIndex(where: { (allDataItem) -> Bool in
             return (allDataItem.key != nil && allDataItem.key == item.key) || allDataItem.title == item.title
         }) {
             

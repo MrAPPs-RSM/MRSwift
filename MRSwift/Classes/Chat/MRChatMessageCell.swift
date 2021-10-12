@@ -7,11 +7,10 @@
 //
 
 import UIKit
-import MRSwift
 import PureLayout
 import TTTAttributedLabel
 
-public protocol MRChatMessageCellDelegate : class {
+public protocol MRChatMessageCellDelegate : AnyObject {
     func mrChatMessageCellDidSelectUrl(cell: MRChatMessageCell, url: URL)
     func mrChatMessageCellDidSelectImage(cell: MRChatMessageCell, image: UIImage?)
     func mrChatMessageCellDidSelectVideo(cell: MRChatMessageCell)

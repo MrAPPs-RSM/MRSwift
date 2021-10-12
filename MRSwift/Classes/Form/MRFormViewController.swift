@@ -354,6 +354,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                         .light: return .black
                     case
                         .dark: return .white
+                    default: return .white
                 }
             }
             if backgroundColor == nil {

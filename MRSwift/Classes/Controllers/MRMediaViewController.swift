@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol MRMediaViewControllerDelegate : class {
+protocol MRMediaViewControllerDelegate : AnyObject {
     func mediaDidTapView()
     func mediaDidDoubleTap()
     func mediaDidFailLoad(media: MRMedia)

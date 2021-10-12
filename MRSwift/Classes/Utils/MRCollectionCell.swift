@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol MRCollectionCellDelegate : class {
+public protocol MRCollectionCellDelegate : AnyObject {
     func mrCollectionCellDidPress(cell: UICollectionViewCell)
 }
 

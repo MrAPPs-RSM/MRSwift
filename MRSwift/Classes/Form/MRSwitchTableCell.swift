@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol MRSwitchTableCellDelegate : class {
+public protocol MRSwitchTableCellDelegate : AnyObject {
     func mrSwitchTableCellDidChangeSelection(cell: MRSwitchTableCell)
 }
 
@@ -73,8 +73,8 @@ public class MRSwitchTableCell: UITableViewCell {
             let text = row.mandatory ? "\(title) *" : title
             if let attributed = NSMutableAttributedString(html: text) {
                 attributed.addAttributes([
-                    .font: lblTitle.font,
-                    .foregroundColor: lblTitle.textColor
+                    .font: lblTitle.font ?? UIFont.systemFont(ofSize: 17),
+                    .foregroundColor: lblTitle.textColor ?? UIColor.black
                 ], range: NSRange(location: 0, length: attributed.length))
                 lblTitle.attributedText = attributed
             } else {

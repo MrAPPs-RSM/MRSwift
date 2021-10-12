@@ -10,25 +10,25 @@ import UIKit
 
 public extension UIViewController {
     
-    @objc public func openLeftDrawerView() {
+    @objc func openLeftDrawerView() {
         if let drawer = UIApplication.shared.windows.first?.rootViewController as? MRDrawerController {
             drawer.openLeftDrawer()
         }
     }
     
-    @objc public func closeLeftDrawerView() {
+    @objc func closeLeftDrawerView() {
         if let drawer = UIApplication.shared.windows.first?.rootViewController as? MRDrawerController {
             drawer.closeLeftDrawer()
         }
     }
     
-    @objc public func openRightDrawerView() {
+    @objc func openRightDrawerView() {
         if let drawer = UIApplication.shared.windows.first?.rootViewController as? MRDrawerController {
             drawer.openRightDrawer()
         }
     }
     
-    @objc public func closeRightDrawerView() {
+    @objc func closeRightDrawerView() {
         if let drawer = UIApplication.shared.windows.first?.rootViewController as? MRDrawerController {
             drawer.closeRightDrawer()
         }

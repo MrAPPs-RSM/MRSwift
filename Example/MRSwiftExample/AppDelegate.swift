@@ -16,7 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
-        UINavigationBar.appearance().isTranslucent = false
+        if #available(iOS 15, *) {
+            let navAppearance = UINavigationBarAppearance()
+            navAppearance.backgroundColor = .white
+            UINavigationBar.appearance().standardAppearance = navAppearance
+            UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
+        } else {
+            UINavigationBar.appearance().isTranslucent = false
+        }
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = UINavigationController(rootViewController: ViewController())

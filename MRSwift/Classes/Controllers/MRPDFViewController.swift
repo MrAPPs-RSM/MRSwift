@@ -80,7 +80,7 @@ class GridPreviewCell : UICollectionViewCell {
 
 
 
-public protocol MRPDFViewControllerDelegate : class {
+public protocol MRPDFViewControllerDelegate : AnyObject {
     func pdfDidStartDownload()
     func pdfDidFinishDownload()
     func pdfDidUpdateDownload(progress: Float)
@@ -344,7 +344,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
             return
         }
         
-        var originalPagerect: CGFloat = 0.0
+        //var originalPagerect: CGFloat = 0.0
         var scalingConstant: CGFloat = 0.0
         var pdfScale: CGFloat = 0.0
         var scaledPageSize: CGSize = .zero
@@ -488,7 +488,7 @@ open class MRPDFViewController: MRMediaViewController, MRMediaViewControllerDele
         gridContainer.autoPinEdge(.right, to: .right, of: view)
         gridContainer.autoSetDimension(.height, toSize: 95+UIView.safeArea.bottom)
         
-        cntGridContainerBottom = NSLayoutConstraint(item: gridContainer, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 95+UIView.safeArea.bottom)
+        cntGridContainerBottom = NSLayoutConstraint(item: gridContainer!, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 95+UIView.safeArea.bottom)
         view.addConstraint(cntGridContainerBottom)
         
         let layout = UICollectionViewFlowLayout()

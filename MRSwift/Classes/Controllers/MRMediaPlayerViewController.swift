@@ -60,7 +60,7 @@ open class MRMedia : NSObject {
     }
 }
 
-public protocol MRMediaPlayerViewControllerDelegate : class {
+public protocol MRMediaPlayerViewControllerDelegate : AnyObject {
     func mediaPlayerDidTapPlay()
     func mediaPlayerDidTapPause()
     func mediaPlayerDidTapStop()

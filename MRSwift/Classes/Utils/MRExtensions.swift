@@ -380,8 +380,8 @@ extension UIApplication: SFSafariViewControllerDelegate {
                 safari.modalPresentationStyle = .overFullScreen
                 viewController.present(safari, animated: true, completion: nil)
             } else {
-                if self.canOpenURL(url) {
-                    self.openURL(url)
+                if canOpenURL(url) {
+                    openUrl(url: url, on: delegate?.window??.rootViewController)
                 }
             }
             
