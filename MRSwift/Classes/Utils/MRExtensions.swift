@@ -515,6 +515,66 @@ public extension UIImageView {
         }
     }
     
+    func setImage(stringUrl: String?, placeholder: UIImage?, ignoreEncoding: Bool, completion: ((_ image: UIImage?) -> Void)?) {
+        
+        guard let stringUrl = stringUrl else {
+            self.image = nil
+            if let completion = completion {
+                completion(nil)
+            }
+            return
+        }
+        
+        var url: URL?
+        if ignoreEncoding {
+            if let remoteUrl = URL(string: stringUrl) {
+                url = remoteUrl
+            } else {
+                url = URL(fileURLWithPath: stringUrl)
+            }
+        } else {
+            if let remoteString = stringUrl.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed), let remoteUrl = URL(string: remoteString) {
+                url = remoteUrl
+            } else {
+                url = URL(fileURLWithPath: stringUrl)
+            }
+        }
+        
+        guard url != nil else {
+            self.image = nil
+            if let completion = completion {
+                completion(nil)
+            }
+            return
+        }
+        
+        self.sd_setImage(with: url) { (image, error, cacheType, url) in
+            
+            if error == nil && image != nil {
+                
+                self.image = image
+                
+                if cacheType == .none {
+                    UIView.transition(with: self,
+                                      duration: 0.3,
+                                      options: .transitionCrossDissolve,
+                                      animations: { self.image = image },
+                                      completion: nil)
+                    /*
+                    let transition = CATransition()
+                    transition.type = CATransitionType.fade
+                    transition.duration = 0.3
+                    transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+                    self.layer.add(transition, forKey: nil)*/
+                }
+            }
+            
+            if let completion = completion {
+                completion(image)
+            }
+        }
+    }
+    
     func rotate(by degrees: CGFloat) {
         transform = CGAffineTransform(rotationAngle: degrees)
     }
