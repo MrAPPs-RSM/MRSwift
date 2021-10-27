@@ -15,7 +15,7 @@ open class MRNavigationController: UINavigationController, UINavigationControlle
     override open func pushViewController(_ viewController: UIViewController, animated: Bool) {
         
         if shouldIgnorePush == false {
-            super.pushViewController(viewController, animated: true)
+            super.pushViewController(viewController, animated: animated)
         }
     }
     
