@@ -84,6 +84,16 @@ open class MRFormRow : NSObject {
     public var attachmentExtensions = [MRFileExtension]()
     public var attachmentMaxSize: Int?    //Byte
     
+    public convenience init(default key: String?, title: String?, value: String?, accessoryType: UITableViewCell.AccessoryType = .none) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.accessoryType = accessoryType
+        self.type = .rowDefault
+    }
+    
     public convenience init(default key: String?, title: String?, value: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
