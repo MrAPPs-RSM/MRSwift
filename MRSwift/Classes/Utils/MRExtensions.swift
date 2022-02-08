@@ -399,6 +399,15 @@ extension UIApplication: SFSafariViewControllerDelegate {
     }
 }
 
+extension UIApplication {
+    var orientation: UIInterfaceOrientation {
+        if let scene = UIApplication.shared.windows.first?.windowScene {
+            return scene.interfaceOrientation
+        }
+        return .portrait
+    }
+}
+
 extension DateFormatter {
     
     var fixedShortWeekDays : [String] {

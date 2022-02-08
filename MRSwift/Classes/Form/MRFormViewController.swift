@@ -358,7 +358,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
                 }
             }
             if backgroundColor == nil {
-                backgroundColor = .groupTableViewBackground
+                backgroundColor = .systemGroupedBackground
             }
             cellBackgroundColor = .secondarySystemGroupedBackground
             searchTintColor = .label
@@ -432,8 +432,8 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         super.viewDidLayoutSubviews()
         
         if marginsActive {
-            cntContentLeading?.constant = UIApplication.shared.statusBarOrientation.isPortrait ? iPadMargin : iPadMargin*1.8
-            cntContentTrailing?.constant = UIApplication.shared.statusBarOrientation.isPortrait ? -iPadMargin : -(iPadMargin*1.8)
+            cntContentLeading?.constant = UIApplication.shared.orientation.isPortrait ? iPadMargin : iPadMargin*1.8
+            cntContentTrailing?.constant = UIApplication.shared.orientation.isPortrait ? -iPadMargin : -(iPadMargin*1.8)
         }
     }
     
@@ -441,23 +441,19 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     
     override open func keyboardDidShow(keyboardInfo: KeyboardInfo) {
         form.contentInset.bottom = keyboardInfo.endFrame.height
-        form.scrollIndicatorInsets.bottom = keyboardInfo.endFrame.height
     }
     
     override open func keyboardDidHide(keyboardInfo: KeyboardInfo) {
         form.contentInset.bottom = 0
-        form.scrollIndicatorInsets.bottom = 0
     }
     
     // MARK: - UITableView DataSource & Delegate
     
     open func numberOfSections(in tableView: UITableView) -> Int {
-        
         return data.count
     }
     
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         let dataSection = data[section]
         return (dataSection.stackable && !dataSection.stacked) || !dataSection.stackable ? dataSection.rows.count : 0
     }
@@ -467,7 +463,6 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
         let dataSection = data[indexPath.section]
         let dataRow = dataSection.rows[indexPath.row]
         if dataRow.type == .rowList || dataRow.type == .rowListMulti {
@@ -477,7 +472,6 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
         let dataSection = data[section]
         
         let header = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 36))
@@ -495,13 +489,11 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        
         let dataSection = data[section]
         return dataSection.title != nil ? sectionHeaderHeight : 0
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let section = data[indexPath.section]
         let row = section.rows[indexPath.row]
         

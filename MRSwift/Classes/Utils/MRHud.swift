@@ -72,7 +72,7 @@ open class MRLabel : UILabel {
     }
 }
 
-public enum MRHudTheme {
+public enum MRHudTheme: Equatable {
     case light
     case dark
     case custom(hudColor: UIColor, textColor: UIColor)
@@ -123,7 +123,6 @@ public enum MRHudStyle {
     
     public convenience init(theme: MRHudTheme, style: MRHudStyle) {
         self.init()
-        
         backgroundColor = .clear
         clipsToBounds = true
         
@@ -136,7 +135,6 @@ public enum MRHudStyle {
     // MARK: - MRLabel Delegate
     
     public func labelDidChangeText(text: String?) {
-        
         fixLabelPosition()/*
          if superview != nil {
          UIView.animate(withDuration: 0.1) {
@@ -146,7 +144,6 @@ public enum MRHudStyle {
     }
     
     private func fixLabelPosition() {
-        
         if textLabel != nil {
             let validText = textLabel?.text != nil && textLabel?.text?.isEmpty == false
             let offset: CGFloat = validText ? contentOffset : 0
@@ -161,14 +158,12 @@ public enum MRHudStyle {
     // MARK: - Linear Progress Handlers
     
     open func set(progress: Float) {
-        
         if progressBar != nil {
             progressBar.setProgress(progress, animated: true)
         }
     }
     
     open func setProgressColors(emptyColor: UIColor, filledColor: UIColor) {
-        
         if progressBar != nil {
             progressBar.trackTintColor = emptyColor
             progressBar.progressTintColor = filledColor
@@ -178,7 +173,6 @@ public enum MRHudStyle {
     // MARK: - Shadow Handlers
     
     open func enableShadow(enable: Bool) {
-        
         if hudView != nil {
             if enable {
                 hudView.layer.shadowColor = shadowColor.cgColor
@@ -195,7 +189,6 @@ public enum MRHudStyle {
     }
     
     open func setShadow(color: UIColor, offset: CGSize, radius: CGFloat, opacity: Float) {
-        
         shadowColor = color
         shadowOffset = offset
         shadowRadius = radius
@@ -206,7 +199,6 @@ public enum MRHudStyle {
     // MARK: - Appearance Handlers
     
     open func set(style: MRHudStyle) {
-        
         self.style = style
         if progressView != nil {
             progressView.removeSubviews()
@@ -215,17 +207,17 @@ public enum MRHudStyle {
         switch style {
             
         case .indeterminate:
-            
             setupHudView()
             
             progressView.removeSubviews()
-            let spinner = UIActivityIndicatorView(style: .whiteLarge)
+            let spinner = UIActivityIndicatorView(style: .large)
+            spinner.color = .white
             switch theme {
-            case .dark:
-                spinner.color = .white
-            case .custom(hudColor: _, textColor: let textColor):
-                spinner.color = textColor
-            default: spinner.color = .lightGray
+                case .dark:
+                    spinner.color = .white
+                case .custom(hudColor: _, textColor: let textColor):
+                    spinner.color = textColor
+                default: spinner.color = .lightGray
             }
             
             progressView.addSubview(spinner)
@@ -233,7 +225,6 @@ public enum MRHudStyle {
             spinner.startAnimating()
             
         case .linearProgress:
-            
             setupHudView()
             
             progressBar = UIProgressView(progressViewStyle: .default)
@@ -249,7 +240,6 @@ public enum MRHudStyle {
             progressBar.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
             
         case .rotationInside(image: let image, duration: let duration):
-            
             setupHudView()
             
             imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
@@ -271,7 +261,6 @@ public enum MRHudStyle {
             }
             
         case .rotationOnly(image: let image, duration: let duration):
-            
             removeHudView()
             
             imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
@@ -294,7 +283,6 @@ public enum MRHudStyle {
     }
     
     private func setupHudView() {
-        
         if imageView != nil {
             imageView.removeFromSuperview()
         }
@@ -307,7 +295,7 @@ public enum MRHudStyle {
         hudView.clipsToBounds = true
         hudView.layer.cornerRadius = 8
         hudView.layer.borderWidth = 1/UIScreen.main.scale
-        hudView.layer.borderColor = UIColor.lightGray.cgColor
+        hudView.layer.borderColor = theme == .dark ? UIColor(netHex: 0x444444).cgColor : UIColor.lightGray.cgColor
         hudView.autoSetDimension(.width, toSize: 30, relation: .greaterThanOrEqual)
         hudView.autoSetDimension(.height, toSize: 30, relation: .greaterThanOrEqual)
         
@@ -324,7 +312,7 @@ public enum MRHudStyle {
             hudView.backgroundColor = .white
             textLabel?.textColor = UIColor.black
         case .dark:
-            hudView.backgroundColor = UIColor(netHex: 0x444444)
+            hudView.backgroundColor = UIColor(netHex: 0x333333)
             textLabel?.textColor = UIColor.white
         case .custom(hudColor: let hudColor, textColor: let textColor):
             hudView.backgroundColor = hudColor
@@ -356,14 +344,12 @@ public enum MRHudStyle {
     }
     
     private func removeHudView() {
-        
         if self.hudView != nil {
             self.hudView.removeFromSuperview()
         }
     }
     
     @objc open func show(in view: UIView) {
-        
         if superview == nil {
             view.addSubview(self)
             autoPinEdgesToSuperviewEdges()
@@ -372,7 +358,6 @@ public enum MRHudStyle {
     }
     
     @objc open func show(in view: UIView, animated: Bool) {
-        
         if superview == nil {
             view.addSubview(self)
             autoPinEdgesToSuperviewEdges()
@@ -396,7 +381,6 @@ public enum MRHudStyle {
     }
     
     @objc open func hide(animated: Bool) {
-        
         if animated {
             UIView.animate(withDuration: 0.3, animations: {
                 self.alpha = 1.0
@@ -411,7 +395,6 @@ public enum MRHudStyle {
     // MARK: - Buttons Handlers
     
     open func set(buttons newButtons: [MRHudButton]) {
-        
         switch style {
         case .rotationOnly(image: _, duration: _):
             removeButtons()
