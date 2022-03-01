@@ -33,6 +33,7 @@ open class MRMedia : NSObject {
     open var mediaDescription: String?
     open var remoteUrl: URL?
     open var localUrl: URL?
+    open var shareUrl: URL?
     open var image: UIImage?
     open var thumbnail: UIImage?
     open var type: MediaType = .image
@@ -60,7 +61,7 @@ open class MRMedia : NSObject {
     }
 }
 
-public protocol MRMediaPlayerViewControllerDelegate : AnyObject {
+public protocol MRMediaPlayerViewControllerDelegate : class {
     func mediaPlayerDidTapPlay()
     func mediaPlayerDidTapPause()
     func mediaPlayerDidTapStop()
@@ -81,7 +82,7 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
     public var bottomViewBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.5)
     public var videoAutoPlay: Bool = false
     
-    private var medias = [MRMedia]()
+    public var medias = [MRMedia]()
     private var nextIndex: Int = 0
     public var selectedIndex: Int = 0
     private weak var playerDelegate: MRMediaPlayerViewControllerDelegate?
@@ -310,6 +311,26 @@ open class MRMediaPlayerViewController: UIViewController, UIPageViewControllerDa
         viewController?.index = index
         
         return viewController
+    }
+    
+    open func goToNext() {
+        let newIndex = selectedIndex + 1
+        if let viewController = viewController(at: newIndex) {
+            pageController.setViewControllers([viewController], direction: .forward, animated: true) { completed in
+                self.selectedIndex = newIndex
+                self.didLoadNewMedia()
+            }
+        }
+    }
+    
+    open func goToPrevious() {
+        let newIndex = selectedIndex - 1
+        if let viewController = viewController(at: newIndex) {
+            pageController.setViewControllers([viewController], direction: .reverse, animated: true) { completed in
+                self.selectedIndex = newIndex
+                self.didLoadNewMedia()
+            }
+        }
     }
     
     open func didLoadNewMedia() {
