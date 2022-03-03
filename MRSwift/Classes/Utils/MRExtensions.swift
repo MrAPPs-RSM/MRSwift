@@ -361,6 +361,15 @@ public extension UIAlertController {
     }
 }
 
+class MRSafariViewController: SFSafariViewController {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        if #available(iOS 13, *) {
+            return .darkContent
+        }
+        return .default
+    }
+}
+
 extension UIApplication: SFSafariViewControllerDelegate {
     
     public func openUrl(stringUrl: String?, on viewController: UIViewController?) {
@@ -372,39 +381,15 @@ extension UIApplication: SFSafariViewControllerDelegate {
     }
     
     public func openUrl(url: URL, on viewController: UIViewController?) {
-        
-        if #available(iOS 9.0, *) {
-            
-            if let viewController = viewController {
-                let safari = SFSafariViewController(url: url)
-                safari.modalPresentationStyle = .overFullScreen
-                viewController.present(safari, animated: true, completion: nil)
-            } else {
-                if canOpenURL(url) {
-                    openUrl(url: url, on: delegate?.window??.rootViewController)
-                }
-            }
-            
-        } else {
-            
-            if self.canOpenURL(url) {
-                self.openURL(url)
-            }
-        }
+        let safari = MRSafariViewController(url: url)
+        safari.delegate = self
+        safari.modalPresentationStyle = .overFullScreen
+        safari.modalPresentationCapturesStatusBarAppearance = true
+        viewController?.present(safari, animated: true, completion: nil)
     }
     
-    @available(iOS 9.0, *)
     public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         controller.dismiss(animated: true, completion: nil)
-    }
-}
-
-extension UIApplication {
-    var orientation: UIInterfaceOrientation {
-        if let scene = UIApplication.shared.windows.first?.windowScene {
-            return scene.interfaceOrientation
-        }
-        return .portrait
     }
 }
 
@@ -487,66 +472,6 @@ public extension UIImageView {
             url = remoteUrl
         } else {
             url = URL(fileURLWithPath: stringUrl)
-        }
-        
-        guard url != nil else {
-            self.image = nil
-            if let completion = completion {
-                completion(nil)
-            }
-            return
-        }
-        
-        self.sd_setImage(with: url) { (image, error, cacheType, url) in
-            
-            if error == nil && image != nil {
-                
-                self.image = image
-                
-                if cacheType == .none {
-                    UIView.transition(with: self,
-                                      duration: 0.3,
-                                      options: .transitionCrossDissolve,
-                                      animations: { self.image = image },
-                                      completion: nil)
-                    /*
-                    let transition = CATransition()
-                    transition.type = CATransitionType.fade
-                    transition.duration = 0.3
-                    transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-                    self.layer.add(transition, forKey: nil)*/
-                }
-            }
-            
-            if let completion = completion {
-                completion(image)
-            }
-        }
-    }
-    
-    func setImage(stringUrl: String?, placeholder: UIImage?, ignoreEncoding: Bool, completion: ((_ image: UIImage?) -> Void)?) {
-        
-        guard let stringUrl = stringUrl else {
-            self.image = nil
-            if let completion = completion {
-                completion(nil)
-            }
-            return
-        }
-        
-        var url: URL?
-        if ignoreEncoding {
-            if let remoteUrl = URL(string: stringUrl) {
-                url = remoteUrl
-            } else {
-                url = URL(fileURLWithPath: stringUrl)
-            }
-        } else {
-            if let remoteString = stringUrl.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed), let remoteUrl = URL(string: remoteString) {
-                url = remoteUrl
-            } else {
-                url = URL(fileURLWithPath: stringUrl)
-            }
         }
         
         guard url != nil else {
