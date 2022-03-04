@@ -235,10 +235,7 @@ public extension UIView {
     }
     
     class var safeArea : UIEdgeInsets {
-        if #available(iOS 11, *) {
-            return UIApplication.shared.keyWindow!.safeAreaInsets
-        }
-        return .zero
+        return UIApplication.shared.firstWindow?.safeAreaInsets ?? .zero
     }
     
     class func nib() -> UINib {
@@ -293,7 +290,7 @@ public extension UIDevice {
     }
     
     class var isPortrait : Bool {
-        return UIApplication.shared.statusBarOrientation == .portrait || UIApplication.shared.statusBarOrientation == .portraitUpsideDown
+        return UIApplication.shared.orientation == .portrait || UIApplication.shared.orientation == .portraitUpsideDown
     }
 }
 
@@ -390,6 +387,20 @@ extension UIApplication: SFSafariViewControllerDelegate {
     
     public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         controller.dismiss(animated: true, completion: nil)
+    }
+    
+    public var firstWindow: UIWindow? {
+        return UIApplication.shared.windows
+                        .first?
+                        .windowScene?
+                        .windows.first
+    }
+    
+    public var orientation: UIInterfaceOrientation {
+        return UIApplication.shared.windows
+                        .first?
+                        .windowScene?
+                        .interfaceOrientation ?? .portrait
     }
 }
 
