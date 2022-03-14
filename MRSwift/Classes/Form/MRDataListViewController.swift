@@ -151,8 +151,8 @@ open class MRDataListViewController: MRPrimitiveViewController, UITableViewDataS
         list.autoPinEdge(toSuperviewEdge: .trailing)
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.textColor = .black
-            textfield.tintColor = .black
+            textfield.textColor = traitCollection.userInterfaceStyle == .light ? .black : .white
+            textfield.tintColor = traitCollection.userInterfaceStyle == .light ? .black : .white
             if let backgroundview = textfield.subviews.first {
                 backgroundview.backgroundColor = .white
                 backgroundview.layer.cornerRadius = 10
