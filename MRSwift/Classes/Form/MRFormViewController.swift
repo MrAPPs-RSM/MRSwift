@@ -569,7 +569,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             cell.lblTitle.font = cellTitleFont
             cell.lblTitle.textColor = titleColor
             cell.txfValue.placeholder = row.placeholder
-            cell.txfValue.isEnabled = editingEnabled
+            cell.txfValue.isEnabled = editingEnabled && row.enabled
             cell.txfValue.font = cellValueFont
             cell.txfValue.textColor = valueColor
             cell.txfValue.keyboardType = row.type == .rowEmail ? .emailAddress : .default
