@@ -286,9 +286,9 @@ public enum MRHudStyle {
             imageView.autoCenterInSuperview()
             if let borderColor = borderColor {
                 imageView.layer.shadowColor = borderColor.cgColor
-                imageView.layer.shadowOpacity = 0.3
-                imageView.layer.shadowRadius = 4
-                imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
+                imageView.layer.shadowOpacity = 0.2
+                imageView.layer.shadowRadius = 2
+                imageView.layer.shadowOffset = CGSize(width: 0, height: 3)
             }
             imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
             
