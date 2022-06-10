@@ -82,7 +82,7 @@ public enum MRHudStyle {
     case indeterminate
     case linearProgress
     case rotationInside(image: UIImage, duration: TimeInterval)
-    case rotationOnly(image: UIImage, duration: TimeInterval)
+    case rotationOnly(image: UIImage, duration: TimeInterval, backgroundColor: UIColor? = nil, tintColor: UIColor? = nil, borderColor: UIColor? = nil)
 }
 
 @objc open class MRHud: UIView, MRLabelDelegate, UITableViewDataSource, UITableViewDelegate {
@@ -260,18 +260,36 @@ public enum MRHudStyle {
                 
             }
             
-        case .rotationOnly(image: let image, duration: let duration):
+        case .rotationOnly(image: let image, duration: let duration, let backgroundColor, let tintColor, let borderColor):
             removeHudView()
             
-            imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
-            imageView.image = image
-            imageView.clipsToBounds = true
-            imageView.contentMode = .scaleAspectFit
-            imageView.autoSetDimensions(to: CGSize(width: 80, height: 80))
+            imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+            imageView.backgroundColor = backgroundColor
+            imageView.layer.cornerRadius = 30
             
+            if backgroundColor != nil {
+                let realImageView = UIImageView()
+                realImageView.backgroundColor = .clear
+                realImageView.clipsToBounds = true
+                realImageView.image = image
+                realImageView.contentMode = .scaleAspectFit
+                realImageView.tintColor = tintColor
+                imageView.addSubview(realImageView)
+                realImageView.autoCenterInSuperview()
+                realImageView.autoSetDimensions(to: CGSize(width: 30, height: 30))
+            } else {
+                imageView.clipsToBounds = true
+                imageView.image = image
+            }
             addSubview(imageView)
+            imageView.autoSetDimensions(to: CGSize(width: 60, height: 60))
             imageView.autoCenterInSuperview()
-            
+            if let borderColor = borderColor {
+                imageView.layer.shadowColor = borderColor.cgColor
+                imageView.layer.shadowOpacity = 0.3
+                imageView.layer.shadowRadius = 4
+                imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
+            }
             imageView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
             
             UIView.animateKeyframes(withDuration: duration, delay: 0, options:[.repeat, .autoreverse], animations: {
@@ -396,7 +414,7 @@ public enum MRHudStyle {
     
     open func set(buttons newButtons: [MRHudButton]) {
         switch style {
-        case .rotationOnly(image: _, duration: _):
+        case .rotationOnly(image: _, duration: _, backgroundColor: _, tintColor: _, borderColor: _):
             removeButtons()
             break
         default:

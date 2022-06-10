@@ -213,13 +213,15 @@ open class MRBottomMenu: UIViewController, UICollectionViewDataSource, UICollect
     
     private func setupLayout() {
         
-        view.backgroundColor = .clear
+        //view.backgroundColor = .clear
         
         let effect = UIBlurEffect(style: .prominent)
-        let container = UIVisualEffectView(effect: effect)
+        let background = UIVisualEffectView(effect: effect)
+        view.addSubview(background)
+        background.autoPinEdgesToSuperviewEdges()
         
-        //let container = UIView()
-        //container.backgroundColor = .white
+        let container = UIView()
+        container.backgroundColor = .clear
         container.clipsToBounds = true
         container.layer.cornerRadius = 24
         //container.layer.masksToBounds = false
@@ -256,7 +258,7 @@ open class MRBottomMenu: UIViewController, UICollectionViewDataSource, UICollect
         cvItems.register(MRBottomMenuCollectionCell.self, forCellWithReuseIdentifier: cellIdentifier)
         cvItems.register(MRBottomMenuHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
         
-        container.contentView.addSubview(cvItems)
+        container.addSubview(cvItems)
         cvItems.autoPinEdgesToSuperviewEdges()
     }
     

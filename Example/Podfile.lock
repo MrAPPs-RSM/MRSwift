@@ -1,7 +1,7 @@
 PODS:
   - Alamofire (5.4.4)
   - Cache (6.0.0)
-  - MRSwift (1.0):
+  - MRSwift (1.1.0):
     - Alamofire
     - Cache
     - PureLayout
@@ -42,7 +42,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
   Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
-  MRSwift: af3f23db5e9ca2420ad93c0501b6c4c27381d514
+  MRSwift: d0ff877180394b1882cbfd3b3b801e304338cfb6
   PureLayout: 5fb5e5429519627d60d079ccb1eaa7265ce7cf88
   RxCocoa: 4baf94bb35f2c0ab31bc0cb9f1900155f646ba42
   RxRelay: e72dbfd157807478401ef1982e1c61c945c94b2f
