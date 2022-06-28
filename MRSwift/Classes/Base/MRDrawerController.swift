@@ -145,6 +145,8 @@ open class MRDrawerController: UIViewController {
         if self.rightViewController != nil {
             self.rightViewController?.view.frame = CGRect(x: self.isRightViewVisible ? self.viewWidth-self.rightViewWidth : self.viewWidth, y: 0.0, width: self.rightViewWidth, height: self.viewHeight)
         }
+        
+        darkBackground.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height)
     }
     
     // MARK: - Drawer Methods
