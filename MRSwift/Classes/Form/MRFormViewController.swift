@@ -10,9 +10,7 @@ import UIKit
 import PureLayout
 
 public extension UITableViewCell {
-    
     @objc func configure(with row: MRFormRow) {
-        
         accessoryType = row.type == .rowList || row.type == .rowListMulti || row.type == .rowAttachment ? .disclosureIndicator : row.accessoryType
         textLabel?.text = row.mandatory ? "\(row.title ?? "")*" : row.title
         if row.type == .rowAttachment {
@@ -48,6 +46,7 @@ public enum MRFormRowType {
     case rowList
     case rowListMulti
     case rowAttachment
+    case rowRating
 }
 
 public enum MRFormRowValueType {
@@ -192,6 +191,15 @@ open class MRFormRow : NSObject {
         self.type = .rowTextArea
     }
     
+    public convenience init(rating key: String?, title: String?, value: Double?) {
+        self.init()
+        
+        self.key = key ?? ""
+        self.title = title
+        self.value = value
+        self.type = .rowRating
+    }
+    
     public convenience init(subtitle key: String?, title: String?, subtitle: String?, visibilityBindKey: String?, visibilityBindValue: Any? = nil) {
         self.init()
         
@@ -273,22 +281,18 @@ open class MRFormSection : NSObject {
     }
 }
 
-open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSource, UITableViewDelegate, MRTextFieldTableCellDelegate, MRTextViewTableCellDelegate, MRSwitchTableCellDelegate, MRDateTableCellDelegate, MRDataListViewControllerDelegate {
-    
+open class MRFormViewController: MRPrimitiveViewController {
     // MARK: - Layout
-    
     open var form: UITableView!
     private var scrollView: UIScrollView!
     private var containerView: UIView!
     
     // MARK: - Constraints
-    
     private var cntContentHeight: NSLayoutConstraint?
     private var cntContentLeading: NSLayoutConstraint?
     private var cntContentTrailing: NSLayoutConstraint?
     
     // MARK: - Constants & Variables
-    
     open var data = [MRFormSection]()
     private let cellIdentifier = "cellIdentifier"
     private let subtitleIdentifier = "subtitleIdentifier"
@@ -337,7 +341,6 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     // MARK: - Initialization
-    
     deinit {
         if marginsActive {
             form.removeObserver(self, forKeyPath: "contentSize")
@@ -345,7 +348,6 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     }
     
     // MARK: - UIViewController Methods
-    
     override open func viewDidLoad() {
         super.viewDidLoad()
         
@@ -387,15 +389,15 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         form.delegate = self
         form.keyboardDismissMode = .interactive
         form.backgroundColor = .clear
-        form.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
-        form.register(MRTextFieldTableCell.self, forCellReuseIdentifier: textfieldIdentifier)
-        form.register(MRTextViewTableCell.self, forCellReuseIdentifier: textAreaIdentifier)
-        form.register(MRSwitchTableCell.self, forCellReuseIdentifier: switchIdentifier)
-        form.register(MRDateTableCell.self, forCellReuseIdentifier: dateIdentifier)
-        form.register(MRAttachmentTableCell.self, forCellReuseIdentifier: attachmentIdentifier)
+        form.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        form.register(MRTextFieldTableCell.self, forCellReuseIdentifier: MRTextFieldTableCell.identifier)
+        form.register(MRTextViewTableCell.self, forCellReuseIdentifier: MRTextViewTableCell.identifier)
+        form.register(MRSwitchTableCell.self, forCellReuseIdentifier: MRSwitchTableCell.identifier)
+        form.register(MRDateTableCell.self, forCellReuseIdentifier: MRDateTableCell.identifier)
+        form.register(MRAttachmentTableCell.self, forCellReuseIdentifier: MRAttachmentTableCell.identifier)
+        form.register(MRRatingTableCell.self, forCellReuseIdentifier: MRRatingTableCell.identifier)
         
         if marginsActive {
-            
             scrollView = UIScrollView()
             view.addSubview(scrollView)
             scrollView.autoPinEdgesToSuperviewEdges()
@@ -419,7 +421,6 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             form.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
             
         } else {
-            
             view.addSubview(form)
             form.autoPinEdgesToSuperviewEdges()
             form.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: UIView.safeArea.bottom, right: 0)
@@ -456,9 +457,62 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
     override open func keyboardDidHide(keyboardInfo: KeyboardInfo) {
         form.contentInset.bottom = 0
     }
+
+    // MARK: - Other Methods
     
-    // MARK: - UITableView DataSource & Delegate
+    @objc func goBack() {
+        navigationController?.popViewController(animated: true)
+    }
     
+    private func showLinkedItems(key: String, value: Any?) {
+        
+        var indexPathsToUpdate = [IndexPath]()
+        
+        for i in 0..<data.count {
+            let section = data[i]
+            for j in 0..<section.rows.count {
+                let row = section.rows[j]
+                var show = true
+                if row.visibilityBindKey == key {
+                    if let visibilityValue = row.visibilityBindValue {
+                        show = false
+                        if let stringValue = value as? String, let visStringValue = visibilityValue as? String {
+                            show = stringValue.compare(visStringValue) == .orderedSame
+                        } else if let intValue = value as? Int, let visIntValue = visibilityValue as? Int {
+                            show = intValue == visIntValue
+                        } else if let boolValue = value as? Bool, let visBoolValue = visibilityValue as? Bool {
+                            show = boolValue == visBoolValue
+                        }
+                        data[i].rows[j].visible = show
+                        indexPathsToUpdate.append(IndexPath(row: j, section: i))
+                    } else {
+                       show = value != nil
+                    }
+                }
+            }
+        }
+        
+        form.reloadRows(at: indexPathsToUpdate, with: .automatic)
+    }
+    
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        if keyPath == "contentSize" && object is UITableView && marginsActive {
+            cntContentHeight?.constant = form.contentSize.height + form.contentInset.top
+        }
+    }
+    
+    // MARK: - Battery Warning
+    
+    override open func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+}
+
+// MARK: - UITableView DataSource & Delegate
+extension MRFormViewController: UITableViewDataSource, UITableViewDelegate {
     open func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
     }
@@ -508,8 +562,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
         let row = section.rows[indexPath.row]
         
         if row.type == .rowAttachment {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: attachmentIdentifier, for: indexPath) as! MRAttachmentTableCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: MRAttachmentTableCell.identifier, for: indexPath) as! MRAttachmentTableCell
             cell.isHidden = !row.visible
             cell.backgroundColor = cellBackgroundColor
             cell.clipsToBounds = true
@@ -522,13 +575,12 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             return cell
             
         } else if row.type == .rowDefault || row.type == .rowAttachment || row.type == .rowList || row.type == .rowListMulti {
-            
             var cell: UITableViewCell!
             if row.type == .rowDefault {
-                cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
+                cell = UITableViewCell(style: .subtitle, reuseIdentifier: UITableViewCell.identifier)
                 cell.detailTextLabel?.numberOfLines = 0
             } else {
-                cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
+                cell = UITableViewCell(style: .value1, reuseIdentifier: UITableViewCell.identifier)
                 cell.detailTextLabel?.numberOfLines = 1
             }
             cell.isHidden = !row.visible
@@ -544,8 +596,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             return cell
             
         } else if row.type == .rowSubtitle {
-            
-            let cell = UITableViewCell(style: .subtitle, reuseIdentifier: subtitleIdentifier)
+            let cell = UITableViewCell(style: .subtitle, reuseIdentifier: UITableViewCell.identifier)
             cell.isHidden = !row.visible
             cell.selectionStyle = .none
             cell.backgroundColor = cellBackgroundColor
@@ -559,8 +610,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             return cell
             
         } else if row.type == .rowTextField || row.type == .rowEmail || row.type == .rowPassword {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: textfieldIdentifier, for: indexPath) as! MRTextFieldTableCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: MRTextFieldTableCell.identifier, for: indexPath) as! MRTextFieldTableCell
             cell.isHidden = !row.visible
             cell.selectionStyle = .none
             cell.delegate = self
@@ -587,8 +637,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             return cell
             
         } else if row.type == .rowTextArea {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: textAreaIdentifier, for: indexPath) as! MRTextViewTableCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: MRTextViewTableCell.identifier, for: indexPath) as! MRTextViewTableCell
             cell.isHidden = !row.visible
             cell.selectionStyle = .none
             cell.delegate = self
@@ -611,8 +660,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             return cell
             
         } else if row.type == .rowSwitch {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: switchIdentifier, for: indexPath) as! MRSwitchTableCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: MRSwitchTableCell.identifier, for: indexPath) as! MRSwitchTableCell
             cell.isHidden = !row.visible
             cell.selectionStyle = .none
             cell.delegate = self
@@ -627,8 +675,7 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             return cell
             
         } else if row.type == .rowDate {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: dateIdentifier, for: indexPath) as! MRDateTableCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: MRDateTableCell.identifier, for: indexPath) as! MRDateTableCell
             cell.isHidden = !row.visible
             cell.selectionStyle = .none
             cell.delegate = self
@@ -645,6 +692,14 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             }
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
+            return cell
+            
+        } else if row.type == .rowRating {
+            let cell = tableView.dequeueReusableCell(withIdentifier: MRRatingTableCell.identifier, for: indexPath) as! MRRatingTableCell
+            cell.delegate = self
+            cell.lblTitle.textColor = titleColor
+            cell.lblTitle.font = cellTitleFont
+            cell.configure(with: row)
             return cell
         }
         
@@ -699,124 +754,72 @@ open class MRFormViewController: MRPrimitiveViewController, UITableViewDataSourc
             }
         }
     }
-    
-    // MARK: - MRTextFieldTableCell Delegate
-    
+}
+
+// MARK: - MRTextFieldTableCell Delegate
+extension MRFormViewController: MRTextFieldTableCellDelegate {
     open func mrTextFieldTableCellDidChangeText(cell: MRTextFieldTableCell) {
-        
         if let indexPath = form.indexPath(for: cell) {
-            
             data[indexPath.section].rows[indexPath.row].value = cell.txfValue.text
             let item = data[indexPath.section].rows[indexPath.row]
             showLinkedItems(key: item.key, value: cell.txfValue.text)
         }
     }
-    
-    // MARK: - MRTextViewTableCell Delegate
-    
+}
+
+// MARK: - MRTextViewTableCell Delegate
+extension MRFormViewController: MRTextViewTableCellDelegate {
     public func mrTextViewTableCellDidChangeText(cell: MRTextViewTableCell) {
-        
         if let indexPath = form.indexPath(for: cell) {
-            
             data[indexPath.section].rows[indexPath.row].value = cell.txwValue.text
             let item = data[indexPath.section].rows[indexPath.row]
             showLinkedItems(key: item.key, value: cell.txwValue.text)
         }
     }
-    
-    // MARK: - MRSwitchTableCell Delegate
-    
+}
+
+// MARK: - MRSwitchTableCell Delegate
+extension MRFormViewController: MRSwitchTableCellDelegate {
     open func mrSwitchTableCellDidChangeSelection(cell: MRSwitchTableCell) {
-        
         if let indexPath = form.indexPath(for: cell) {
-            
             data[indexPath.section].rows[indexPath.row].value = cell.swSwitch.isOn
             let item = data[indexPath.section].rows[indexPath.row]
             showLinkedItems(key: item.key, value: cell.swSwitch.isOn)
         }
     }
-    
-    // MARK: - MRDateTableCell Delegate
-    
+}
+
+// MARK: - MRDateTableCell Delegate
+extension MRFormViewController: MRDateTableCellDelegate {
     open func mrDateTableCellDidChangeDate(cell: MRDateTableCell) {
-        
         if let indexPath = form.indexPath(for: cell) {
-            
             data[indexPath.section].rows[indexPath.row].value = cell.datePicker.date
             let item = data[indexPath.section].rows[indexPath.row]
             showLinkedItems(key: item.key, value: cell.datePicker.date)
         }
     }
-    
-    // MARK: - MRDataListViewController Delegate
-    
+}
+
+// MARK: - MRDataListViewController Delegate
+extension MRFormViewController: MRDataListViewControllerDelegate {
     open func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: MRDataListItem) {
-        
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
-        
         let item = data[currentIndexPath.section].rows[currentIndexPath.row]
         showLinkedItems(key: item.key, value: value)
     }
     
     open func mrDataListViewControllerDidSelectValues(viewController: UIViewController, value: [MRDataListItem]) {
-        
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
-        
         let item = data[currentIndexPath.section].rows[currentIndexPath.row]
         showLinkedItems(key: item.key, value: value.count > 0)
     }
-    
-    // MARK: - Other Methods
-    
-    @objc func goBack() {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    private func showLinkedItems(key: String, value: Any?) {
+}
+
+// MARK: - MRRatingTableCell Delegate
+extension MRFormViewController: MRRatingTableCellDelegate {
+    open func mrRatingTableCellDidRate(cell: MRRatingTableCell, value: Double) {
         
-        var indexPathsToUpdate = [IndexPath]()
-        
-        for i in 0..<data.count {
-            let section = data[i]
-            for j in 0..<section.rows.count {
-                let row = section.rows[j]
-                var show = true
-                if row.visibilityBindKey == key {
-                    if let visibilityValue = row.visibilityBindValue {
-                        show = false
-                        if let stringValue = value as? String, let visStringValue = visibilityValue as? String {
-                            show = stringValue.compare(visStringValue) == .orderedSame
-                        } else if let intValue = value as? Int, let visIntValue = visibilityValue as? Int {
-                            show = intValue == visIntValue
-                        } else if let boolValue = value as? Bool, let visBoolValue = visibilityValue as? Bool {
-                            show = boolValue == visBoolValue
-                        }
-                        data[i].rows[j].visible = show
-                        indexPathsToUpdate.append(IndexPath(row: j, section: i))
-                    } else {
-                       show = value != nil
-                    }
-                }
-            }
-        }
-        
-        form.reloadRows(at: indexPathsToUpdate, with: .automatic)
     }
-    
-    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        
-        if keyPath == "contentSize" && object is UITableView && marginsActive {
-            cntContentHeight?.constant = form.contentSize.height + form.contentInset.top
-        }
-    }
-    
-    // MARK: - Battery Warning
-    
-    override open func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
 }

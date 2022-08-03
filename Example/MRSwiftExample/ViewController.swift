@@ -128,7 +128,12 @@ class ViewController: UIViewController {
             MRFormSection(id: nil, title: "Attachment", subtitle: nil, value: nil, rows: [
                 MRFormRow(attachment: "attachment_1", title: "Title 7-1", value: nil, attachmentUrl: nil, maxSize: nil, visibilityBindKey: nil),
                 MRFormRow(attachment: "attachment_2", title: "Title 7-2", value: nil, attachmentUrl: nil, maxSize: nil, visibilityBindKey: nil)
-            ])
+            ]),
+            MRFormSection(id: nil, title: "Rating", subtitle: nil, value: nil, rows: [
+                MRFormRow(rating: "rating_1", title: "Title 8-1", value: 0),
+                MRFormRow(rating: "rating_2", title: "Title 8-2", value: 2),
+                MRFormRow(rating: "rating_3", title: "Title 8-2", value: 3.9),
+            ]),
         ]
         navigationController?.pushViewController(viewController, animated: true)
     }
