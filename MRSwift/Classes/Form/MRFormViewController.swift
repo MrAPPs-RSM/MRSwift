@@ -701,6 +701,13 @@ extension MRFormViewController: UITableViewDataSource, UITableViewDelegate {
             cell.lblTitle.font = cellTitleFont
             cell.configure(with: row)
             return cell
+        } else if row.type == .rowRating {
+            let cell = tableView.dequeueReusableCell(withIdentifier: MRRatingTableCell.identifier, for: indexPath) as! MRRatingTableCell
+            cell.delegate = self
+            cell.lblTitle.textColor = titleColor
+            cell.lblTitle.font = cellTitleFont
+            cell.configure(with: row)
+            return cell
         }
         
         return UITableViewCell()
@@ -754,10 +761,8 @@ extension MRFormViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }
     }
-}
-
-// MARK: - MRTextFieldTableCell Delegate
-extension MRFormViewController: MRTextFieldTableCellDelegate {
+    
+    // MARK: - MRTextFieldTableCell Delegate
     open func mrTextFieldTableCellDidChangeText(cell: MRTextFieldTableCell) {
         if let indexPath = form.indexPath(for: cell) {
             data[indexPath.section].rows[indexPath.row].value = cell.txfValue.text
@@ -765,10 +770,8 @@ extension MRFormViewController: MRTextFieldTableCellDelegate {
             showLinkedItems(key: item.key, value: cell.txfValue.text)
         }
     }
-}
-
-// MARK: - MRTextViewTableCell Delegate
-extension MRFormViewController: MRTextViewTableCellDelegate {
+    
+    // MARK: - MRTextViewTableCell Delegate
     public func mrTextViewTableCellDidChangeText(cell: MRTextViewTableCell) {
         if let indexPath = form.indexPath(for: cell) {
             data[indexPath.section].rows[indexPath.row].value = cell.txwValue.text
@@ -776,10 +779,8 @@ extension MRFormViewController: MRTextViewTableCellDelegate {
             showLinkedItems(key: item.key, value: cell.txwValue.text)
         }
     }
-}
-
-// MARK: - MRSwitchTableCell Delegate
-extension MRFormViewController: MRSwitchTableCellDelegate {
+    
+    // MARK: - MRSwitchTableCell Delegate
     open func mrSwitchTableCellDidChangeSelection(cell: MRSwitchTableCell) {
         if let indexPath = form.indexPath(for: cell) {
             data[indexPath.section].rows[indexPath.row].value = cell.swSwitch.isOn
@@ -787,10 +788,8 @@ extension MRFormViewController: MRSwitchTableCellDelegate {
             showLinkedItems(key: item.key, value: cell.swSwitch.isOn)
         }
     }
-}
-
-// MARK: - MRDateTableCell Delegate
-extension MRFormViewController: MRDateTableCellDelegate {
+    
+    // MARK: - MRDateTableCell Delegate
     open func mrDateTableCellDidChangeDate(cell: MRDateTableCell) {
         if let indexPath = form.indexPath(for: cell) {
             data[indexPath.section].rows[indexPath.row].value = cell.datePicker.date
@@ -798,10 +797,8 @@ extension MRFormViewController: MRDateTableCellDelegate {
             showLinkedItems(key: item.key, value: cell.datePicker.date)
         }
     }
-}
-
-// MARK: - MRDataListViewController Delegate
-extension MRFormViewController: MRDataListViewControllerDelegate {
+    
+    // MARK: - MRDataListViewController Delegate
     open func mrDataListViewControllerDidSelectValue(viewController: UIViewController, value: MRDataListItem) {
         data[currentIndexPath.section].rows[currentIndexPath.row].value = value
         form.reloadRows(at: [currentIndexPath], with: .none)
@@ -815,10 +812,8 @@ extension MRFormViewController: MRDataListViewControllerDelegate {
         let item = data[currentIndexPath.section].rows[currentIndexPath.row]
         showLinkedItems(key: item.key, value: value.count > 0)
     }
-}
-
-// MARK: - MRRatingTableCell Delegate
-extension MRFormViewController: MRRatingTableCellDelegate {
+    
+    // MARK: - MRRatingTableCell Delegate
     open func mrRatingTableCellDidRate(cell: MRRatingTableCell, value: Double) {
         
     }
