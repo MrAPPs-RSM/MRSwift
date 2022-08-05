@@ -281,7 +281,13 @@ open class MRFormSection : NSObject {
     }
 }
 
-open class MRFormViewController: MRPrimitiveViewController {
+open class MRFormViewController: MRPrimitiveViewController,
+                                    MRDateTableCellDelegate,
+                                    MRTextFieldTableCellDelegate,
+                                    MRSwitchTableCellDelegate,
+                                    MRRatingTableCellDelegate,
+                                    MRDataListViewControllerDelegate,
+                                    MRTextViewTableCellDelegate {
     // MARK: - Layout
     open var form: UITableView!
     private var scrollView: UIScrollView!
