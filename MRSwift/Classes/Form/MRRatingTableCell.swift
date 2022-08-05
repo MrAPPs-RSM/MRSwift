@@ -59,7 +59,7 @@ public class MRRatingTableCell: UITableViewCell {
     
     // MARK: - Variables
     private var activeStarColor = UIColor(netHex: 0xfcba03)
-    private var inactiveStarColor = UIColor(netHex: 0x999999)
+    private var inactiveStarColor = UIColor(netHex: 0xbbbbbb)
     private var imageConfig: UIImage.SymbolConfiguration!
     private let ratingSpacing: CGFloat = 2
     public var delegate: MRRatingTableCellDelegate?
@@ -77,7 +77,7 @@ public class MRRatingTableCell: UITableViewCell {
     
     private func setupLayout() {
         selectionStyle = .none
-        imageConfig = UIImage.SymbolConfiguration(pointSize: 26, weight: .regular)
+        imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
         contentView.addSubview(lblTitle)
         contentView.addSubview(ratingContainer)
         ratingContainer.addSubview(btnStar1)
@@ -90,7 +90,7 @@ public class MRRatingTableCell: UITableViewCell {
             lblTitle.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             ratingContainer.leadingAnchor.constraint(greaterThanOrEqualTo: lblTitle.trailingAnchor, constant: 16),
             ratingContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            ratingContainer.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 16),
+            ratingContainer.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 15),
             ratingContainer.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16),
             btnStar1.leadingAnchor.constraint(equalTo: ratingContainer.leadingAnchor),
             btnStar1.topAnchor.constraint(equalTo: ratingContainer.topAnchor),
@@ -135,11 +135,11 @@ public class MRRatingTableCell: UITableViewCell {
     }
     
     private func setRating(value: Double) {
-        setButtonStar(button: btnStar1, starSystemName: value < 0.4 ? "star" : value < 0.9 ? "star.leadinghalf.filled" : "star.fill")
-        setButtonStar(button: btnStar2, starSystemName: value < 1.4 ? "star" : value < 1.9 ? "star.leadinghalf.filled" : "star.fill")
-        setButtonStar(button: btnStar3, starSystemName: value < 2.4 ? "star" : value < 2.9 ? "star.leadinghalf.filled" : "star.fill")
-        setButtonStar(button: btnStar4, starSystemName: value < 3.4 ? "star" : value < 3.9 ? "star.leadinghalf.filled" : "star.fill")
-        setButtonStar(button: btnStar5, starSystemName: value < 4.4 ? "star" : value < 4.9 ? "star.leadinghalf.filled" : "star.fill")
+        setButtonStar(button: btnStar1, starSystemName: value < 0.25 ? "star" : value < 0.75 ? "star.leadinghalf.filled" : "star.fill")
+        setButtonStar(button: btnStar2, starSystemName: value < 1.25 ? "star" : value < 1.75 ? "star.leadinghalf.filled" : "star.fill")
+        setButtonStar(button: btnStar3, starSystemName: value < 2.25 ? "star" : value < 2.75 ? "star.leadinghalf.filled" : "star.fill")
+        setButtonStar(button: btnStar4, starSystemName: value < 3.25 ? "star" : value < 3.75 ? "star.leadinghalf.filled" : "star.fill")
+        setButtonStar(button: btnStar5, starSystemName: value < 4.25 ? "star" : value < 4.75 ? "star.leadinghalf.filled" : "star.fill")
     }
     
     private func setButtonStar(button: UIButton, starSystemName: String) {
