@@ -282,6 +282,8 @@ open class MRFormSection : NSObject {
 }
 
 open class MRFormViewController: MRPrimitiveViewController,
+                                 UITableViewDataSource,
+                                    UITableViewDelegate,
                                     MRDateTableCellDelegate,
                                     MRTextFieldTableCellDelegate,
                                     MRSwitchTableCellDelegate,
@@ -463,62 +465,9 @@ open class MRFormViewController: MRPrimitiveViewController,
     override open func keyboardDidHide(keyboardInfo: KeyboardInfo) {
         form.contentInset.bottom = 0
     }
-
-    // MARK: - Other Methods
     
-    @objc func goBack() {
-        navigationController?.popViewController(animated: true)
-    }
+    // MARK: - UITableView DataSource & Delegate
     
-    private func showLinkedItems(key: String, value: Any?) {
-        
-        var indexPathsToUpdate = [IndexPath]()
-        
-        for i in 0..<data.count {
-            let section = data[i]
-            for j in 0..<section.rows.count {
-                let row = section.rows[j]
-                var show = true
-                if row.visibilityBindKey == key {
-                    if let visibilityValue = row.visibilityBindValue {
-                        show = false
-                        if let stringValue = value as? String, let visStringValue = visibilityValue as? String {
-                            show = stringValue.compare(visStringValue) == .orderedSame
-                        } else if let intValue = value as? Int, let visIntValue = visibilityValue as? Int {
-                            show = intValue == visIntValue
-                        } else if let boolValue = value as? Bool, let visBoolValue = visibilityValue as? Bool {
-                            show = boolValue == visBoolValue
-                        }
-                        data[i].rows[j].visible = show
-                        indexPathsToUpdate.append(IndexPath(row: j, section: i))
-                    } else {
-                       show = value != nil
-                    }
-                }
-            }
-        }
-        
-        form.reloadRows(at: indexPathsToUpdate, with: .automatic)
-    }
-    
-    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        
-        if keyPath == "contentSize" && object is UITableView && marginsActive {
-            cntContentHeight?.constant = form.contentSize.height + form.contentInset.top
-        }
-    }
-    
-    // MARK: - Battery Warning
-    
-    override open func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-}
-
-// MARK: - UITableView DataSource & Delegate
-extension MRFormViewController: UITableViewDataSource, UITableViewDelegate {
     open func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
     }
@@ -823,4 +772,56 @@ extension MRFormViewController: UITableViewDataSource, UITableViewDelegate {
     open func mrRatingTableCellDidRate(cell: MRRatingTableCell, value: Double) {
         
     }
+
+    // MARK: - Other Methods
+    
+    @objc func goBack() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func showLinkedItems(key: String, value: Any?) {
+        
+        var indexPathsToUpdate = [IndexPath]()
+        
+        for i in 0..<data.count {
+            let section = data[i]
+            for j in 0..<section.rows.count {
+                let row = section.rows[j]
+                var show = true
+                if row.visibilityBindKey == key {
+                    if let visibilityValue = row.visibilityBindValue {
+                        show = false
+                        if let stringValue = value as? String, let visStringValue = visibilityValue as? String {
+                            show = stringValue.compare(visStringValue) == .orderedSame
+                        } else if let intValue = value as? Int, let visIntValue = visibilityValue as? Int {
+                            show = intValue == visIntValue
+                        } else if let boolValue = value as? Bool, let visBoolValue = visibilityValue as? Bool {
+                            show = boolValue == visBoolValue
+                        }
+                        data[i].rows[j].visible = show
+                        indexPathsToUpdate.append(IndexPath(row: j, section: i))
+                    } else {
+                       show = value != nil
+                    }
+                }
+            }
+        }
+        
+        form.reloadRows(at: indexPathsToUpdate, with: .automatic)
+    }
+    
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        if keyPath == "contentSize" && object is UITableView && marginsActive {
+            cntContentHeight?.constant = form.contentSize.height + form.contentInset.top
+        }
+    }
+    
+    // MARK: - Battery Warning
+    
+    override open func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
 }
