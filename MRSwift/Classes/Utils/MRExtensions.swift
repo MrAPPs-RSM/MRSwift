@@ -445,7 +445,6 @@ public extension UINavigationController {
 public extension UIImageView {
     
     func setImage(with url: URL?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
-        
         self.sd_setImage(with: url, placeholderImage: placeholder, options: .continueInBackground) { (image, error, cacheType, url) in
             
             if let error = error {
@@ -459,7 +458,6 @@ public extension UIImageView {
     }
     
     func setImage(url: String?, placeholder: UIImage?) {
-        
         guard let url = url else {
             self.image = nil
             return
@@ -469,7 +467,6 @@ public extension UIImageView {
     }
     
     func setImage(stringUrl: String?, placeholder: UIImage?, completion: ((_ image: UIImage?) -> Void)?) {
-        
         guard let stringUrl = stringUrl else {
             self.image = nil
             if let completion = completion {
@@ -493,12 +490,9 @@ public extension UIImageView {
             return
         }
         
-        self.sd_setImage(with: url) { (image, error, cacheType, url) in
-            
+        self.sd_setImage(with: url, placeholderImage: placeholder, options: .refreshCached) { image, error, cacheType, url in
             if error == nil && image != nil {
-                
                 self.image = image
-                
                 if cacheType == .none {
                     UIView.transition(with: self,
                                       duration: 0.3,
@@ -521,7 +515,6 @@ public extension UIImageView {
     }
     
     func setImage(stringUrl: String?, placeholder: UIImage?, ignoreEncoding: Bool, completion: ((_ image: UIImage?) -> Void)?) {
-
          guard let stringUrl = stringUrl else {
              self.image = nil
              if let completion = completion {
@@ -552,32 +545,23 @@ public extension UIImageView {
              }
              return
          }
-
-         self.sd_setImage(with: url) { (image, error, cacheType, url) in
-
-             if error == nil && image != nil {
-
-                 self.image = image
-
-                 if cacheType == .none {
-                     UIView.transition(with: self,
-                                       duration: 0.3,
-                                       options: .transitionCrossDissolve,
-                                       animations: { self.image = image },
-                                       completion: nil)
-                     /*
-                     let transition = CATransition()
-                     transition.type = CATransitionType.fade
-                     transition.duration = 0.3
-                     transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-                     self.layer.add(transition, forKey: nil)*/
-                 }
-             }
-
-             if let completion = completion {
-                 completion(image)
-             }
-         }
+        
+        self.sd_setImage(with: url, placeholderImage: placeholder, options: .refreshCached) { image, error, cacheType, url in
+            if error == nil && image != nil {
+                self.image = image
+                if cacheType == .none {
+                    UIView.transition(with: self,
+                                      duration: 0.3,
+                                      options: .transitionCrossDissolve,
+                                      animations: { self.image = image },
+                                      completion: nil)
+                }
+            }
+            
+            if let completion = completion {
+                completion(image)
+            }
+        }
     }
     
     func rotate(by degrees: CGFloat) {
