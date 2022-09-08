@@ -83,7 +83,11 @@ public class MRSwitchTableCell: UITableViewCell {
         } else {
             lblTitle.text = ""
         }
-        swSwitch.isOn = (row.value as? Bool) ?? false
+        if let value = row.value as? Bool {
+            swSwitch.isOn = value
+        } else if let value = row.value as? String {
+            swSwitch.isOn = value == "true"
+        }
     }
     
     @objc func switchDidChangeValue(sender: UISwitch) {
