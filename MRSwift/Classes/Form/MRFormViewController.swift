@@ -770,7 +770,9 @@ open class MRFormViewController: MRPrimitiveViewController,
     
     // MARK: - MRRatingTableCell Delegate
     open func mrRatingTableCellDidRate(cell: MRRatingTableCell, value: Double) {
-        
+        if let indexPath = form.indexPath(for: cell) {
+            data[indexPath.section].rows[indexPath.row].value = Int(value)
+        }
     }
 
     // MARK: - Other Methods
