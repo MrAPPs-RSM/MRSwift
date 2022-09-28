@@ -32,6 +32,7 @@ public class MRDateTableCell: UITableViewCell, UITextFieldDelegate {
     private func setupInterface() {
         
         datePicker = UIDatePicker()
+        datePicker.minimumDate = Date.distantPast
         datePicker.addTarget(self, action: #selector(datePickerDidChangeValue(picker:)), for: .valueChanged)
         
         lblTitle = UILabel()
