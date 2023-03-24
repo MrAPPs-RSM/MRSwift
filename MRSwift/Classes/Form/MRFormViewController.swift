@@ -81,7 +81,8 @@ open class MRFormRow : NSObject {
     public var extraInfo: String?
     public var attachmentUrl: URL?
     public var attachmentExtensions = [MRFileExtension]()
-    public var attachmentMaxSize: Int?    //Byte
+    public var attachmentMaxSize: Int? //Byte
+    public var keyboardType: UIKeyboardType = .default
     
     public convenience init(default key: String?, title: String?, value: String?, accessoryType: UITableViewCell.AccessoryType = .none) {
         self.init()
@@ -238,7 +239,7 @@ open class MRFormRow : NSObject {
         self.type = .rowListMulti
     }
     
-    public convenience init(id: Any?, key: String?, title: String?, subtitle: String?, value: Any?, placeholder: String?, image: UIImage?, extraData: Any?, dateFormat: String?, accessoryType: UITableViewCell.AccessoryType, mandatory: Bool, type: MRFormRowType, visible: Bool = true) {
+    public convenience init(id: Any?, key: String?, title: String?, subtitle: String?, value: Any?, placeholder: String?, image: UIImage?, extraData: Any?, dateFormat: String?, accessoryType: UITableViewCell.AccessoryType, mandatory: Bool, type: MRFormRowType, visible: Bool = true, keyboardType: UIKeyboardType = .default) {
         self.init()
         
         self.id = id
@@ -254,6 +255,7 @@ open class MRFormRow : NSObject {
         self.mandatory = mandatory
         self.type = type
         self.visible = visible
+        self.keyboardType = keyboardType
     }
 }
 
@@ -577,7 +579,7 @@ open class MRFormViewController: MRPrimitiveViewController,
             cell.txfValue.isEnabled = editingEnabled && row.enabled
             cell.txfValue.font = cellValueFont
             cell.txfValue.textColor = valueColor
-            cell.txfValue.keyboardType = row.type == .rowEmail ? .emailAddress : .default
+            cell.txfValue.keyboardType = row.type == .rowEmail ? .emailAddress : row.keyboardType
             cell.txfValue.isSecureTextEntry = row.type == .rowPassword
             cell.txfValue.autocapitalizationType = row.type == .rowEmail || row.type == .rowPassword ? .none : .sentences
             switch (row.valueType) {
@@ -585,7 +587,7 @@ open class MRFormViewController: MRPrimitiveViewController,
                 case .decimal: cell.txfValue.keyboardType = .decimalPad
                 case .email: cell.txfValue.keyboardType = .emailAddress
                 case .url: cell.txfValue.keyboardType = .URL
-                default: cell.txfValue.keyboardType = .default
+                default: cell.txfValue.keyboardType = row.keyboardType
             }
             cell.configure(with: row)
             if tintColor != nil { cell.tintColor = tintColor }
