@@ -8,7 +8,6 @@
 
 import UIKit
 import PureLayout
-import TTTAttributedLabel
 
 public protocol MRChatMessageCellDelegate : AnyObject {
     func mrChatMessageCellDidSelectUrl(cell: MRChatMessageCell, url: URL)
@@ -23,14 +22,14 @@ public enum MRChatMessageCellStyle {
     case image
 }
 
-open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
+open class MRChatMessageCell: UITableViewCell {
     
     // MARK: - Layout
     
     open var bubbleContainerView: UIView!
     open var bubbleView: UIImageView?
     open var lblSenderName: UILabel?
-    open var lblMessage: TTTAttributedLabel?
+    open var lblMessage: UILabel?
     open var imgImage: UIImageView?
     open var lblMessageDate: UILabel!
     private var videoLayer: UIView?
@@ -148,14 +147,10 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
         let endSpace = "  aaaa"
         realText += endSpace
         
-        lblMessage?.setText(realText) { (attributedString) -> NSMutableAttributedString? in
-            attributedString?.addAttribute(
-                kCTForegroundColorAttributeName as NSAttributedString.Key,
-                value: UIColor.clear,
-                range: NSRange(location: attributedString!.length-endSpace.count, length: endSpace.count)
-            )
-            return attributedString
-        }
+        let string = NSMutableAttributedString(string: realText)
+        string.addAttributes([
+            kCTForegroundColorAttributeName as NSAttributedString.Key: UIColor.clear
+        ], range: NSRange(location: string.length-endSpace.count, length: endSpace.count))
     }
     
     private func createMessageLabel() {
@@ -168,24 +163,7 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
             
             //Creating message UILabel with link support
             
-            lblMessage = TTTAttributedLabel(frame: .zero)
-            lblMessage?.enabledTextCheckingTypes = NSTextCheckingAllTypes
-            lblMessage?.delegate = self
-            lblMessage?.activeLinkAttributes = [
-                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),
-                NSAttributedString.Key.foregroundColor: UIColor.white.darker,
-                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-            ]
-            lblMessage?.linkAttributes = [
-                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),
-                NSAttributedString.Key.foregroundColor: UIColor.white,
-                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-            ]
-            lblMessage?.inactiveLinkAttributes = [
-                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),
-                NSAttributedString.Key.foregroundColor: UIColor.white,
-                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-            ]
+            lblMessage = UILabel(frame: .zero)
             lblMessage?.numberOfLines = 0
             lblMessage?.textColor = .white
             bubbleView?.addSubview(lblMessage!)
@@ -355,12 +333,6 @@ open class MRChatMessageCell: UITableViewCell, TTTAttributedLabelDelegate {
     
     @objc func didTapVideo() {
         delegate?.mrChatMessageCellDidSelectVideo(cell: self)
-    }
-    
-    // MARK: - TTTAttributedLabel Delegate
-    
-    public func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
-        delegate?.mrChatMessageCellDidSelectUrl(cell: self, url: url)
     }
     
     // MARK: - Other Methods

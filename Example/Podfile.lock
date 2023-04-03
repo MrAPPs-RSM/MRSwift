@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.4.4)
+  - Alamofire (5.6.4)
   - Cache (6.0.0)
   - MRSwift (1.1.0):
     - Alamofire
@@ -8,18 +8,16 @@ PODS:
     - RxCocoa
     - RxSwift
     - SDWebImage
-    - TTTAttributedLabel
   - PureLayout (3.1.9)
-  - RxCocoa (6.2.0):
-    - RxRelay (= 6.2.0)
-    - RxSwift (= 6.2.0)
-  - RxRelay (6.2.0):
-    - RxSwift (= 6.2.0)
-  - RxSwift (6.2.0)
-  - SDWebImage (5.12.0):
-    - SDWebImage/Core (= 5.12.0)
-  - SDWebImage/Core (5.12.0)
-  - TTTAttributedLabel (2.0.0)
+  - RxCocoa (6.5.0):
+    - RxRelay (= 6.5.0)
+    - RxSwift (= 6.5.0)
+  - RxRelay (6.5.0):
+    - RxSwift (= 6.5.0)
+  - RxSwift (6.5.0)
+  - SDWebImage (5.15.5):
+    - SDWebImage/Core (= 5.15.5)
+  - SDWebImage/Core (5.15.5)
 
 DEPENDENCIES:
   - MRSwift (from `../`)
@@ -33,23 +31,21 @@ SPEC REPOS:
     - RxRelay
     - RxSwift
     - SDWebImage
-    - TTTAttributedLabel
 
 EXTERNAL SOURCES:
   MRSwift:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
+  Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
   Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
-  MRSwift: d0ff877180394b1882cbfd3b3b801e304338cfb6
+  MRSwift: 89c591f8d74f26c17e3ede2f20d0d1bac38394ec
   PureLayout: 5fb5e5429519627d60d079ccb1eaa7265ce7cf88
-  RxCocoa: 4baf94bb35f2c0ab31bc0cb9f1900155f646ba42
-  RxRelay: e72dbfd157807478401ef1982e1c61c945c94b2f
-  RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
-  SDWebImage: 4ea20cca2986adc5aacde07aa686742fd4c67a37
-  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
+  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
+  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
+  SDWebImage: fd7e1a22f00303e058058278639bf6196ee431fe
 
-PODFILE CHECKSUM: 1aaafeed6ed80c4d3be46b2667cefa2be178582a
+PODFILE CHECKSUM: 80fa3b5f028c0f4230220d85c39a629048cff39f
 
 COCOAPODS: 1.11.2
